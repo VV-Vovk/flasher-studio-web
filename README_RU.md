@@ -185,3 +185,11 @@ RM0473: 12 KiB SRAM1, 32 KiB SRAM2a, 4 KiB SRAM2b and two-bit SBRSA_B. WB1MMC an
 Radio/FUS guided update planner: exact version and density-specific install-address metadata from pinned ST v1.24.0 release notes; rejects absent images, unreviewed migration, downgrade, Safeboot, mismatched local file and overlap with declared application. Actual installation remains in STM32CubeProgrammer, not browser; no auto deletion, security changes or acceptance of license. SWD FUS Operator can overwrite CPU1. Verify installed version and SFSA after every operation. No vendor binaries bundled.
 
 Experimental USB DFU radio start: inspect current installed stack and FUS idle, require explicit approval, issue a single GET_STATE and only then START_WS. Do not query again after start (can re-enter FUS), no upgrade/delete/key commands or auto retry. Command acceptance is not evidence that the wireless stack is running. Diagnostic sessions block virtual FUS addresses. Hardware verification remains outstanding.
+
+
+## v0.2.46 — эксперимент USB DFU radio/FUS для WB55 1 MiB
+
+- Подготовка локального официального BIN ST: версия FUS из таблицы устройства, пинованный каталог, SFSA/WRP/PCROP, только пустые страницы, полное сравнение Flash после записи. Стирания нет.
+- Отдельная экспериментальная команда FUS_FW_UPGRADE доступна только при полностью пустой незакрытой области CPU1 и отсутствии установленного стека. Разрешено продолжить только точно совпадающий ранее записанный BIN. Никаких автоматических повторов, удаления стека или изменений option bytes.
+- При сбросе USB исход неизвестен; сохранённое локально ожидание требует проверки того же UID и версии после переподключения или официальной диагностики. Совпадение версии не равно функциональной проверке.
+- Документация: ST AN5185 rev15, §7.2, таблицы 24–25. Аппаратная проверка не выполнена, Firebase не публиковался. Сторонние бинарники не включены.
