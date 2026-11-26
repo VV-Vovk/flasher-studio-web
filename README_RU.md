@@ -1,3 +1,5 @@
+Public dependency license notices and exact-version inventory check backported from v0.2.23; no new dependencies. Previously distributed ESP stub provenance remains subject to review; no new recovery binary distribution.
+
 # Flasher Studio v0.2.20.1 (Android USB hotfix)
 
 Android Web Serial may expose paired Bluetooth RFCOMM devices even when a wired ESP is selected. Auto uses one filtered WebUSB chooser for supported CH340/CP210x bridges and unambiguous CDC-ACM layouts, including ESP32-C3 native USB. Desktop native COM preserved; no Android fallback to Bluetooth on denial/cancellation. Shared routing for normal flashing, bootloader/recovery and monitor. Existing pinned polyfill, no new dependencies. Mock routing tests only; real phone/cable/programmer tests pending. No live deploy.

@@ -1130,6 +1130,8 @@ const oldIssue34=liveIssue;
 liveIssue=function(){if(targetState!=='none'&&(!support34||!cap34().compile))return support34?'Компиляция выбранной модели пока не поддерживается.':'Проверяем каталог возможностей…';if(fi===5&&targetState!=='none'&&support34&&realPlan().engine==='stm32-bare'&&!support34.stmCompile(realPlan().nativeTarget,stmSupportCatalog34))return 'Нет подтверждённого профиля сборки STM32.';return oldIssue34();};
 Promise.all([import('./target-support.js'),fetch('./stm32-targets.json').then(r=>r.json())]).then(([m,c])=>{support34=m;stmSupportCatalog34=c;renderFamily();refreshCompact();renderDevice();liveControls();}).catch(e=>{console.warn('Target support:',e);});
 
+// Third-party notices are served alongside the generated browser bundle.
+const licensePanel=document.createElement('p');licensePanel.className='muted';licensePanel.innerHTML='<a href="./licenses/README.txt" target="_blank" rel="noopener">Лицензии и сторонние компоненты</a> · <a href="./licenses/npm-THIRD-PARTY-NOTICES.txt" target="_blank" rel="noopener">Тексты лицензий npm</a>';$('settings').append(licensePanel);
 // Initial state: no hardware is connected.
 syncDeveloper();clearProject();go('build');syncPickers17();
 </script><script>if ('serviceWorker' in navigator && location.protocol !== 'file:') { navigator.serviceWorker.register('/sw.js').catch(console.warn); }</script></body></html>

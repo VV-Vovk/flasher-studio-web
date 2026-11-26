@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "vendor": "esbuild vendor-entry.js --bundle --format=esm --platform=browser --outfile=public/usb-vendor.js",
+    "vendor": "node tools/vendor-licenses.mjs && esbuild vendor-entry.js --bundle --format=esm --platform=browser --legal-comments=eof --outfile=public/usb-vendor.js",
     "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
