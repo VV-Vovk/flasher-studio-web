@@ -205,3 +205,33 @@ test('deletion completion requires idle, unchanged FUS, absent stack and nondecr
  assert.equal(wbDeleteCompletion(p,{...stageRadio,stackType:1},reply,976).completed,false);
  assert.equal(wbDeleteCompletion(p,{...stageRadio,fus:{major:2,minor:2,patch:0}},reply,976).completed,false);
 });
+
+import {wbWirelessFooter,wbDirectAddress,WbDfuRadioEnter,readWbCpu1Backup} from '../public/stm32-wb-dfu.js';
+test('AN5185 new format footer and placement require exact ST footer, version and NVM gap',()=>{
+ const b=new Uint8Array(100),v=new DataView(b.buffer),set=(o,x)=>v.setUint32(o,x,true);
+ set(40,0x200);set(48,0x0202);set(52,0x01180000);set(56,0xb10c8b99);set(88,20);set(96,0xd3a12c5e);
+ assert.deepEqual(wbWirelessFooter(b,'1.24.0'),{format:2,nvmPages:2,version:'1.24.0',flashPages:2});
+ assert.throws(()=>wbWirelessFooter(b,'1.23.0'),/version/);
+ set(40,0);assert.throws(()=>wbWirelessFooter(b,'1.24.0'),/NVM/);
+ assert.equal(wbDirectAddress(wbProfile(name),240*4096,129460,2),0x080ce000);
+ assert.throws(()=>wbDirectAddress(wbProfile(name),4096,8192,2),/insufficient/);
+});
+test('CPU1 backup reads twice and rejects PCROP, short geometry, and changing bytes',async()=>{
+ const s=new FakeWbDfu();const r=await readWbCpu1Backup(s,name,desc(240),4096);
+ assert.equal(r.data.length,4096);assert.ok(r.data.every(x=>x===0x5a));assert.equal(r.sha256.length,64);
+ await assert.rejects(readWbCpu1Backup(s,name,desc(240),240*4096+4096),/SFSA/);
+ s.regs.set(0x58004024,0);await assert.rejects(readWbCpu1Backup(s,name,desc(240),4096),/PCROP/);
+});
+class FakeEnter extends WbDfuRadioEnter{
+ constructor(){super({},0,wbProfile(name),[]);this.fixture=new FakeRadioDelete();this.fixture.running=true;this.calls=0;this.replies=[Uint8Array.of(255,254),Uint8Array.of(0,0)];}
+ async identify(){return this.fixture.uid;}
+ async read(a,n){if(a===0xffff0054){this.calls++;if(this.disconnect&&this.calls===2)throw Error('reset');return this.replies.shift();}return this.fixture.read(a,n);}
+}
+test('enter FUS only on explicit approval and NOT_RUNNING response; no command repetition',async()=>{
+ let s=new FakeEnter(),r=await s.enter(name,desc(240),()=>true);assert.equal(r.commandAttempted,true);assert.equal(s.calls,2);
+ await assert.rejects(s.enter(name,desc(240),()=>true),/used/);
+ s=new FakeEnter();s.replies=[Uint8Array.of(16,0)];assert.equal((await s.enter(name,desc(240),()=>true)).activationBlocked,true);assert.equal(s.calls,1);
+ s=new FakeEnter();assert.equal((await s.enter(name,desc(240),()=>false)).cancelled,true);assert.equal(s.calls,0);
+ s=new FakeEnter();s.disconnect=true;assert.equal((await s.enter(name,desc(240),()=>true)).outcomeUnknown,true);assert.equal(s.calls,2);
+ s=new FakeEnter();s.fixture.running=false;assert.equal((await s.enter(name,desc(240),()=>true)).alreadyIdle,true);assert.equal(s.calls,0);
+});
