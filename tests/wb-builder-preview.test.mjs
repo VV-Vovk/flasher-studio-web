@@ -51,3 +51,14 @@ test('WB artifact metadata rejects mismatched CPU, SDK and memory budget',()=>{
  assert.doesNotThrow(()=>checkWbBuildMetadata(m,req));
  for(const b of [{...m,target:'STM32WB35CEU6A'},{...m,cubeTag:'v1.23.0'},{...m,memory:{...m.memory,wbApplicationOnly:false}},{...m,memory:{...m.memory,flashKiB:1024}},{...m,memory:{...m.memory,flashKiB:33}}])assert.throws(()=>checkWbBuildMetadata(b,req));
 });
+
+test('UI keeps legacy polling independent and saves WB request format for artifact revalidation',()=>{
+ const html=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
+ const legacy=html.split('async function liveFollow(c,r){')[1].split('\n')[0];
+ const preview=html.split('async function followUniversal(c,r){')[1].split('\n')[0];
+ const save=html.split('async function saveUniversal(r,bytes){')[1].split('\n')[0];
+ assert.match(legacy,/c\.findRun\(r\.requestId\);/);
+ assert.doesNotMatch(legacy,/builderRefForRequest/);
+ assert.match(preview,/c\.findRun\(r\.requestId,universal\.builderRefForRequest\(r\)\)/);
+ assert.match(save,/ext:r\.ext,builderRef:universal\.builderRefForRequest\(r\)/);
+});
