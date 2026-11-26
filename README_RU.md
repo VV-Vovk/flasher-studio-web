@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.20.1 (Android USB hotfix)
+
+Android Web Serial may expose paired Bluetooth RFCOMM devices even when a wired ESP is selected. Auto uses one filtered WebUSB chooser for supported CH340/CP210x bridges and unambiguous CDC-ACM layouts, including ESP32-C3 native USB. Desktop native COM preserved; no Android fallback to Bluetooth on denial/cancellation. Shared routing for normal flashing, bootloader/recovery and monitor. Existing pinned polyfill, no new dependencies. Mock routing tests only; real phone/cable/programmer tests pending. No live deploy.
+
 # Flasher Studio v0.2.20
 
 Separate target capability states (build+flash, build only, flash only, unsupported). Unsupported target rows disabled, exact manual entry checked, unsupported programming interfaces disabled. Compiler eligibility uses existing Builder profile inventory and source-only catalogue metadata; it is not a guarantee of any project's compilation. Additional F030/F031/F051/F071/F072 and F103 low/medium/high-density base-part SWD profiles from existing ROM geometry, HSI guard, full F1 verification. F0/F1 are not complete (including F09x, XL/other F1 lines); no hardware certification. No new private CI.
