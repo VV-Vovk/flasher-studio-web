@@ -73,8 +73,8 @@ async function withWbDfu(name,usb,fn,mode='diagnostic'){
   if(c.length!==1)throw Error('WB DFU ambiguous internal Flash');
   const {i,a}=c[0],pages=dfuGeometry(a.interfaceName);
   await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);
-  const S=mode==='application'?WbDfuApplication:mode==='radio-start'?WbDfuRadioStart:mode==='radio-stage'?WbDfuRadioStage:WbDfuReadOnly;outcome=await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);return outcome;
- }finally{if(d.opened)try{await d.close();}catch(e){if(mode==='radio-stage'&&outcome)outcome.cleanupWarning='USB close failed; reconnect manually: '+e.message;else throw e;}}
+  const S=mode==='application'?WbDfuApplication:mode==='radio-start'?WbDfuRadioStart:mode==='radio-stage'?WbDfuRadioStage:mode==='radio-delete'?WbDfuRadioDelete:WbDfuReadOnly;outcome=await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);return outcome;
+ }finally{if(d.opened)try{await d.close();}catch(e){if((mode==='radio-stage'||mode==='radio-delete')&&outcome)outcome.cleanupWarning='USB close failed; reconnect manually: '+e.message;else throw e;}}
 }
 
 export function probeWbDfu(name,usb=navigator.usb){return withWbDfu(name,usb,(s,d)=>inspectWbDfu(s,name,d));}
@@ -160,9 +160,10 @@ export function startWbWireless(name,approve,usb=navigator.usb){
 // First experimental radio/FUS staging path. No erase, FUS upgrade command,
 // reset, stack deletion or option-byte changes. Only a blank, reviewed range
 // can be written. Stage/readback is NOT an installed firmware result.
+export function wbRadioWriteCandidate(name){return wbRomDfuCandidate(name)&&[262144,524288,655360,1048576].includes(wbProfile(name)?.flash);}
 export function wbRadioStagingPlan(name,file,applicationEnd,snapshot,descriptor,radio,acknowledge){
  const p=wbProfile(name);
- if(!wbRomDfuCandidate(name)||p.flash!==1048576||!/^STM32WB55/i.test(name))throw Error('WB radio staging: only reviewed 1 MiB WB55 USB targets');
+ if(!wbRadioWriteCandidate(name))throw Error('WB radio staging: only reviewed WB35/WB55 USB targets');
  if(!radio?.fus||radio.lastFusState!==0||radio.lastWirelessState!==0||radio.wireless!==null||radio.stackType!==0)throw Error('WB radio staging requires idle FUS and no installed wireless stack');
  const currentFus=[radio.fus.major,radio.fus.minor,radio.fus.patch].join('.');
  const plan=radioUpdateRequirements({target:name,currentFus,name:file,applicationEnd,acknowledge});
@@ -295,4 +296,82 @@ export function verifyWbRadioAfterUpgrade(name,pending,usb=navigator.usb){
   const versionMatched=reportedVersion===entry.version&&(entry.kind==='fus'||!!info.radio.stackType);
   return {versionMatched,reportedVersion,expectedVersion:entry.version,appKiB:info.appKiB,radio:info.radio,reportedOnly:true};
  });
+}
+
+// AN5185 rev15, sections 1.3, 2.2, 7.2 and tables 9, 15, 16, 24/25.
+// Separate deletion session, never automatically chained to an installation.
+// The first implementation supports an already idle FUS only. It never uses
+// the two GET_STATE commands that intentionally switch a running stack to FUS.
+function versionString(v){return v?[v.major,v.minor,v.patch].join('.'):null;}
+export function wbFusReply(b){
+ if(!(b instanceof Uint8Array)||b.length!==2)throw Error('WB FUS response length');
+ const [state,error]=b;
+ const phase=state===0&&error===0?'idle':error===0xfe?'not-running':error!==0?'error':state>=0x10&&state<=0x3f?'busy':'unknown';
+ return {state,error,phase};
+}
+export function wbDeleteCompletion(pending,radio,reply,appKiB){
+ if(pending?.kind!=='delete'||!pending.commandAttempted||!radio?.fus||!Number.isInteger(appKiB))throw Error('WB deletion verification input');
+ const noStack=radio.wireless===null&&radio.stackType===0;
+ const completed=reply.phase==='idle'&&noStack&&radio.lastFusState===0&&radio.lastWirelessState===0&&versionString(radio.fus)===pending.expectedVersion&&appKiB>=pending.oldAppKiB;
+ return {completed,noStack,reply,appKiB,reportedVersion:versionString(radio.fus),reportedOnly:true};
+}
+export class WbDfuRadioDelete extends WbDfuReadOnly{
+ #query=false;#delete=false;#used=false;
+ async pointer(a){if(this.#query&&a===0xffff0054)return StmDfu.prototype.pointer.call(this,a);return super.pointer(a);}
+ async output(req,b=new Uint8Array(),value=0){
+  if(req===1&&value===0&&(this.#delete&&b.length===1&&b[0]===0x52||this.#query&&b.length===5&&b[0]===0x21&&new DataView(b.buffer,b.byteOffset+1,4).getUint32(0,true)===0xffff0054))return StmDfu.prototype.output.call(this,req,b,value);
+  return super.output(req,b,value);
+ }
+ async #state(){this.#query=true;try{return wbFusReply(await this.read(0xffff0054,2));}finally{this.#query=false;}}
+ async #check(name,descriptor){
+  if(!wbRadioWriteCandidate(name)||this.pr!==wbProfile(name))throw Error('WB deletion target unsupported');
+  const id=await this.identify(),snapshot=await wbDfuSnapshot(this),info=await inspectWbDfu(this,name,descriptor);
+  if(!info.radio||await this.identify()!==id||JSON.stringify(await wbDfuSnapshot(this))!==JSON.stringify(snapshot))throw Error('WB deletion identity/security/radio unavailable');
+  return {id,snapshot,info};
+ }
+ async deleteInstalled(name,descriptor,{file,bytes,acknowledge},approve){
+  if(this.#used)throw Error('WB deletion session already used');
+  this.#used=true;
+  if(typeof approve!=='function'||!(bytes instanceof Uint8Array))throw Error('WB deletion needs verified replacement and approval');
+  const data=bytes.slice(),before=await this.#check(name,descriptor),radio=before.info.radio;
+  if(!radio.wireless||!radio.stackType||radio.lastFusState!==0||radio.lastWirelessState!==0)throw Error('WB installed stack with idle FUS required; use CubeProgrammer to switch to FUS first');
+  // Require a genuine replacement, valid for this density and current FUS,
+  // before making the old stack unavailable. Recalculate placement after delete.
+  const currentFus=versionString(radio.fus);
+  const plan=await planRadioUpdate({target:name,currentFus,name:file,bytes:data,applicationEnd:BASE,acknowledge});
+  if(plan.kind!=='wireless')throw Error('WB delete requires a wireless replacement BIN');
+  const pending={kind:'delete',target:name,uid:before.id,file,sha256:plan.sha256,expectedVersion:currentFus,oldVersion:versionString(radio.wireless),oldType:radio.stackType,oldAppKiB:before.info.appKiB,commandAttempted:false};
+  if(await approve({...pending})!==true)return {cancelled:true};
+  const again=await this.#check(name,descriptor);
+  if(JSON.stringify(again)!==JSON.stringify(before))return {...pending,activationBlocked:true,reason:'WB identity/security/radio changed'};
+  let reply;
+  try{reply=await this.#state();await this.idle();}catch(e){return {...pending,activationBlocked:true,reason:e.message};}
+  if(reply.phase!=='idle')return {...pending,activationBlocked:true,reason:'WB FUS not idle: '+reply.phase};
+  this.#delete=true;
+  try{await this.download(0,Uint8Array.of(0x52));return {...pending,commandAttempted:true,commandAccepted:true};}
+  catch(e){return {...pending,commandAttempted:true,outcomeUnknown:true,reason:e.message};}
+  finally{this.#delete=false;}
+ }
+ async verifyDelete(name,descriptor,pending){
+  if(this.#used)throw Error('WB deletion verification session already used');
+  this.#used=true;
+  if(pending?.target!==name||pending.kind!=='delete'||pending.commandAttempted!==true||typeof pending.uid!=='string')throw Error('WB previous deletion required');
+  const before=await this.#check(name,descriptor);
+  if(before.id!==pending.uid)throw Error('WB different device after deletion');
+  const radio=before.info.radio;
+  // Never send a query to a known running wireless stack. A repeated query
+  // would switch CPU2 back into FUS. Report that official inspection is needed.
+  if(radio.lastFusState===4||radio.lastWirelessState===1)return {completed:false,reply:{phase:'not-running'},reportedOnly:true,appKiB:before.info.appKiB};
+  const reply=await this.#state();
+  if(reply.phase!=='idle')return {completed:false,reply,reportedOnly:true,appKiB:before.info.appKiB};
+  const after=await this.#check(name,descriptor);
+  if(after.id!==pending.uid)throw Error('WB different device after deletion query');
+  return wbDeleteCompletion(pending,after.info.radio,reply,after.info.appKiB);
+ }
+}
+export function deleteWbWireless(name,options,approve,usb=navigator.usb){
+ return withWbDfu(name,usb,(s,d)=>s.deleteInstalled(name,d,options,approve),'radio-delete');
+}
+export function verifyWbWirelessDeleted(name,pending,usb=navigator.usb){
+ return withWbDfu(name,usb,(s,d)=>s.verifyDelete(name,d,pending),'radio-delete');
 }

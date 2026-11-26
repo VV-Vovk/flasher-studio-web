@@ -145,3 +145,63 @@ test('blank-target FUS upgrade: separate approval, one-shot command, safe reconn
   s=fresh();await assert.rejects(run(s,()=>true,{...options,applicationEnd:appEnd}),/blank CPU1/);assert.equal(s.calls.length,0);
  }finally{if(original)Object.defineProperty(globalThis,'crypto',original);else delete globalThis.crypto;}
 });
+
+import {WbDfuRadioDelete,wbDeleteCompletion,wbFusReply,wbRadioWriteCandidate} from '../public/stm32-wb-dfu.js';
+test('radio write candidate covers only ROM USB WB35/WB55 and actual densities',()=>{
+ for(const n of [name,'STM32WB55CCU6','STM32WB55REV6','STM32WB35CEU6A'])assert.equal(wbRadioWriteCandidate(n),true,n);
+ for(const n of ['STM32WB50CGU6','STM32WB15CCU6','STM32WB30CEU6A','STM32WB5MMGH6','STM32WB55'])assert.equal(wbRadioWriteCandidate(n),false,n);
+});
+test('FUS response decoder never equates busy/error/not-running with idle',()=>{
+ assert.equal(wbFusReply(Uint8Array.of(0,0)).phase,'idle');
+ for(const n of [0x10,0x21,0x30])assert.equal(wbFusReply(Uint8Array.of(n,0)).phase,'busy');
+ assert.equal(wbFusReply(Uint8Array.of(0xff,0xfe)).phase,'not-running');
+ assert.equal(wbFusReply(Uint8Array.of(0,6)).phase,'error');
+ assert.equal(wbFusReply(Uint8Array.of(0x40,0)).phase,'unknown');
+ assert.throws(()=>wbFusReply(Uint8Array.of(0)),/length/);
+});
+class FakeRadioDelete extends WbDfuRadioDelete{
+ constructor(){
+  super({},0,wbProfile(name),[]);this.fixture=new FakeWbDfu();this.calls=[];this.hasStack=true;this.uid='fixture';
+  this.device={controlTransferOut:async(setup,b)=>{this.calls.push([setup.request,setup.value,...b]);if(this.disconnect)throw Error('reset');return {status:'ok',bytesWritten:b.length};}};
+ }
+ async identify(){return this.uid;}
+ async read(a,n){
+  if(a===0xffff0054){this.calls.push(['query']);return this.reply||Uint8Array.of(0,0);}
+  const b=await this.fixture.read(a,n);
+  if(a===0x20030024&&n===32){
+   const v=new DataView(b.buffer);v.setUint32(12,0x02020000,true);
+   if(this.hasStack){b[7]=1;v.setUint32(20,0x01180000,true);v.setUint32(24,0x01010010,true);v.setUint32(28,0,true);}
+   if(this.running){b[5]=4;b[6]=1;}
+  }
+  return b;
+ }
+ async idle(){}
+ async download(block,data){await this.output(1,data,block);}
+}
+test('delete requires replacement digest, idle FUS, explicit approval; single command and same UID verification',async()=>{
+ const entry=WB_RADIO_FILES['5x'].find(e=>e.name==='stm32wb5x_BLE_Stack_full_fw.bin'),bytes=new Uint8Array(entry.size).fill(0xa5),options={file:entry.name,bytes,acknowledge:true};
+ const original=Object.getOwnPropertyDescriptor(globalThis,'crypto');
+ Object.defineProperty(globalThis,'crypto',{configurable:true,value:{subtle:{async digest(alg){return alg==='SHA-1'?Uint8Array.from(entry.blob.match(/../g),x=>parseInt(x,16)).buffer:new Uint8Array(32).buffer;}}}});
+ const run=(s,approve=()=>true,o=options)=>s.deleteInstalled(name,desc(240),o,approve);
+ try{
+  let s=new FakeRadioDelete(),r=await run(s);assert.equal(r.commandAccepted,true);assert.deepEqual(s.calls,[['query'],[1,0,0x52]]);
+  await assert.rejects(run(s),/already used/);await assert.rejects(s.output(1,Uint8Array.of(0x52),0),/read-only/);
+  let v=new FakeRadioDelete();assert.equal((await v.verifyDelete(name,desc(240),r)).completed,false);
+  v=new FakeRadioDelete();v.hasStack=false;assert.equal((await v.verifyDelete(name,desc(240),r)).completed,true);
+  v=new FakeRadioDelete();v.hasStack=false;v.reply=Uint8Array.of(0x20,0);assert.equal((await v.verifyDelete(name,desc(240),r)).completed,false);
+  v=new FakeRadioDelete();v.uid='another';await assert.rejects(v.verifyDelete(name,desc(240),r),/different device/);assert.deepEqual(v.calls,[]);
+  v=new FakeRadioDelete();v.running=true;assert.equal((await v.verifyDelete(name,desc(240),r)).reply.phase,'not-running');assert.deepEqual(v.calls,[]);
+  s=new FakeRadioDelete();assert.equal((await run(s,()=>false)).cancelled,true);assert.deepEqual(s.calls,[]);
+  s=new FakeRadioDelete();s.running=true;await assert.rejects(run(s),/idle FUS/);assert.deepEqual(s.calls,[]);
+  s=new FakeRadioDelete();s.reply=Uint8Array.of(0x10,0);assert.equal((await run(s)).activationBlocked,true);assert.deepEqual(s.calls,[['query']]);
+  s=new FakeRadioDelete();s.disconnect=true;assert.equal((await run(s)).outcomeUnknown,true);assert.deepEqual(s.calls,[['query'],[1,0,0x52]]);
+  s=new FakeRadioDelete();await assert.rejects(run(s,()=>true,{...options,bytes:new Uint8Array(1)}),/filename/);assert.deepEqual(s.calls,[]);
+ }finally{if(original)Object.defineProperty(globalThis,'crypto',original);else delete globalThis.crypto;}
+});
+test('deletion completion requires idle, unchanged FUS, absent stack and nondecreasing SFSA',()=>{
+ const p={kind:'delete',commandAttempted:true,expectedVersion:'2.1.0',oldAppKiB:800},reply=wbFusReply(Uint8Array.of(0,0));
+ assert.equal(wbDeleteCompletion(p,stageRadio,reply,976).completed,true);
+ assert.equal(wbDeleteCompletion(p,stageRadio,reply,799).completed,false);
+ assert.equal(wbDeleteCompletion(p,{...stageRadio,stackType:1},reply,976).completed,false);
+ assert.equal(wbDeleteCompletion(p,{...stageRadio,fus:{major:2,minor:2,patch:0}},reply,976).completed,false);
+});
