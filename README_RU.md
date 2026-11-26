@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.12
+
+Local ESP32-C3 builds: configure profile, copy local build command, explicitly import own catalog.json and ZIP. Verify checksum, manifest, component bounds, matching known partition layout and draft notices. Metadata persists locally; after reload select original ZIP for installation. No network request/token for local ZIP; no automatic install or public ESP binary distribution. Requires Docker on PC, not cloud compilation. Actual hardware and end-to-end browser validation pending.
+
 # Flasher Studio v0.2.11
 
 ESP Recovery configuration: defaults 4 MiB, Wi-Fi+BLE, board-specific GPIO candidate, 3 seconds hold; reset button restores defaults. Select 0–5 seconds, GPIO, Flash, transport. Only exact existing catalog packages can be installed; unavailable custom settings disable install, no automatic compilation or public ESP redistribution. Hardware validation pending.
