@@ -57,7 +57,7 @@ class FakeRadioStart extends WbDfuRadioStart{
  async idle(){}
  async download(block,data){await this.output(1,data,block);}
 }
-test('Radio start uses one explicit FUS state query and one start; no install or auto retry',async()=>{let s=new FakeRadioStart();assert.deepEqual(await s.startInstalled(name,desc(240),()=>true),{commandAccepted:true,runningVerified:false});assert.deepEqual(s.calls,[['query'],[1,0,0x5a]]);await assert.rejects(s.startInstalled(name,desc(240),()=>true),/already used/);await assert.rejects(s.output(1,Uint8Array.of(0x53),0),/read-only/);s=new FakeRadioStart();s.busy=true;await assert.rejects(s.startInstalled(name,desc(240),()=>true),/not idle/);assert.deepEqual(s.calls,[['query']]);s=new FakeRadioStart();assert.equal((await s.startInstalled(name,desc(240),()=>false)).cancelled,true);assert.deepEqual(s.calls,[]);});
+test('Radio start uses one explicit FUS state query and one start; no install or auto retry',async()=>{let s=new FakeRadioStart();const started=await s.startInstalled(name,desc(240),()=>true);assert.equal(started.commandAccepted,true);assert.equal(started.runningVerified,false);assert.equal(started.uid,'fixture');assert.equal(started.kind,'start');assert.deepEqual(s.calls,[['query'],[1,0,0x5a]]);await assert.rejects(s.startInstalled(name,desc(240),()=>true),/already used/);await assert.rejects(s.output(1,Uint8Array.of(0x53),0),/read-only/);s=new FakeRadioStart();s.busy=true;await assert.rejects(s.startInstalled(name,desc(240),()=>true),/not idle/);assert.deepEqual(s.calls,[['query']]);s=new FakeRadioStart();assert.equal((await s.startInstalled(name,desc(240),()=>false)).cancelled,true);assert.deepEqual(s.calls,[]);});
 test('DFU diagnostic cannot access virtual FUS command address',async()=>{const s=new WbDfuReadOnly({},0,{},[]);await assert.rejects(s.pointer(0xffff0054),/virtual/);await assert.rejects(s.output(1,Uint8Array.of(0x21,0x54,0,0xff,0xff),0),/read-only/);});
 
 import {wbRadioStagingPlan,WbDfuRadioStage} from '../public/stm32-wb-dfu.js';
@@ -272,4 +272,18 @@ test('upgrade completion distinguishes installed/stopped, running, busy and erro
  assert.equal(wbUpgradeSettled('wireless',{...running,wireless:null}),false);
  for(const f of [1,2,3,255])for(const kind of ['fus','wireless'])assert.equal(wbUpgradeSettled(kind,{...idle,lastFusState:f}),false);
  assert.equal(wbUpgradeSettled('fus',{...running,lastWirelessState:255}),false);
+});
+
+import {inspectWbStarted} from '../public/stm32-wb-dfu.js';
+test('stack start confirmation never sends another FUS command and checks UID/type/version and CPU1',async()=>{
+ const pending={target:name,uid:'fixture',kind:'start',commandAttempted:true,expectedVersion:'1.24.0',expectedType:1};
+ let s=new FakeRadioDelete();s.running=true;
+ const good=await inspectWbStarted(s,name,desc(240),pending);
+ assert.equal(good.completed,true);assert.equal(good.runningVerified,false);assert.equal(good.runningReported,true);assert.deepEqual(s.calls,[]);
+ s.running=false;assert.equal((await inspectWbStarted(s,name,desc(240),pending)).completed,false);
+ s.running=true;assert.equal((await inspectWbStarted(s,name,desc(240),{...pending,expectedType:2})).completed,false);
+ assert.equal((await inspectWbStarted(s,name,desc(240),{...pending,expectedVersion:'1.23.0'})).completed,false);
+ assert.equal((await inspectWbStarted(s,name,desc(240),{...pending,preserveBytes:4096,preserveSha:'0'.repeat(64)})).completed,false);
+ await assert.rejects(inspectWbStarted(s,name,desc(240),{...pending,uid:'wrong'}),/different device/);
+ assert.deepEqual(s.calls,[]);
 });

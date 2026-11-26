@@ -74,7 +74,7 @@ async function withWbDfu(name,usb,fn,mode='diagnostic'){
   const {i,a}=c[0],pages=dfuGeometry(a.interfaceName);
   await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);
   const S=mode==='application'?WbDfuApplication:mode==='radio-start'?WbDfuRadioStart:mode==='radio-stage'?WbDfuRadioStage:mode==='radio-delete'?WbDfuRadioDelete:mode==='radio-enter'?WbDfuRadioEnter:WbDfuReadOnly;outcome=await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);return outcome;
- }finally{if(d.opened)try{await d.close();}catch(e){if((mode==='radio-stage'||mode==='radio-delete'||mode==='radio-enter')&&outcome)outcome.cleanupWarning='USB close failed; reconnect manually: '+e.message;else throw e;}}
+ }finally{if(d.opened)try{await d.close();}catch(e){if((mode==='radio-stage'||mode==='radio-delete'||mode==='radio-enter'||mode==='radio-start')&&outcome)outcome.cleanupWarning='USB close failed; reconnect manually: '+e.message;else throw e;}}
 }
 
 export function probeWbDfu(name,usb=navigator.usb){return withWbDfu(name,usb,(s,d)=>inspectWbDfu(s,name,d));}
@@ -134,28 +134,47 @@ export class WbDfuRadioStart extends WbDfuReadOnly{
   if(req===1&&value===0&&(this.#start&&b.length===1&&b[0]===0x5a||this.#stateQuery&&b.length===5&&b[0]===0x21&&new DataView(b.buffer,b.byteOffset+1,4).getUint32(0,true)===0xffff0054))return StmDfu.prototype.output.call(this,req,b,value);
   return super.output(req,b,value);
  }
- async startInstalled(name,descriptor,approve){
+ async startInstalled(name,descriptor,approve,expected=null){
   if(this.#used)throw Error('WB start session already used; reconnect and inspect');
   this.#used=true;
   if(typeof approve!=='function')throw Error('WB start requires approval');
   const id=await this.identify(),snapshot=await wbDfuSnapshot(this),info=await inspectWbDfu(this,name,descriptor);
   const radio=info.radio;
   if(!radio||radio.lastFusState!==0||radio.lastWirelessState!==0||!radio.wireless||!radio.stackType)throw Error('WB installed wireless stack and FUS idle not confirmed');
-  if(await approve({target:name,version:radio.wireless})!==true)return {cancelled:true};
+  if(expected&&(expected.kind!=='start-ready'||expected.uid!==id||expected.target!==name||expected.expectedVersion!==versionString(radio.wireless)))throw Error('WB different device or stack before start');
+  const pending={target:name,uid:id,kind:'start',file:expected?.file||'FUS_START_WS',expectedVersion:versionString(radio.wireless),expectedType:radio.stackType,preserveBytes:expected?.preserveBytes||0,preserveSha:expected?.preserveSha||null,commandAttempted:false};
+  if(await approve({...pending,version:radio.wireless})!==true)return {cancelled:true};
   if(await this.identify()!==id||JSON.stringify(await wbDfuSnapshot(this))!==JSON.stringify(snapshot)||JSON.stringify(await readWbRadioInfo(this))!==JSON.stringify(radio))throw Error('WB identity or radio state changed');
   this.#stateQuery=true;
   let state;try{state=await this.read(0xffff0054,2);}finally{this.#stateQuery=false;}
   if(state.length!==2||state[0]!==0||state[1]!==0)throw Error('WB FUS not idle / error; start blocked');
   await this.idle();this.#start=true;
   try{await this.download(0,Uint8Array.of(0x5a));}
-  catch(e){throw Error('WB START_WS outcome unknown (reset possible). Do not retry blindly; reconnect and verify installed stack.',{cause:e});}
+  catch(e){return {...pending,commandAttempted:true,outcomeUnknown:true,runningVerified:false,reason:e.message};}
   finally{this.#start=false;}
-  return {commandAccepted:true,runningVerified:false};
+  return {...pending,commandAttempted:true,commandAccepted:true,runningVerified:false};
  }
 }
-export function startWbWireless(name,approve,usb=navigator.usb){
- return withWbDfu(name,usb,(s,d)=>s.startInstalled(name,d,approve),'radio-start');
+export function startWbWireless(name,approve,usb=navigator.usb,expected=null){
+ return withWbDfu(name,usb,(s,d)=>s.startInstalled(name,d,approve,expected),'radio-start');
 }
+export async function inspectWbStarted(s,name,descriptor,pending){
+ if(pending?.kind!=='start'||pending.target!==name||pending.commandAttempted!==true||typeof pending.uid!=='string'||!Number.isInteger(pending.expectedType)||pending.expectedType<=0||typeof pending.expectedVersion!=='string')throw Error('WB start verification record');
+ if(await s.identify()!==pending.uid)throw Error('WB different device after stack start');
+ const info=await inspectWbDfu(s,name,descriptor);
+ if(!info.radio)return {completed:false,runningVerified:false,reason:'WB radio table unavailable; verify with official tools'};
+ const versionMatched=versionString(info.radio.wireless)===pending.expectedVersion&&info.radio.stackType===pending.expectedType;
+ let cpu1Verified=null;
+ if(pending.preserveBytes){
+  if(!Number.isInteger(pending.preserveBytes)||pending.preserveBytes<0||pending.preserveBytes%info.pageBytes||pending.preserveBytes>info.appKiB*1024||!/^[a-f0-9]{64}$/.test(pending.preserveSha||''))cpu1Verified=false;
+  else cpu1Verified=await wbDigest(await wbReadRange(s,pending.preserveBytes))===pending.preserveSha;
+ }
+ const finalInfo=await inspectWbDfu(s,name,descriptor);
+ if(await s.identify()!==pending.uid||JSON.stringify(info)!==JSON.stringify(finalInfo))throw Error('WB state changed during start verification');
+ const runningReported=versionMatched&&wbUpgradeSettled('wireless',info.radio);
+ return {completed:runningReported&&cpu1Verified!==false,runningReported,runningVerified:false,versionMatched,cpu1Verified,appKiB:info.appKiB,reportedOnly:true};
+}
+export function verifyWbWirelessStarted(name,pending,usb=navigator.usb){return withWbDfu(name,usb,(s,d)=>inspectWbStarted(s,name,d,pending));}
 
 // First experimental radio/FUS staging path. No erase, FUS upgrade command,
 // reset, stack deletion or option-byte changes. Only a blank, reviewed range
