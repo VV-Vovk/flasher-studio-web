@@ -28,3 +28,10 @@ test('WB DFU rejects missing security state, wrong geometry and secure overlap',
  }
  assert.throws(()=>wbDfuPlan(name,image(240*4096+1),desc(240),snap),/crosses SFSA/);
 });
+
+import {WbDfuReadOnly} from '../public/stm32-wb-dfu.js';
+test('WB diagnostic permits only pointer and abort, never destructive DFU commands',async()=>{const calls=[],s=new WbDfuReadOnly({async controlTransferOut(setup,b){calls.push([setup.request,setup.value,...b]);return {status:'ok',bytesWritten:b.length};}},0,{},[]);
+ await s.output(1,Uint8Array.of(0x21,0,0,0,8),0);await s.output(6);
+ for(const [req,b,v] of [[1,Uint8Array.of(0x41,0,0,0,8),0],[1,Uint8Array.of(0x92),0],[1,Uint8Array.of(1,2),2],[1,new Uint8Array(),0],[4,new Uint8Array(),0]])await assert.rejects(s.output(req,b,v),/read-only/);
+ await assert.rejects(s.program());assert.equal(calls.length,2);
+});

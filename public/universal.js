@@ -30,17 +30,14 @@ export function checkWbFullProjectHex(build,files){
 }
 const workflow='build-universal.yml';
 export class UniversalBuilder extends GithubBuilder{
- async check(){const r=await this.api('');if(normalizeRepo(r.full_name).toLowerCase()!==this.repo.toLowerCase())throw Error('Другой репозиторий');const w=await this.api('/actions/workflows/'+workflow);if(w.state!=='active')throw Error('Workflow не активен');return r.full_name;}
- async dispatch(r){if(!/^[a-f0-9]{32}$/.test(r.requestId))throw Error('Request ID');return this.api('/actions/workflows/'+workflow+'/dispatches','POST',{ref:builderRefForRequest(r),inputs:{request_id:r.requestId,input_type:r.ext,engine:r.engine,fqbn:r.fqbn||'',native_target:r.nativeTarget||'',environment:r.environment||'',libraries:r.libraries||''}});}
+ async check(){const r=await this.requirePrivate();const w=await this.api('/actions/workflows/'+workflow);if(w.state!=='active')throw Error('Workflow не активен');return r.full_name;}
+ async dispatch(r){if(!/^[a-f0-9]{32}$/.test(r.requestId))throw Error('Request ID');await this.requirePrivate();return this.api('/actions/workflows/'+workflow+'/dispatches','POST',{ref:builderRefForRequest(r),inputs:{request_id:r.requestId,input_type:r.ext,engine:r.engine,fqbn:r.fqbn||'',native_target:r.nativeTarget||'',environment:r.environment||'',libraries:r.libraries||''}});}
  async findRun(id,ref='main'){if(!/^[a-f0-9]{32}$/.test(id))throw Error('Request ID');const d=await this.api('/actions/workflows/'+workflow+'/runs?event=workflow_dispatch&branch='+encodeURIComponent(checkedRef(ref))+'&per_page=50');return d.workflow_runs?.find(r=>r.display_title==='Studio Compile '+id&&r.head_branch===ref)||null;}
  async upload(r,file){
   const branch=builderRefForRequest(r),encoded=encodeURIComponent(branch);
   if(!/^[a-f0-9]{32}$/.test(r.requestId)||!['ino','zip','c','cpp','ioc'].includes(r.ext))throw Error('Request ID / format');
-  if(branch===WB_BUILDER_REF){
-   const repo=await this.api('');
-   if(repo.private!==true)throw Error('STM32WB preview requires private Builder');
-   await this.api('/git/ref/heads/'+branch);
-  }
+  await this.requirePrivate();
+  if(branch===WB_BUILDER_REF)await this.api('/git/ref/heads/'+branch);
   if(file.size<1||file.size>15*1024*1024)throw Error('Исходники: максимум 15 МиБ');
   const bytes=new Uint8Array(await file.arrayBuffer());let s='';for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode(...bytes.subarray(i,i+8192));
   const blob=await this.api('/git/blobs','POST',{content:btoa(s),encoding:'base64'});

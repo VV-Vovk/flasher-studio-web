@@ -23,7 +23,7 @@ test('WB preview exact templates, branch isolation and unsupported inputs',()=>{
 class Fake extends UniversalBuilder{
  constructor(){super('ghp_test','owner/private-builder');this.calls=[];this.private=true;}
  async api(path,method='GET',body){this.calls.push({path,method,body});
-  if(path==='')return {private:this.private};
+  if(path==='')return {private:this.private,full_name:this.repo};
   if(path==='/git/blobs')return {sha:'a'.repeat(40)};
   if(path.startsWith('/git/ref/heads/'))return {object:{sha:'b'.repeat(40)}};
   if(path==='/git/commits/'+'b'.repeat(40))return {tree:{sha:'c'.repeat(40)}};

@@ -165,3 +165,7 @@ Select exact STM32WB model and STM32CubeIDE (GNU). Upload a portable ZIP (15 MiB
 ## v0.2.42 — WB55 ELF audit and experimental SWD full project
 
 Only exact WB55 parts with 192 KiB SRAM1: independent browser ELF/HEX byte comparison, static allocation audit, live SFSA/SBRSA/SNBRSA and default IPCCDBA/MAPPING_TABLE verification, repeated after reset and before erase/write pages. User must confirm compatible installed radio stack and backup. No CPU2, FUS, option-byte or SRAM writes. Other geometries and old full-project artifacts are compile-only. These checks do not prove runtime BLE compatibility. No restricted third-party files in public repository.
+
+## v0.2.43 — WB diagnostics and app-only OTA export
+
+WB30/35/50/55 ROM DFU read-only probe; only SET_ADDRESS and UPLOAD/status/ABORT, no writes. ROM support for register reads must be confirmed on actual devices. WB55 192 KiB SRAM1: discover AN5247 OTA GATT service without writes; validate local relocated application HEX at 0x08007000, vector, declared SFSA budget and end marker, export BIN only. No automatic reboot, erase, OTA transfer, FUS/radio installation or vendor binary redistribution. All GitHub personal-source uploads and dispatches require exact private repository identity before transfer, including legacy Builder.

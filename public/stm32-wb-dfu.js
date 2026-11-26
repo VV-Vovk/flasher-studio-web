@@ -4,7 +4,7 @@
  // A descriptor or user-entered size is never a substitute for SFSA.
 import {wbProfile,wbFlashLayout} from './stm32-wb.js';
 import {validateStmVector} from './programmers.js';
-import {dfuGeometry} from './extra-programmers.js';
+import {dfuGeometry,StmDfu} from './extra-programmers.js';
 const BASE=0x08000000;
 function uint32(n){return Number.isInteger(n)&&n>=0&&n<=0xffffffff;}
 export function wbRomDfuCandidate(name){
@@ -35,4 +35,37 @@ export function wbDfuPlan(name,image,descriptor,snapshot){
  const erasePages=pages.slice(0,span/p.pageSize);
  if(erasePages.length!==span/p.pageSize||erasePages.some(x=>x.address+x.size>BASE+limit))throw Error('WB DFU erase plan exceeds application');
  return Object.freeze({limit,span,physical:p.flash,pageSize:p.pageSize,erasePages:Object.freeze(erasePages.map(x=>Object.freeze({...x})))});
+}
+
+// Diagnostic session: only SET_ADDRESS + UPLOAD/ABORT/status. Never erase,
+// unprotect, write target bytes, start CPU2 or leave DFU.
+export class WbDfuReadOnly extends StmDfu{
+ async output(req,b=new Uint8Array(),value=0){
+  if(!(req===6&&value===0&&b.length===0||req===1&&value===0&&b.length===5&&b[0]===0x21))throw Error('WB DFU diagnostic is read-only');
+  return super.output(req,b,value);
+ }
+ async program(){throw Error('WB DFU writing not enabled');}
+}
+export async function inspectWbDfu(s,name,descriptor){
+ if(!wbRomDfuCandidate(name)||s.pr!==wbProfile(name))throw Error('WB DFU target not reviewed');
+ const id=await s.identify(),read32=async a=>new DataView((await s.read(a,4)).buffer).getUint32(0,true);
+ const F=0x58004000;
+ const snapshot={sfr:await read32(F+0x80),optr:await read32(F+0x20),srrvr:await read32(F+0x84),wrp:[await read32(F+0x2c),await read32(F+0x30)],pcrop:[[await read32(F+0x24),await read32(F+0x28)],[await read32(F+0x34),await read32(F+0x38)]]};
+ const layout=wbFlashLayout(s.pr,snapshot.sfr,snapshot.optr,snapshot.srrvr);
+ const pages=dfuGeometry(descriptor),bytes=pages.reduce((n,x)=>n+x.size,0);
+ if(![layout.limit,s.pr.flash].includes(bytes)||pages.some((p,i)=>p.size!==s.pr.pageSize||p.address!==BASE+i*s.pr.pageSize))throw Error('WB DFU descriptor geometry mismatch');
+ if(await s.identify()!==id)throw Error('WB DFU device changed');
+ return {target:name,flashKiB:s.pr.flash/1024,appKiB:layout.limit/1024,pageBytes:s.pr.pageSize,descriptorKiB:bytes/1024,readOnly:true};
+}
+export async function probeWbDfu(name,usb=navigator.usb){
+ if(!wbRomDfuCandidate(name)||!usb?.requestDevice)throw Error('WB DFU unavailable');
+ const d=await usb.requestDevice({filters:[{vendorId:0x0483,productId:0xdf11}]});
+ try{
+  await d.open();if(!d.configuration)await d.selectConfiguration(1);
+  const c=[];for(const i of d.configuration.interfaces)for(const a of i.alternates)if(a.interfaceClass===0xfe&&a.interfaceSubclass===1&&a.interfaceProtocol===2&&/^@Internal Flash/i.test(a.interfaceName||''))c.push({i,a});
+  if(c.length!==1)throw Error('WB DFU ambiguous internal Flash');
+  const {i,a}=c[0],pages=dfuGeometry(a.interfaceName);
+  await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);
+  return await inspectWbDfu(new WbDfuReadOnly(d,i.interfaceNumber,wbProfile(name),pages),name,a.interfaceName);
+ }finally{if(d.opened)await d.close();}
 }
