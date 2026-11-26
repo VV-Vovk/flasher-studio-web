@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.18
+
+Local Monitor tab: serial terminal with TX/RX, baud rate, 7/8 data bits, parity, stop bits, CR/LF, optional timestamps and echo, pause, autoscroll, text log export. Numeric plotter parses complete lines, 1–8 numeric channels, named `temp:25.4 voltage:3.3`, bounded 10,000 samples, selectable visible window, toggle series and CSV export. Uses existing Web Serial, WebUSB CDC, CH340/CP210x; monitor holds exclusive hardware lock, releases port on navigation. No network requests from monitor, no tokens, no private Actions minutes. Hardware browser tests pending.
+
 # Flasher Studio v0.2.17
 
 Wired ESP8266 (NodeMCU, D1 mini, Generic) experimental support: Arduino ESP8266 core 3.1.2 combined uncompressed eboot+app BIN at 0x0, flash capacity, segment geometry, boot checksum and full image CRC verified before write. Cloud archive selection limited to one BIN with exact Arduino core metadata; manual file must pass same format. No ESP8266 OTA installation, no arbitrary SDK image / filesystem / segment layouts. Added ESP32-S2 and H2 ordinary merged BIN route, matching chip headers and offsets. All writes still require physical connection and readback. No hardware verification. No private CI runs triggered. Arduino Nano/old bootloader routes unchanged.
