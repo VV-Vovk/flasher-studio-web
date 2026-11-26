@@ -9,7 +9,7 @@ import {clPageProfile,identifyCL,programCL} from './stm32-cl-page.js';
 import {l0Profile,identifyL0,programL0} from './stm32-l0.js';
 import {h72Profile,identifyH72,programH72} from './stm32-h72.js';
 import {h7abProfile,identifyH7AB,programH7AB} from './stm32-h7ab.js';
-import {wbProfile,identifyWB,programWB,wbApplicationLimit} from './stm32-wb.js';
+import {wbProfile,identifyWB,programWB,wbApplicationLimit,wbProjectMemory} from './stm32-wb.js';
 const u=a=>Uint8Array.from(a),eq=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]),hex=a=>Array.from(a,x=>x.toString(16).padStart(2,'0')).join(''),wait=ms=>new Promise(r=>setTimeout(r,ms));
 // RM0360 rev 5: F070x6, 32 KiB main flash, 1 KiB pages, halfword programming.
 // Device ID and size identify compatible silicon geometry, not exact package/order code.
@@ -74,8 +74,9 @@ const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022
 export class Stm32SwdSession {
  constructor(pr){this.pr=pr;}
  async applicationLimit(){return this.pr.applicationOnly?wbApplicationLimit(this):this.pr.flash;}
+ async wbProjectMemory(project=null){return wbProjectMemory(this,project);}
  async identify(){if(this.pr.controller==='wb-app')return identifyWB(this);if(this.pr.controller==='h7ab-sector')return identifyH7AB(this);if(this.pr.controller==='h72-sector')return identifyH72(this);if(this.pr.controller==='l0-pecr')return identifyL0(this);if(this.pr.controller==='cl-page')return identifyCL(this);if(this.pr.controller==='g-single-page')return identifyGPage(this);if(this.pr.controller==='f2f4-sector')return identifySector(this);return this.pr.idReg?this.identifyF0():this.identifyF1();}
- async program(b,progress=()=>{}){if(this.pr.controller==='wb-app')return programWB(this,b,progress);if(this.pr.controller==='h7ab-sector')return programH7AB(this,b,progress);if(this.pr.controller==='h72-sector')return programH72(this,b,progress);if(this.pr.controller==='l0-pecr')return programL0(this,b,progress);if(this.pr.controller==='cl-page')return programCL(this,b,progress);if(this.pr.controller==='g-single-page')return programGPage(this,b,progress);if(this.pr.controller==='f2f4-sector')return programSector(this,b,progress);if(this.pr.controller==='f1-xl')return this.programF1XL(b,progress);return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
+ async program(b,progress=()=>{},project=null){if(this.pr.controller==='wb-app')return programWB(this,b,progress,project);if(project)throw Error('WB project requires WB SWD');if(this.pr.controller==='h7ab-sector')return programH7AB(this,b,progress);if(this.pr.controller==='h72-sector')return programH72(this,b,progress);if(this.pr.controller==='l0-pecr')return programL0(this,b,progress);if(this.pr.controller==='cl-page')return programCL(this,b,progress);if(this.pr.controller==='g-single-page')return programGPage(this,b,progress);if(this.pr.controller==='f2f4-sector')return programSector(this,b,progress);if(this.pr.controller==='f1-xl')return this.programF1XL(b,progress);return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
  async identifyF1(){if((await this.reg(0xe0042000)&0xfff)!==this.pr.pid)throw Error('STM32F1 device ID mismatch');if(((await this.reg(0xe000ed00)>>>4)&0xfff)!==0xc23)throw Error('Cortex-M3 required');let b=await this.read(this.pr.sizeReg,2);if(b.length!==2||(b[0]+256*b[1])*1024!==this.pr.flash)throw Error('Flash size mismatch');let uid=await this.read(this.pr.uid,12);if(uid.length!==12||uid.every(x=>!x)||uid.every(x=>x===255))throw Error('Invalid UID');return 'stm32-'+hex(uid);}
 
  async ready(){let end=Date.now()+20000;while(Date.now()<end){let s=await this.reg(0x4002200c);if(!(s&1)){if(s&0x14)throw Error('STM32 Flash status '+s.toString(16));return;}await wait(3);}throw Error('Flash busy timeout');}

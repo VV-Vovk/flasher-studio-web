@@ -161,3 +161,7 @@ ESP32-C3 direct USB Serial/JTAG (303a:1001) on Android uses a narrow WebUSB CDC 
 ## v0.2.41 — WB complete CubeIDE project preview
 
 Select exact STM32WB model and STM32CubeIDE (GNU). Upload a portable ZIP (15 MiB maximum) with .project, .cproject, all selected sources/headers, own linker/startup and legally obtained libraries; no linked resources, external paths or custom build commands. Add flasher-native.json with {"wbAppFlashKiB": <page-aligned application KiB from actual device SFSA>}. Private WB Builder branch compiles without downloading restricted middleware. HEX must start at 0x08000000, contain valid CPU1 vectors, stay inside declared application budget. Browser checks manifest and actual HEX independently. Full-project results are stored/exportable but direct catalog flashing disabled until radio compatibility and shared RAM are validated. No automatic FUS/radio updates. Synthetic GNU link test is not a real BLE example or hardware validation.
+
+## v0.2.42 — WB55 ELF audit and experimental SWD full project
+
+Only exact WB55 parts with 192 KiB SRAM1: independent browser ELF/HEX byte comparison, static allocation audit, live SFSA/SBRSA/SNBRSA and default IPCCDBA/MAPPING_TABLE verification, repeated after reset and before erase/write pages. User must confirm compatible installed radio stack and backup. No CPU2, FUS, option-byte or SRAM writes. Other geometries and old full-project artifacts are compile-only. These checks do not prove runtime BLE compatibility. No restricted third-party files in public repository.

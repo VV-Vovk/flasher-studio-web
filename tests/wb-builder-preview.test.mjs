@@ -79,5 +79,5 @@ test('WB full project routes only portable ZIP to private preview and validates 
  assert.doesNotThrow(()=>checkWbFullProjectHex(m,files));
  assert.throws(()=>checkWbFullProjectHex({...m,wbFlashRanges:[{...ranges[0],endExclusive:0x08000010,size:16}]},files));
  const h=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
- assert.match(h,/if\(r\.m\.build\.wbFullProject\)throw Error/);
+ assert.match(h,/if\(r\.m\.build\.wbFullProject\)\{const b=r\.m\.build;if\(!b\.wbMemoryAudit/);
 });

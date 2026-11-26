@@ -2,6 +2,7 @@ import {GithubBuilder,normalizeRepo} from './github-api.js';
 import {sha256Hex} from './safety.js';
 import {wbCpu1CompileTarget,wbProfile} from './stm32-wb.js';
 import {parseHex} from './programmers.js';
+import {auditWbElf} from './wb-memory.js';
 export const WB_BUILDER_REF='develop/wb-cpu1';
 export function builderRefForRequest(r){
  const n=String(r?.nativeTarget||'').trim().toUpperCase();
@@ -25,6 +26,7 @@ export function checkWbFullProjectHex(build,files){
  const hex=files.get('firmware.hex');if(!hex)throw Error('STM32WB: отсутствует HEX CPU1');
  const ranges=parseHex(new TextDecoder().decode(hex));const actual=ranges.map(x=>({start:x.address,endExclusive:x.address+x.data.length,size:x.data.length}));
  if(JSON.stringify(actual)!==JSON.stringify(build.wbFlashRanges.map(x=>({start:x.start,endExclusive:x.endExclusive,size:x.size}))))throw Error('STM32WB: HEX не совпадает с диапазонами манифеста');
+ if(build.wbMemoryAudit!=null){if(!/^STM32WB55/.test(build.target)||build.memory?.ramKiB!==192)throw Error('WB ELF audit target');const audit=auditWbElf(files.get('firmware.elf'),build.memory.flashKiB,ranges);if(JSON.stringify(audit)!==JSON.stringify(build.wbMemoryAudit))throw Error('WB ELF audit mismatch');}
 }
 const workflow='build-universal.yml';
 export class UniversalBuilder extends GithubBuilder{

@@ -1,6 +1,7 @@
 // CPU1 application Flash only. Independent implementation from RM0434 and AN5451.
 // No CPU2 firmware, FUS, option byte writes, or mass erase.
 import {validateStmVector} from './programmers.js';
+import {wbCheckMemoryFit,wbSharedBounds} from './wb-memory.js';
 const BASE=0x08000000,F=0x58004000,PWR=0x58000400,ID=0xe0042000,DHCSR=0xe000edf0;
 const ACR=F,KEY=F+8,SR=F+16,CR=F+20,ECCR=F+24,OPT=F+32,C2SR=F+0x60,C2CR=F+0x64,SFR=F+0x80,SRRVR=F+0x84;
 const LOCK=0x80000000,OPTLOCK=0x40000000,IRQ=0x07000000,START=0x10000,ERR=0xc3fa,BUSY=0xd0000;
@@ -45,6 +46,13 @@ export async function wbApplicationLimit(s){
  const p=s.pr;
  if((await s.reg(SR))&0xe000)throw Error('STM32WB invalid option or read status');
  return wbFlashLayout(p,await s.reg(SFR),await s.reg(OPT),await s.reg(SRRVR)).limit;
+}
+// Read-only live memory snapshot; shared layout reviewed for WB55 SRAM1=192 KiB.
+export async function wbProjectMemory(s,project=null){
+ if(s.pr.controller!=='wb-app'||s.pr.ram!==192*1024)throw Error('WB shared RAM geometry not reviewed');
+ const limit=await wbApplicationLimit(s),rv=await s.reg(SRRVR),ipcc=await s.reg(F+0x3c);
+ const bounds=project?wbCheckMemoryFit(project,limit,rv,ipcc):wbSharedBounds(rv,ipcc);
+ return {limit,...bounds};
 }
 // A fresh system reset with CPU1 vector catch prevents the old application
 // from launching CPU2 before programming. Merely seeing C2BOOT=0 is not proof
@@ -104,7 +112,7 @@ async function preflight(s,b){
  if((await s.reg(ECCR))&0xc0000000)throw Error('STM32WB ECC fault');
  return {limit,span};
 }
-export async function programWB(s,b,progress=()=>{}){
+export async function programWB(s,b,progress=()=>{},project=null){
  const p=s.pr;
  if(!(b instanceof Uint8Array)||b.length>p.flash||typeof s.writeDoubleword!=='function')throw Error('STM32WB image or transport');
  validateStmVector(b,p);
@@ -112,6 +120,7 @@ export async function programWB(s,b,progress=()=>{}){
  await resetHaltWB(s);
  if(await identifyWB(s)!==s.id)throw Error('STM32WB UID changed after reset');
  const {limit,span}=await preflight(s,b),acr=await s.reg(ACR),off=acr&~0x1f00;
+ if(project)await wbProjectMemory(s,project);
  if(acr&0x8000)throw Error('STM32WB Flash suspend requested');
  try{
   if(await s.reg(CR)&LOCK){await s.put(KEY,0x45670123);await s.put(KEY,0xcdef89ab);}
@@ -122,14 +131,14 @@ export async function programWB(s,b,progress=()=>{}){
   // Only pages occupied by the incoming application. Never erase the tail of
   // the nonsecure area, which may contain persistent application data.
   for(let i=0;i<span;i+=p.pageSize){
-   await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');
+   await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');if(project)await wbProjectMemory(s,project);
    const cmd=OPTLOCK|IRQ|2|((i/p.pageSize)<<3);
    await s.put(CR,cmd);await s.put(CR,cmd|START);await complete(s);await checkHalted(s);
    progress(.2*(i+p.pageSize)/span);
   }
   await s.put(CR,OPTLOCK|IRQ|1);
   for(let i=0;i<b.length;i+=8){
-   if(i%p.pageSize===0){await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');}
+   if(i%p.pageSize===0){await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');if(project)await wbProjectMemory(s,project);}
    const data=new Uint8Array(8).fill(255);data.set(b.slice(i,i+8));
    if(data.some(x=>x!==255)){await s.writeDoubleword(BASE+i,data);await complete(s);await checkHalted(s);}
    if(i%1024===0)progress(.2+.6*Math.min(i+8,b.length)/b.length);
