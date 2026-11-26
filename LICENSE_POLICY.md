@@ -24,3 +24,5 @@
 - H72x/H73x: independent register-level implementation based on factual register values and Flash geometry from ST RM0468; no vendor source or loader binaries redistributed.
 
 - H7A/B RM0455 and ST CMSIS register definitions used as factual reference; original JS driver, no vendor implementation or Flash loader binaries added. Existing license review restrictions remain.
+
+- WB CPU1 application driver: original register-level implementation using factual RM0434/AN5451 descriptions. No ST FUS or wireless binary redistribution, no option modifications. Restricted wireless middleware stays excluded.

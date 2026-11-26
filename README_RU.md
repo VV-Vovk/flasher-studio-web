@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.34 (development)
+
+Priority STM32WB55/50/35/30/5M: 14 SWD base groups (17 package templates). RM0434: CPU1 only, live SFSA and CPU2 boot vector, RDP0, FSD/ESE, CPU2 not started, page erase only within incoming application, verification of erased page tail, no CPU2/FUS/security updates. No mass erase. Existing data in overwritten pages is lost; remaining pages preserved. User must reset/halt CPU1 before CPU2 boots. WB1x uses another geometry (RM0473) and is not enabled. Flash-only pending verified Builder builds. No new dependencies or wireless blobs; no hardware tests.
+
 # Flasher Studio v0.2.33 (development)
 
 H7A3/H7B3 2 MiB and H7B0 128 KiB: 21 new SWD base groups (36 package patterns), currently flash-only until Builder support is verified. RM0455: 8 KiB sectors, 128-bit rows, per-bank WRP group checks and PCROP/secure-only/ECC checks. Both banks unlocked before erase; bank swap rejected. H7A3 1 MiB remains disabled due to contradictory address mapping in RM0455 and reported CubeProgrammer behavior. H7AXI stack validation now shared by the browser and driver, L0 sparse HEX gaps use erased zero, UID recheck uses the session identity method (including split UID on L0). H72 incomplete row no longer cleared on USB failure: power-cycle required. No new dependencies or SDK binaries. Mock tests only, hardware validation pending.
