@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.29 (development)
+
+F4 remaining and F7 sector profile expansion: 176 new base catalogue groups; F413/423, F427/429/437/439, F469/479, F722/723/730/732/733, F745/746/750/756, F765/767/768/769/777/778/779. RM0430, RM0090, RM0386, RM0431, RM0385 and RM0410. Separate single/dual-bank layouts, correct physical sector encoding, live bank swap checks, secondary WRP checks, grouped WRP for F413 and F76, F72 PCROP, F7 unique ID addresses and ART cache handling. F7 requires reset/halt with core caches disabled. No option bytes altered, no vendor implementation or new dependencies. Mock tests only; hardware validation pending.
+
 # Flasher Studio v0.2.28 (development)
 
 F2/F4 single-bank expansion: 99 base catalogue profiles covering F205/207/215/217, F401/405/407/410/411/412/415/417/446; 240 catalogue entries. Density-specific RAM and F401 IDs, exact catalogue package matching, F410 64 KiB geometry, CCM stack support for F405/407/415/417, option lock guard. F413/423 and F42x/F43x/F46x/F47x remain pending. Supported order-code templates can now open exact marking entry instead of a disabled placeholder; wildcard targets remain rejected. `npm run coverage:stm32` reports catalogue base coverage without SDK builds. No new dependencies or public vendor binaries. Hardware verification remains pending.

@@ -16,3 +16,5 @@
 - G0B0 and G4 category 3/4: factual register and memory geometry from RM0454 and RM0440 rev 9 chapters 3–4; no vendor source or loader binaries added.
 
 - F2/F4 single-bank profile expansion references ST RM0033, RM0368, RM0383, RM0090, RM0401, RM0402, RM0390 and DS6329. No vendor implementation copied.
+
+- F4/F7 expansion: factual register layouts and memory geometry from RM0430, RM0090, RM0386, RM0431, RM0385, RM0410; independently implemented, no firmware blobs or new dependencies.
