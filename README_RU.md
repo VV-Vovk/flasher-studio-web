@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.30 (development)
+
+C0 and L4/L4+ independent doubleword Flash driver: 54 C0 and 139 L4 catalogue base groups. Exact ID/size/UID, separate C0 status/PCROP/security registers (no ECC register), L4 firewall/swap and ECC preflight, locked options, full main Flash erase/verify. L4 256/512 KiB legacy dual-bank sparse layouts rejected before erase; L4+ low-density reserved DBANK rejected. No hardware/real SDK builds, no new dependencies. References RM0490, RM0394, RM0351, RM0432. Two C0 package groups still lack a Builder profile. L0 not yet enabled.
+
 # Flasher Studio v0.2.29 (development)
 
 F4 remaining and F7 sector profile expansion: 176 new base catalogue groups; F413/423, F427/429/437/439, F469/479, F722/723/730/732/733, F745/746/750/756, F765/767/768/769/777/778/779. RM0430, RM0090, RM0386, RM0431, RM0385 and RM0410. Separate single/dual-bank layouts, correct physical sector encoding, live bank swap checks, secondary WRP checks, grouped WRP for F413 and F76, F72 PCROP, F7 unique ID addresses and ART cache handling. F7 requires reset/halt with core caches disabled. No option bytes altered, no vendor implementation or new dependencies. Mock tests only; hardware validation pending.
