@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.27 (development)
+
+G0B0 and G4 categories 3/4 (G471/473/474/483/484/491/4A1): 119 additional catalog templates, 77 base geometries. RM0440 rev 9 chapters 3/4; RM0454 G0B0. Category 3 checks all four WRP areas even in single-bank mode, both PCROP areas, secondary ECC flags in 128-bit read mode, live bank swap and secure areas. Both MER bits for category 3 even in single-bank mode. 128/256 KiB category 3 parts in dual-bank mode are rejected before erase because of the address gap, pending segmented image support. G411/G414 remain without SWD due to unverified silicon details. No physical tests, no private builds, no new dependencies. 
+
 # Flasher Studio v0.2.26 (development)
 
 G030/G050/G070 single-bank value line (RM0454 rev 5); G0B1/C1 128/256/512 KiB (RM0444 rev 6). 86 additional catalogue package templates, 41 base geometries. Bank mode read from size and option registers; swapped banks refused. Full main-flash mass erase for bank-capable parts, both-bank WRP/PCROP/SEC/ECC checks, parity SRAM bounds. No option bytes altered. G0B0 and remaining G4 pending. No new dependencies or private builds; hardware tests pending. Main's USB hotfix and license notices preserved.

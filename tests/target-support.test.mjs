@@ -8,7 +8,8 @@ test('Capabilities separate supported, compile-only, unavailable, and flash-only
  const cap=(name,fi=5,other={})=>targetCapability({fi,name,board:name,...other},catalog);
  assert.equal(cap('STM32F070F6P6').state,'both');
  assert.equal(cap('STM32G431CBT6').state,'both');
- assert.equal(cap('STM32G474RET6').state,'compile');
+ assert.equal(cap('STM32G474RET6').state,'both');
+ assert.equal(cap('STM32G411CCT6').state,'compile');
  assert.equal(cap('STM32H563ZIT6').state,'none');
  assert.equal(cap('STM32U575RIT6').selectable,false);
  assert.equal(cap('STM32FOOBAR').selectable,false);
