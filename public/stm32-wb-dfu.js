@@ -48,7 +48,7 @@ export class WbDfuReadOnly extends StmDfu{
 }
 export async function inspectWbDfu(s,name,descriptor){
  if(!wbRomDfuCandidate(name)||s.pr!==wbProfile(name))throw Error('WB DFU target not reviewed');
- const id=await s.identify(),read32=async a=>new DataView((await s.read(a,4)).buffer).getUint32(0,true);
+ const id=await s.identify(),read32=async a=>{const b=await s.read(a,4);if(b.length!==4)throw Error('WB DFU short register read');return new DataView(b.buffer,b.byteOffset,b.byteLength).getUint32(0,true);};
  const F=0x58004000;
  const snapshot={sfr:await read32(F+0x80),optr:await read32(F+0x20),srrvr:await read32(F+0x84),wrp:[await read32(F+0x2c),await read32(F+0x30)],pcrop:[[await read32(F+0x24),await read32(F+0x28)],[await read32(F+0x34),await read32(F+0x38)]]};
  const layout=wbFlashLayout(s.pr,snapshot.sfr,snapshot.optr,snapshot.srrvr);

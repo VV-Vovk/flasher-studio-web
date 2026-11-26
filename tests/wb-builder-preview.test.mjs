@@ -79,5 +79,13 @@ test('WB full project routes only portable ZIP to private preview and validates 
  assert.doesNotThrow(()=>checkWbFullProjectHex(m,files));
  assert.throws(()=>checkWbFullProjectHex({...m,wbFlashRanges:[{...ranges[0],endExclusive:0x08000010,size:16}]},files));
  const h=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
- assert.match(h,/if\(r\.m\.build\.wbFullProject\)\{const b=r\.m\.build;if\(!b\.wbMemoryAudit/);
+ assert.match(h,/if\(r\.m\.build\.wbFullProject\)\{const b=r\.m\.build;if\(b\.wbOtaLayout\)throw Error/);
+});
+
+test('WB OTA metadata must use explicit relocated layout and full ELF audit',()=>{
+ const full={...req,engine:'stm32cubeide-gcc',ext:'zip'},B=0x08007000;
+ const memory={wbApplicationOnly:true,physicalFlashKiB:1024,ramKiB:192,flashKiB:32};
+ const m={target:req.nativeTarget,memory,wbFullProject:true,wbOtaLayout:'st-ble-app-0x7000',wbOtaOrigin:B,wbMemoryAudit:{schema:1},wbFlashRanges:[{start:B,endExclusive:B+512,size:512}]};
+ assert.doesNotThrow(()=>checkWbBuildMetadata(m,full));
+ for(const b of [{...m,wbOtaLayout:undefined},{...m,wbOtaOrigin:0x08000000},{...m,wbMemoryAudit:null},{...m,wbFlashRanges:[{start:0x08000000,endExclusive:B+512,size:512}]}])assert.throws(()=>checkWbBuildMetadata(b,full));
 });

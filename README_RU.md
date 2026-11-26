@@ -169,3 +169,5 @@ Only exact WB55 parts with 192 KiB SRAM1: independent browser ELF/HEX byte compa
 ## v0.2.43 — WB diagnostics and app-only OTA export
 
 WB30/35/50/55 ROM DFU read-only probe; only SET_ADDRESS and UPLOAD/status/ABORT, no writes. ROM support for register reads must be confirmed on actual devices. WB55 192 KiB SRAM1: discover AN5247 OTA GATT service without writes; validate local relocated application HEX at 0x08007000, vector, declared SFSA budget and end marker, export BIN only. No automatic reboot, erase, OTA transfer, FUS/radio installation or vendor binary redistribution. All GitHub personal-source uploads and dispatches require exact private repository identity before transfer, including legacy Builder.
+
+Full CubeIDE GNU OTA build opt-in: add `wbOtaLayout: "st-ble-app-0x7000"` alongside `wbAppFlashKiB` in flasher-native.json; use project linker at 0x08007000, reserve SRAM1 first word, include AN5247 tags. Builder emits canonical erased-byte-padded BIN; Web revalidates ELF/HEX/BIN and blocks ordinary writes. Export the selected OTA version in Device → STM32WB DFU / BLE OTA. No direct OTA transfer, radio installation or proprietary middleware download.

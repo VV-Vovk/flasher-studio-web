@@ -3,6 +3,7 @@ import {sha256Hex} from './safety.js';
 import {wbCpu1CompileTarget,wbProfile} from './stm32-wb.js';
 import {parseHex} from './programmers.js';
 import {auditWbElf} from './wb-memory.js';
+import {checkWbOtaImage,wbOtaCandidate,WB_OTA_BASE} from './wb-ota.js';
 export const WB_BUILDER_REF='develop/wb-cpu1';
 export function builderRefForRequest(r){
  const n=String(r?.nativeTarget||'').trim().toUpperCase();
@@ -19,14 +20,18 @@ export function checkWbBuildMetadata(build,r){
  if(builderRefForRequest(r)!==WB_BUILDER_REF)return;
  const p=wbProfile(r.nativeTarget),m=build?.memory;
  if(String(build?.target||'').toUpperCase()!==String(r.nativeTarget).toUpperCase()||(r.engine==='stm32-bare'?build?.cubeTag!=='v1.24.0'||build?.wbFullProject===true:build?.wbFullProject!==true)||m?.wbApplicationOnly!==true||m.physicalFlashKiB!==p.flash/1024||m.ramKiB!==p.ram/1024||!Number.isInteger(m.flashKiB)||m.flashKiB<p.pageSize/1024||m.flashKiB>=m.physicalFlashKiB||m.flashKiB%(p.pageSize/1024)!==0)throw Error('STM32WB: неверный профиль CPU1 в артефакте');
- if(r.engine==='stm32cubeide-gcc'&&(!Array.isArray(build.wbFlashRanges)||!build.wbFlashRanges.length||build.wbFlashRanges[0].start!==0x08000000||build.wbFlashRanges.some((x,i,a)=>!Number.isInteger(x.start)||!Number.isInteger(x.endExclusive)||x.start<0x08000000||x.start>=x.endExclusive||x.endExclusive>0x08000000+m.flashKiB*1024||x.size!==x.endExclusive-x.start||(i>0&&x.start<=a[i-1].endExclusive))))throw Error('STM32WB: неверные диапазоны полного проекта');
+ const ota=build.wbOtaLayout!==undefined||build.wbOtaOrigin!==undefined;
+ if(ota&&(r.engine!=='stm32cubeide-gcc'||build.wbOtaLayout!=='st-ble-app-0x7000'||build.wbOtaOrigin!==WB_OTA_BASE||!wbOtaCandidate(build.target)||!build.wbMemoryAudit||m.flashKiB<=28))throw Error('WB OTA manifest layout');
+ const origin=ota?WB_OTA_BASE:0x08000000;
+ if(r.engine==='stm32cubeide-gcc'&&(!Array.isArray(build.wbFlashRanges)||!build.wbFlashRanges.length||build.wbFlashRanges[0].start!==origin||build.wbFlashRanges.some((x,i,a)=>!Number.isInteger(x.start)||!Number.isInteger(x.endExclusive)||x.start<origin||x.start>=x.endExclusive||x.endExclusive>0x08000000+m.flashKiB*1024||x.size!==x.endExclusive-x.start||(i>0&&x.start<=a[i-1].endExclusive))))throw Error('STM32WB: неверные диапазоны полного проекта');
 }
 export function checkWbFullProjectHex(build,files){
  if(!build.wbFullProject)return;
  const hex=files.get('firmware.hex');if(!hex)throw Error('STM32WB: отсутствует HEX CPU1');
  const ranges=parseHex(new TextDecoder().decode(hex));const actual=ranges.map(x=>({start:x.address,endExclusive:x.address+x.data.length,size:x.data.length}));
  if(JSON.stringify(actual)!==JSON.stringify(build.wbFlashRanges.map(x=>({start:x.start,endExclusive:x.endExclusive,size:x.size}))))throw Error('STM32WB: HEX не совпадает с диапазонами манифеста');
- if(build.wbMemoryAudit!=null){if(!/^STM32WB55/.test(build.target)||build.memory?.ramKiB!==192)throw Error('WB ELF audit target');const audit=auditWbElf(files.get('firmware.elf'),build.memory.flashKiB,ranges);if(JSON.stringify(audit)!==JSON.stringify(build.wbMemoryAudit))throw Error('WB ELF audit mismatch');}
+ if(build.wbMemoryAudit!=null){if(!/^STM32WB55/.test(build.target)||build.memory?.ramKiB!==192)throw Error('WB ELF audit target');const audit=auditWbElf(files.get('firmware.elf'),build.memory.flashKiB,ranges,build.wbOtaOrigin??0x08000000);if(JSON.stringify(audit)!==JSON.stringify(build.wbMemoryAudit))throw Error('WB ELF audit mismatch');}
+ if(build.wbOtaLayout!==undefined){const result=checkWbOtaImage(build.target,ranges,build.memory.flashKiB),b=files.get('firmware.bin');if(!b||b.length!==result.image.length||!b.every((v,i)=>v===result.image[i]))throw Error('WB OTA BIN differs from addressed HEX');}
 }
 const workflow='build-universal.yml';
 export class UniversalBuilder extends GithubBuilder{
