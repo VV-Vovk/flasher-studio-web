@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.10
+
+Public STM32F103C8T6 FS10 v0.2.2: CI and Firebase publish download the exact released catalog and ZIP, verify pinned SHA-256 and manifest, and stage the Apache-2.0 package with LICENSE on the same origin. New installations prefer this package; historical catalog entries remain for existing builds. No token is sent for public downloads. No third-party binaries added. Urboot still comes directly from MiniCore. ESP distribution remains on hold. Hardware validation pending. Local deployment requires `python tools/prepare_public_boot.py` before tests and deploy.
+
 # Flasher Studio v0.2.9
 
 Urboot for six ATmega328/328P clock profiles: fetch exact official MiniCore 3.0.2 HEX from pinned upstream commit, anonymously; verify known SHA-256, size and addresses; preserve USBasp signature/fuse and explicit confirmation guards. No third-party binary is mirrored. The manual candidate ZIP path remains. Browser network and hardware are not validated yet. ESP/STM candidate distribution unchanged.

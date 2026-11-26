@@ -29,6 +29,8 @@ jobs:
           python-version: '3.12'
       - run: npm ci --ignore-scripts --no-audit --no-fund
       - run: npm run vendor && test -s public/usb-vendor.js
+      - name: Fetch and verify reviewed public STM32 package
+        run: python tools/prepare_public_boot.py
       - run: npm test
       - run: python -m unittest discover -s tests -p '*_test.py'
       - uses: actions/upload-artifact@v6
