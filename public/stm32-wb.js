@@ -8,7 +8,7 @@ const LOCK=0x80000000,OPTLOCK=0x40000000,IRQ=0x07000000,START=0x10000,ERR=0xc3fa
 const patterns=["STM32WB55CGUx","STM32WB55RGVx","STM32WB55VGYx","STM32WB55VGQx","STM32WB55VYYx","STM32WB55CEUx","STM32WB55REVx","STM32WB55VEYx","STM32WB55VEQx","STM32WB55CCUx","STM32WB55RCVx","STM32WB55VCYx","STM32WB55VCQx","STM32WB50CGUx","STM32WB5MMGHx","STM32WB35CEUxA","STM32WB35CCUxA","STM32WB30CEUxA","STM32WB15CCUx","STM32WB15CCUxE","STM32WB15CCYx","STM32WB10CCUx","STM32WB1MMCHx"],sizes={C:256,E:512,G:1024,Y:640};
 export const WB_PROFILES=Object.freeze(Object.fromEntries(patterns.map(n=>{
  const line=n.slice(5,9),small=['WB15','WB10','WB1M'].includes(line),ram=small?12:line==='WB35'||line==='WB30'?32:line==='WB50'||n[10]==='C'?64:192;
- return [n,Object.freeze({controller:'wb-app',pid:small?0x494:0x495,core:0xc24,idReg:ID,uid:0x1fff7590,sizeReg:0x1fff75e0,flash:(small?320:sizes[n[10]])*1024,ram:ram*1024,pageSize:small?2048:4096,sbrvMask:small?0x1ffff:0x3ffff,wrpMask:['WB35','WB30'].includes(line)?0x7f:0xff,pcropMask:['WB35','WB30'].includes(line)?0xff:0x1ff,applicationOnly:true})];
+ return [n,Object.freeze({controller:'wb-app',pid:small?0x494:0x495,core:0xc24,idReg:ID,uid:0x1fff7590,sizeReg:0x1fff75e0,flash:(small?320:sizes[n[10]])*1024,ram:ram*1024,pageSize:small?2048:4096,sbrvMask:small?0x1ffff:0x3ffff,wrpMask:['WB35','WB30'].includes(line)?0x7f:0xff,pcropMask:['WB35','WB30'].includes(line)?0xff:0x1ff,applicationOnly:true,sharedLayout:!small&&line!=='WB5M'})];
 })));
 export function wbProfile(name){
  const n=String(name).trim().toUpperCase().replace(/TR$/,'');
@@ -49,9 +49,9 @@ export async function wbApplicationLimit(s){
 }
 // Read-only live memory snapshot; shared layout reviewed for WB55 SRAM1=192 KiB.
 export async function wbProjectMemory(s,project=null){
- if(s.pr.controller!=='wb-app'||s.pr.ram!==192*1024)throw Error('WB shared RAM geometry not reviewed');
+ if(s.pr.controller!=='wb-app'||!s.pr.sharedLayout)throw Error('WB shared RAM geometry not reviewed');
  const limit=await wbApplicationLimit(s),rv=await s.reg(SRRVR),ipcc=await s.reg(F+0x3c);
- const bounds=project?wbCheckMemoryFit(project,limit,rv,ipcc):wbSharedBounds(rv,ipcc);
+ const bounds=project?wbCheckMemoryFit(project,limit,rv,ipcc,s.pr.ram/1024):wbSharedBounds(rv,ipcc);
  return {limit,...bounds};
 }
 // A fresh system reset with CPU1 vector catch prevents the old application

@@ -4,13 +4,14 @@
  // A descriptor or user-entered size is never a substitute for SFSA.
 import {wbProfile,wbFlashLayout} from './stm32-wb.js';
 import {validateStmVector} from './programmers.js';
+import {readWbRadioInfo} from './wb-radio.js';
 import {dfuGeometry,StmDfu} from './extra-programmers.js';
 const BASE=0x08000000;
 function uint32(n){return Number.isInteger(n)&&n>=0&&n<=0xffffffff;}
 export function wbRomDfuCandidate(name){
  const n=String(name).trim().toUpperCase().replace(/TR$/,'');
- // WB10/15 ROM has no DFU; module pin routing has not been reviewed.
- return /^STM32WB(?:30|35|50|55)[A-Z][A-Z][A-Z][0-9][A-Z]*$/.test(n)&&!!wbProfile(n);
+ // AN5451 table 8: WB30/WB50 have no physical USB; WB10/15 and modules excluded.
+ return /^STM32WB(?:35|55)[A-Z][A-Z][A-Z][0-9][A-Z]*$/.test(n)&&!!wbProfile(n);
 }
 export function wbDfuPlan(name,image,descriptor,snapshot){
  if(!wbRomDfuCandidate(name))throw Error('WB ROM DFU target not reviewed');
@@ -46,18 +47,21 @@ export class WbDfuReadOnly extends StmDfu{
  }
  async program(){throw Error('WB DFU writing not enabled');}
 }
+async function wbDfuSnapshot(s){
+ const read32=async a=>{const b=await s.read(a,4);if(b.length!==4)throw Error('WB DFU short register read');return new DataView(b.buffer,b.byteOffset,b.byteLength).getUint32(0,true);};
+ const F=0x58004000;
+ return {sfr:await read32(F+0x80),optr:await read32(F+0x20),srrvr:await read32(F+0x84),wrp:[await read32(F+0x2c),await read32(F+0x30)],pcrop:[[await read32(F+0x24),await read32(F+0x28)],[await read32(F+0x34),await read32(F+0x38)]]};
+}
 export async function inspectWbDfu(s,name,descriptor){
  if(!wbRomDfuCandidate(name)||s.pr!==wbProfile(name))throw Error('WB DFU target not reviewed');
- const id=await s.identify(),read32=async a=>{const b=await s.read(a,4);if(b.length!==4)throw Error('WB DFU short register read');return new DataView(b.buffer,b.byteOffset,b.byteLength).getUint32(0,true);};
- const F=0x58004000;
- const snapshot={sfr:await read32(F+0x80),optr:await read32(F+0x20),srrvr:await read32(F+0x84),wrp:[await read32(F+0x2c),await read32(F+0x30)],pcrop:[[await read32(F+0x24),await read32(F+0x28)],[await read32(F+0x34),await read32(F+0x38)]]};
+ const id=await s.identify(),snapshot=await wbDfuSnapshot(s);
  const layout=wbFlashLayout(s.pr,snapshot.sfr,snapshot.optr,snapshot.srrvr);
  const pages=dfuGeometry(descriptor),bytes=pages.reduce((n,x)=>n+x.size,0);
  if(![layout.limit,s.pr.flash].includes(bytes)||pages.some((p,i)=>p.size!==s.pr.pageSize||p.address!==BASE+i*s.pr.pageSize))throw Error('WB DFU descriptor geometry mismatch');
  if(await s.identify()!==id)throw Error('WB DFU device changed');
- return {target:name,flashKiB:s.pr.flash/1024,appKiB:layout.limit/1024,pageBytes:s.pr.pageSize,descriptorKiB:bytes/1024,readOnly:true};
+ let radio=null;try{radio=await readWbRadioInfo(s);}catch{}return {target:name,flashKiB:s.pr.flash/1024,appKiB:layout.limit/1024,pageBytes:s.pr.pageSize,descriptorKiB:bytes/1024,readOnly:true,radio};
 }
-export async function probeWbDfu(name,usb=navigator.usb){
+async function withWbDfu(name,usb,fn,write=false){
  if(!wbRomDfuCandidate(name)||!usb?.requestDevice)throw Error('WB DFU unavailable');
  const d=await usb.requestDevice({filters:[{vendorId:0x0483,productId:0xdf11}]});
  try{
@@ -66,6 +70,53 @@ export async function probeWbDfu(name,usb=navigator.usb){
   if(c.length!==1)throw Error('WB DFU ambiguous internal Flash');
   const {i,a}=c[0],pages=dfuGeometry(a.interfaceName);
   await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);
-  return await inspectWbDfu(new WbDfuReadOnly(d,i.interfaceNumber,wbProfile(name),pages),name,a.interfaceName);
+  const S=write?WbDfuApplication:WbDfuReadOnly;return await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);
  }finally{if(d.opened)await d.close();}
+}
+
+export function probeWbDfu(name,usb=navigator.usb){return withWbDfu(name,usb,(s,d)=>inspectWbDfu(s,name,d));}
+// Bounded application-only DfuSe driver. No special FUS commands, read unprotect,
+// mass erase, option byte writes or manifestation. Fail closed if ROM cannot read
+// the relevant registers or valid FUS device info. Hardware validation pending.
+const equal=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
+const le=a=>[a&255,a>>>8&255,a>>>16&255,a>>>24&255];
+export class WbDfuApplication extends WbDfuReadOnly{
+ #allowed=null;
+ async output(req,b=new Uint8Array(),value=0){
+  if(this.#allowed&&req===1&&value===this.#allowed.value&&equal(b,this.#allowed.data))return StmDfu.prototype.output.call(this,req,b,value);
+  return super.output(req,b,value);
+ }
+ async #write(value,data){
+  if(this.#allowed)throw Error('WB DFU concurrent write');
+  this.#allowed={value,data:Uint8Array.from(data)};
+  try{await this.download(value,this.#allowed.data);}finally{this.#allowed=null;}
+ }
+ async program(name,image,descriptor,approve,progress=()=>{}){
+  if(!wbRomDfuCandidate(name)||this.pr!==wbProfile(name)||!(image instanceof Uint8Array)||typeof approve!=='function')throw Error('WB DFU target / confirmation');
+  const bytes=image.slice(),id=await this.identify();
+  const snapshot=await wbDfuSnapshot(this),plan=wbDfuPlan(name,bytes,descriptor,snapshot);
+  const check=async()=>{
+   if(await this.identify()!==id||JSON.stringify(await wbDfuSnapshot(this))!==JSON.stringify(snapshot))throw Error('WB DFU identity/security changed');
+   const reg=async a=>{const b=await this.read(a,4);if(b.length!==4)throw Error('WB short status');return new DataView(b.buffer,b.byteOffset,b.byteLength).getUint32(0,true);};
+   if((await reg(0x58004010))&0x000de3fa||(await reg(0x58004060))&0x000d0000||(await reg(0x58004064))&0x00050007)throw Error('WB DFU flash busy/error');
+   const radio=await readWbRadioInfo(this);if(radio.lastFusState!==0||radio.lastWirelessState!==0)throw Error('WB DFU FUS not reported idle; use SWD instead');
+  };
+  await check();await this.read(BASE,8);
+  if(await approve({appKiB:plan.limit/1024,pages:plan.erasePages.length,bytes:bytes.length})!==true)return {cancelled:true};
+  await check();
+  for(let i=0;i<plan.erasePages.length;i++){
+   await check();await this.idle();await this.#write(0,[0x41,...le(plan.erasePages[i].address)]);progress(.2*(i+1)/plan.erasePages.length);
+  }
+  for(let i=0;i<bytes.length;i+=256){
+   if(i%plan.pageSize===0)await check();
+   const raw=bytes.slice(i,i+256),pad=new Uint8Array(Math.ceil(raw.length/8)*8).fill(255);pad.set(raw);
+   if(pad.some(x=>x!==255)){await this.pointer(BASE+i);await this.#write(2,pad);}
+   progress(.2+.6*(i+raw.length)/bytes.length);
+  }
+  for(let i=0;i<plan.span;i+=256){const n=Math.min(256,plan.span-i),expected=new Uint8Array(n).fill(255);expected.set(bytes.slice(i,i+n));if(!equal(expected,await this.read(BASE+i,n)))throw Error('WB DFU readback mismatch');progress(.8+.2*(i+n)/plan.span);}
+  await check();return {verified:true,bytes:bytes.length,pages:plan.erasePages.length};
+ }
+}
+export function flashWbDfu(name,image,approve,progress,usb=navigator.usb){
+ return withWbDfu(name,usb,(s,d)=>s.program(name,image,d,approve,progress),true);
 }

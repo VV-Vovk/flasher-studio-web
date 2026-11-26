@@ -7,8 +7,8 @@ const snap={sfr:240,optr:0x1aa,srrvr:0x8003c000,wrp:[0xff,0xff],pcrop:[[0x1ff,0]
 function image(n=4097){const b=new Uint8Array(n).fill(255),v=new DataView(b.buffer);v.setUint32(0,0x20001000,true);v.setUint32(4,0x08000009,true);return b;}
 const desc=n=>'@Internal Flash /0x08000000/'+n+'*004Kg';
 test('WB ROM DFU scope excludes WB10/WB15 and unreviewed modules',()=>{
- for(const n of [name,'STM32WB35CEU6A','STM32WB30CEU6A','STM32WB50CGU6'])assert.equal(wbRomDfuCandidate(n),true,n);
- for(const n of ['STM32WB15CCU6','STM32WB10CCU6','STM32WB1MMCH6','STM32WB5MMGH6','STM32WB55RGVx','STM32WB55RGV','STM32WB55ZZZ6'])assert.equal(wbRomDfuCandidate(n),false,n);
+ for(const n of [name,'STM32WB35CEU6A'])assert.equal(wbRomDfuCandidate(n),true,n);
+ for(const n of ['STM32WB30CEU6A','STM32WB50CGU6','STM32WB15CCU6','STM32WB10CCU6','STM32WB1MMCH6','STM32WB5MMGH6','STM32WB55RGVx','STM32WB55RGV','STM32WB55ZZZ6'])assert.equal(wbRomDfuCandidate(n),false,n);
  assert.ok(!targetCapability({fi:5,name},[]).methods.includes('USB DFU'));
 });
 test('WB DFU plan erases only occupied pages under live SFSA',()=>{

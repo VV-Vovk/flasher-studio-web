@@ -30,7 +30,7 @@ export function checkWbFullProjectHex(build,files){
  const hex=files.get('firmware.hex');if(!hex)throw Error('STM32WB: отсутствует HEX CPU1');
  const ranges=parseHex(new TextDecoder().decode(hex));const actual=ranges.map(x=>({start:x.address,endExclusive:x.address+x.data.length,size:x.data.length}));
  if(JSON.stringify(actual)!==JSON.stringify(build.wbFlashRanges.map(x=>({start:x.start,endExclusive:x.endExclusive,size:x.size}))))throw Error('STM32WB: HEX не совпадает с диапазонами манифеста');
- if(build.wbMemoryAudit!=null){if(!/^STM32WB55/.test(build.target)||build.memory?.ramKiB!==192)throw Error('WB ELF audit target');const audit=auditWbElf(files.get('firmware.elf'),build.memory.flashKiB,ranges,build.wbOtaOrigin??0x08000000);if(JSON.stringify(audit)!==JSON.stringify(build.wbMemoryAudit))throw Error('WB ELF audit mismatch');}
+ if(build.wbMemoryAudit!=null){const p=wbProfile(build.target);if(!p?.sharedLayout||build.memory?.ramKiB!==p.ram/1024)throw Error('WB ELF audit target');const audit=auditWbElf(files.get('firmware.elf'),build.memory.flashKiB,ranges,build.wbOtaOrigin??0x08000000,build.memory.ramKiB);if(JSON.stringify(audit)!==JSON.stringify(build.wbMemoryAudit))throw Error('WB ELF audit mismatch');}
  if(build.wbOtaLayout!==undefined){const result=checkWbOtaImage(build.target,ranges,build.memory.flashKiB),b=files.get('firmware.bin');if(!b||b.length!==result.image.length||!b.every((v,i)=>v===result.image[i]))throw Error('WB OTA BIN differs from addressed HEX');}
 }
 const workflow='build-universal.yml';
