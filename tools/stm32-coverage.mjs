@@ -19,4 +19,10 @@ const report=Object.fromEntries([...groups.entries()].map(([family,m])=>{
  const a=[...m.values()];
  return [family,{bases:a.length,compile:a.filter(x=>x.compile).length,swd:a.filter(x=>x.swd).length,both:a.filter(x=>x.both).length}];
 }));
-console.log(JSON.stringify({scope:'Catalogue base groups; software eligibility only; not hardware or SDK build validation',families:report},null,2));
+const totals=Object.values(report).reduce((a,v)=>({bases:a.bases+v.bases,compile:a.compile+v.compile,swd:a.swd+v.swd,both:a.both+v.both}),{bases:0,compile:0,swd:0,both:0});
+function progress(v){
+ const n=v.bases;
+ const count=k=>({implemented:v[k],remaining:n-v[k],percent:n?Math.round(v[k]/n*1000)/10:0});
+ return {bases:n,compile:count('compile'),swd:count('swd'),both:count('both')};
+}
+console.log(JSON.stringify({scope:'Catalogue base groups; software eligibility only; not hardware or SDK build validation',totals:progress(totals),families:report,familyProgress:Object.fromEntries(Object.entries(report).map(([k,v])=>[k,progress(v)]))},null,2));
