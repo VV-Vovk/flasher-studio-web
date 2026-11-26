@@ -170,7 +170,7 @@ class FakeRadioDelete extends WbDfuRadioDelete{
   const b=await this.fixture.read(a,n);
   if(a===0x20030024&&n===32){
    const v=new DataView(b.buffer);v.setUint32(12,0x02020000,true);
-   if(this.hasStack){b[7]=1;v.setUint32(20,0x01180000,true);v.setUint32(24,0x01010010,true);v.setUint32(28,0,true);}
+   if(this.hasStack){b[7]=1;v.setUint32(20,this.stackVersion??0x01180000,true);v.setUint32(24,0x01010010,true);v.setUint32(28,0,true);}
    if(this.running){b[5]=4;b[6]=1;}
   }
   return b;
@@ -247,7 +247,7 @@ test('direct new-format upgrade with nonblank CPU1: live address, exact backup, 
  const start=wbDirectAddress(wbProfile(name),240*4096,bytes.length,2),end=start+Math.ceil(bytes.length/4096)*4096;
  const backup=new Uint8Array(4096).fill(0x5a),options={file:entry.name,bytes,applicationEnd:0x08001000,acknowledge:true,backup,direct:true};
  class Direct extends WbDfuRadioStage{
-  constructor(){super({},0,wbProfile(name),[]);this.fixture=new FakeRadioDelete();this.memory=this.fixture.fixture.memory;this.memory.fill(255,4096,240*4096);this.calls=[];this.device={controlTransferOut:async(setup,b)=>{assert.equal(setup.request,1);if(setup.value===0){assert.deepEqual([...b],[0x53]);this.calls.push('upgrade');}else{assert.equal(setup.value,2);assert.ok(this.addr>=start&&this.addr+b.length<=end);this.memory.set(b,this.addr-0x08000000);this.calls.push(this.addr);}return {status:'ok',bytesWritten:b.length};}};}
+  constructor(){super({},0,wbProfile(name),[]);this.fixture=new FakeRadioDelete();this.fixture.stackVersion=0x01120000;this.memory=this.fixture.fixture.memory;this.memory.fill(255,4096,240*4096);this.calls=[];this.device={controlTransferOut:async(setup,b)=>{assert.equal(setup.request,1);if(setup.value===0){assert.deepEqual([...b],[0x53]);this.calls.push('upgrade');}else{assert.equal(setup.value,2);assert.ok(this.addr>=start&&this.addr+b.length<=end);this.memory.set(b,this.addr-0x08000000);this.calls.push(this.addr);}return {status:'ok',bytesWritten:b.length};}};}
   async identify(){return 'fixture';}async read(a,n){return this.fixture.read(a,n);}async idle(){}async pointer(a){this.addr=a;}async download(block,b){await this.output(1,b,block);}
  }
  const original=Object.getOwnPropertyDescriptor(globalThis,'crypto');
@@ -255,8 +255,21 @@ test('direct new-format upgrade with nonblank CPU1: live address, exact backup, 
  try{
   let s=new Direct(),r=await s.stage(name,desc(240),options,()=>true,()=>{},()=>true);
   assert.equal(r.direct,true);assert.equal(r.commandAccepted,true);assert.equal(r.start,start);assert.equal(r.preserveBytes,4096);assert.deepEqual(s.memory.slice(0,4096),backup);assert.deepEqual(s.memory.slice(start-0x08000000,start-0x08000000+bytes.length),bytes);assert.equal(s.calls.filter(x=>x==='upgrade').length,1);
+  s=new Direct();s.fixture.stackVersion=0x01180000;await assert.rejects(s.stage(name,desc(240),options,()=>true,()=>{},()=>true),/strictly newer/);assert.equal(s.calls.length,0);
   s=new Direct();s.memory[0]=1;await assert.rejects(s.stage(name,desc(240),options,()=>true,()=>{},()=>true),/backup differs/);assert.equal(s.calls.length,0);
   s=new Direct();s.memory[4096]=1;await assert.rejects(s.stage(name,desc(240),options,()=>true,()=>{},()=>true),/not blank/);assert.equal(s.calls.length,0);
   s=new Direct();await assert.rejects(s.stage(name,desc(240),{...options,backup:null},()=>true,()=>{},()=>true),/exact CPU1 backup/);
  }finally{if(original)Object.defineProperty(globalThis,'crypto',original);else delete globalThis.crypto;}
+});
+
+import {wbUpgradeSettled} from '../public/stm32-wb-dfu.js';
+test('upgrade completion distinguishes installed/stopped, running, busy and error',()=>{
+ const idle={lastFusState:0,lastWirelessState:0,wireless:{major:1},stackType:1};
+ assert.equal(wbUpgradeSettled('fus',idle),true);
+ assert.equal(wbUpgradeSettled('wireless',idle),false);
+ const running={...idle,lastFusState:4,lastWirelessState:1};
+ assert.equal(wbUpgradeSettled('wireless',running),true);
+ assert.equal(wbUpgradeSettled('wireless',{...running,wireless:null}),false);
+ for(const f of [1,2,3,255])for(const kind of ['fus','wireless'])assert.equal(wbUpgradeSettled(kind,{...idle,lastFusState:f}),false);
+ assert.equal(wbUpgradeSettled('fus',{...running,lastWirelessState:255}),false);
 });

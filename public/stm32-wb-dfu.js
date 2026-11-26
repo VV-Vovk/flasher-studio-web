@@ -314,7 +314,7 @@ export function verifyWbRadioAfterUpgrade(name,pending,usb=navigator.usb){
   const v=entry.kind==='fus'?info.radio.fus:info.radio.wireless;
   const reportedVersion=v?[v.major,v.minor,v.patch].join('.'):null;
   const versionMatched=reportedVersion===entry.version&&(entry.kind==='fus'||!!info.radio.stackType);
-  const settled=entry.kind==='fus'?info.radio.lastFusState===0||info.radio.lastFusState===4:info.radio.lastFusState===4&&info.radio.lastWirelessState===1||info.radio.lastFusState===0&&info.radio.lastWirelessState===0;
+  const settled=wbUpgradeSettled(entry.kind,info.radio);
   let cpu1Verified=null;
   if(pending.preserveBytes){
    if(!Number.isInteger(pending.preserveBytes)||pending.preserveBytes<0||pending.preserveBytes%info.pageBytes||pending.preserveBytes>info.appKiB*1024||!/^[a-f0-9]{64}$/.test(pending.preserveSha||''))cpu1Verified=false;
@@ -322,7 +322,7 @@ export function verifyWbRadioAfterUpgrade(name,pending,usb=navigator.usb){
   }
   const finalInfo=await inspectWbDfu(s,name,d);
   if(await s.identify()!==pending.uid||JSON.stringify(finalInfo)!==JSON.stringify(info))throw Error('WB state changed during verification');
-  return {versionMatched,completed:versionMatched&&settled&&cpu1Verified!==false,cpu1Verified,reportedVersion,expectedVersion:entry.version,appKiB:info.appKiB,radio:info.radio,reportedOnly:true};
+  return {versionMatched,completed:versionMatched&&settled&&cpu1Verified!==false,cpu1Verified,reportedVersion,expectedVersion:entry.version,appKiB:info.appKiB,radio:info.radio,reportedOnly:true,settled,needsStart:entry.kind==='wireless'&&versionMatched&&cpu1Verified!==false&&info.radio.lastFusState===0&&info.radio.lastWirelessState===0};
  });
 }
 
@@ -488,4 +488,13 @@ export function wbContainsUpgradeMarker(bytes){
  const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
  for(let i=0;i+4<=bytes.length;i+=4)if([0x23372991,0xb10c8b99,0x32279221,0xd3a12c5e,0xe2b51d4a,0x42769811,0x927a6741].includes(v.getUint32(i,true)))return true;
  return false;
+}
+
+// AN5185 tables 9, 15/16: never equate a version in a shared table
+// with successful startup. An installed-but-stopped stack is a distinct state.
+export function wbUpgradeSettled(kind,radio){
+ if(!radio)return false;
+ const idle=radio.lastFusState===0&&radio.lastWirelessState===0;
+ const running=radio.lastFusState===4&&radio.lastWirelessState===1&&!!radio.wireless&&!!radio.stackType;
+ return kind==='fus'?idle||running:kind==='wireless'?running:false;
 }
