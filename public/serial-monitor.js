@@ -139,6 +139,7 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
  let lastDraw=0,lastNames='';
  function tick(t){
    frame=requestAnimationFrame(tick);
+   if(!root.hidden&&t-lastDraw>500&&!locked&&!opening&&!closing){const disabled=!available(el('monTransport').value)||!canOpen();if(el('monConnect').disabled!==disabled)el('monConnect').disabled=disabled;}
    if(root.hidden||paused||!dirty||t-lastDraw<100)return;
    lastDraw=t;dirty=false;
    if(mode==='text'){
@@ -163,7 +164,9 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
      t0=performance.now();atLine=true;history.clear();hidden.clear();lastNames='';txt='';bytesRx=bytesTx=0;dirty=true;
      current=new MonitorSession({onText:textRx,onLine:line=>{if(history.add(parsePlotLine(line),(performance.now()-t0)/1000))dirty=true;},onEnd:e=>{if(session===current)void disconnect(e.message);}});
      session=current;await current.open(port,{baudRate:Number(el('monBaud').value),dataBits:Number(el('monBits').value),stopBits:Number(el('monStop').value),parity:el('monParity').value,flowControl:'none'});
-     status('Подключено · '+el('monBaud').value+' бод');opening=false;refresh();
+     opening=false;
+     if(root.hidden){await disconnect();return;}
+     status('Подключено · '+el('monBaud').value+' бод');refresh();
    }catch(e){await disconnect(e.name==='NotFoundError'?'Порт не выбран':'Ошибка: '+e.message);}
  };
  async function send(){
