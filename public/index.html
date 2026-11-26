@@ -728,7 +728,7 @@ const prevBootCards=bootCards16;bootCards16=function(root,groups,pick=false){pre
 // Modules are hosted on the same origin. npm bundling is part of deploy, not a CDN import at runtime.
 Promise.all([import('./programmers.js').then(m=>driver=m),import('./universal.js').then(m=>universal=m),import('./extra-programmers.js').then(m=>extra=m)]).then(()=>{liveControls();renderDevice();renderOperation14();}).catch(e=>{universalError=e.message;usbError=e.message;renderDevice();});
 import('./usb-vendor.js').then(m=>{vendor=m;renderDevice();renderOperation14();}).catch(e=>{usbError='USB-модуль не собран. Выполни npm run vendor перед деплоем.';renderDevice();});
-for(const api of [navigator.serial,navigator.usb])api?.addEventListener('disconnect',e=>{const s=hw?.kind==='esp'?hw:espSession21;if(s&&driver?.espLifecycle.matches(s,e)){driver.espLifecycle.markLost(s);if(s===hw){logHW('ESP USB отключён.');if(!hwBusy){setHWBusy(true);void dropHardware().finally(()=>{setHWBusy(false);renderDevice();});}}else espLog21('ESP USB отключён.');return;}if(hw&&hw.kind!=='esp'&&!hwBusy){logHW('USB отключён.');void dropHardware();}});
+for(const api of [navigator.serial,navigator.usb])api?.addEventListener('disconnect',e=>{if(driver?.espLifecycle.observeClosingDisconnect(e))return;const s=hw?.kind==='esp'?hw:espSession21;if(s&&driver?.espLifecycle.matches(s,e)){driver.espLifecycle.markLost(s);if(s===hw){logHW('ESP USB отключён.');if(!hwBusy){setHWBusy(true);void dropHardware().finally(()=>{setHWBusy(false);renderDevice();});}}else espLog21('ESP USB отключён.');return;}if(hw&&hw.kind!=='esp'&&!hwBusy){logHW('USB отключён.');void dropHardware();}});
 loadBootIndex().then(()=>renderOperation14()).catch(e=>console.warn('Boot catalog:',e.message));
 fetch('./stm32-targets.json').then(r=>r.json()).then(a=>{mergeST(a.map(x=>x.name));if(fi===5)renderFamily();}).catch(e=>console.warn('STM32 catalog:',e.message));
 
@@ -1060,7 +1060,7 @@ import('./cloud-esp.js').then(m=>{cloud32=m;renderOperation14();}).catch(e=>stat
 let monitor33=null;
 const monitorGo33=go;
 go=function(v){if(v!=='monitor'&&monitor33?.isLocked()&&!monitor33.isOpening())void monitor33.disconnect();monitorGo33(v);if(v==='monitor')monitor33?.refresh();};
-const monitorCanOpen33=()=>!hw&&!hwBusy&&!liveBusy&&!cloudBusy32&&!document.querySelector('dialog[open]');
+const monitorCanOpen33=()=>!driver?.espLifecycle.blocked()&&!hw&&!hwBusy&&!liveBusy&&!cloudBusy32&&!document.querySelector('dialog[open]');
 import('./serial-monitor.js').then(m=>{
  monitor33=m.mountMonitor($('monitor'),{
    canOpen:monitorCanOpen33,

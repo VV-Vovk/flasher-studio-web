@@ -39,7 +39,7 @@ export class EspUsbCdcPort{
     if(!(b instanceof Uint8Array))throw Error('ESP USB invalid bytes');
     for(let p=0;p<b.length;p+=4096){if(!active())throw Error('ESP USB closed');const chunk=b.subarray(p,p+4096),r=ok(await d.transferOut(tx[0].endpointNumber,chunk));if(r.bytesWritten!==chunk.length)throw Error('ESP USB incomplete write');}
    }});
-  }catch(e){await this.close();throw e;}
+  }catch(e){void this.close().catch(()=>{});throw e;}
  }
  async setSignals(s){
   if(!this.active)throw Error('ESP USB closed');

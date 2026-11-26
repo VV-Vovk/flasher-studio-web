@@ -16,28 +16,37 @@ export function usbJournal(storage=storageDefault()){
  },clear(){try{storage?.removeItem(USB_LOG_KEY);}catch{}}};
 }
 export function createEspLifecycle({timeout=5000,journal=usbJournal()}={}){
- const tasks=new WeakMap(),lost=new WeakSet();let pending=0,unsafe=false;
+ const tasks=new WeakMap(),lost=new WeakSet(),closing=new Set();let pending=0,unsafe=false;
  const record=(event,s)=>journal.record(event,s);
  function close(s){
   if(!s?.transport)return Promise.resolve(false);
   const t=s.transport;if(tasks.has(t))return tasks.get(t);
-  pending++;record('close-start',s);
+  pending++;closing.add(s);record('close-start',s);
   const task=(async()=>{
    let timer;
+   const originalWait=t.waitForUnlock;
+   // esptool-js 0.7.1 polls stream locks forever by default. Bound that
+   // public method during final disconnect, without issuing a second close.
+   if(typeof originalWait==='function')t.waitForUnlock=async()=>{
+    const deadline=Date.now()+timeout;
+    while(t.device?.readable?.locked||t.device?.writable?.locked){if(Date.now()>=deadline)throw Object.assign(Error('USB stream unlock timeout'),{timedOut:true});await new Promise(r=>setTimeout(r,25));}
+   };
+   const disconnect=Promise.resolve().then(()=>t.disconnect()).finally(()=>{if(typeof originalWait==='function')t.waitForUnlock=originalWait;});
    try{
-    await Promise.race([Promise.resolve().then(()=>t.disconnect()),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Object.assign(Error('USB close timeout'),{timedOut:true})),timeout);})]);
+    await Promise.race([disconnect,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Object.assign(Error('USB close timeout'),{timedOut:true})),timeout);})]);
     const p=t.device;
     if(p?.device?.opened===true||p?.readable?.locked||p?.writable?.locked)throw Error('USB not released');
     record('close-ok',s);return true;
    }catch(e){unsafe=true;record(e?.timedOut?'close-timeout':'close-error',s);return false;}
-   finally{clearTimeout(timer);pending--;}
+   finally{clearTimeout(timer);pending--;closing.delete(s);}
   })();
   tasks.set(t,task);return task;
  }
  function matches(s,event){const p=s?.transport?.device;return !!p&&(event?.device?event.device===p.device||event.device===p.device_:event?.port?event.port===p:event?.target===p);}
  function markLost(s){if(s?.transport&&!lost.has(s.transport)){lost.add(s.transport);record('usb-disconnect',s);}}
  function assertLive(s){if(lost.has(s?.transport))throw Error('ESP USB отключён во время операции');}
- return {close,matches,markLost,assertLive,record,blocked:()=>pending>0||unsafe,unsafe:()=>unsafe,journal};
+ function observeClosingDisconnect(event){let found=false;for(const s of closing)if(matches(s,event)){markLost(s);found=true;}return found;}
+ return {close,matches,markLost,assertLive,observeClosingDisconnect,record,blocked:()=>pending>0||unsafe,unsafe:()=>unsafe,journal};
 }
 export const espLifecycle=createEspLifecycle();
 export const ESP_CLOSE_WARNING='USB-соединение не удалось подтвердить как закрытое. Не нажимай RESET при подключённом USB. Отсоедини кабель, закрой приложение и только потом снова открой его.';

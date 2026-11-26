@@ -49,3 +49,13 @@ test('ESP flash success/reset prompt occurs after close and no false flash failu
  assert.match(line,/Запись проверена · USB не закрыт/);
  for(const script of h.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi))new Function(script[1]);
 });
+
+test('USB disconnect during closing is recorded and stream lock polling is bounded',async()=>{
+ const events=[],c=createEspLifecycle({timeout:15,journal:{record:e=>events.push(e)}}),raw={};
+ const original=async()=>assert.fail('unbounded original wait used');
+ const t={device:{device:raw,readable:{locked:true}},waitForUnlock:original,async disconnect(){await this.waitForUnlock(400);}};
+ const s={transport:t},task=c.close(s);
+ assert.equal(c.observeClosingDisconnect({device:raw}),true);
+ assert.equal(await task,false);assert.equal(c.blocked(),true);assert.ok(events.includes('usb-disconnect'));assert.ok(events.includes('close-timeout'));
+ await new Promise(r=>setTimeout(r,35));assert.equal(t.waitForUnlock,original);
+});
