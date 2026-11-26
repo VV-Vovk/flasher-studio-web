@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.13
+
+ESP32-C3 private cloud Recovery: reuse the existing private Builder token and workflow build-esp-recovery.yml (Builder v0.2.8), exact settings, dispatch/resume, verified chunked download, IndexedDB cache and install dialog. No local Docker or manual file transfer required in the normal flow. Private Actions quota applies. Public ESP redistribution remains HOLD; hardware test pending. Custom cloud build limited to C3; S3/C6 remain previous experimental private candidates. Existing own ZIP import remains in advanced details.
+
 # Flasher Studio v0.2.12
 
 Local ESP32-C3 builds: configure profile, copy local build command, explicitly import own catalog.json and ZIP. Verify checksum, manifest, component bounds, matching known partition layout and draft notices. Metadata persists locally; after reload select original ZIP for installation. No network request/token for local ZIP; no automatic install or public ESP binary distribution. Requires Docker on PC, not cloud compilation. Actual hardware and end-to-end browser validation pending.
