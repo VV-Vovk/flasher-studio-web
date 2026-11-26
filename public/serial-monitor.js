@@ -189,7 +189,7 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
  function download(data,type,name){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);}
  el('monExport').onclick=()=>{if(mode==='text')download(txt,'text/plain;charset=utf-8','serial-log.txt');else download(history.csv(),'text/csv;charset=utf-8','serial-plot.csv');};
  el('monTransport').onchange=refresh;
- if(!navigator.serial?.requestPort&&navigator.usb?.requestDevice)el('monTransport').value='bridge';
+ // Auto uses the shared wired routing, including Android WebUSB.
  new ResizeObserver(()=>{dirty=true;if(mode==='plot'&&!paused)draw();}).observe(el('monCanvas'));
  refresh();
  return {refresh,disconnect,isLocked:()=>locked,isOpening:()=>opening};

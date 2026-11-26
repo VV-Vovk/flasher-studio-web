@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.25 (Android USB hotfix)
+
+Android Web Serial may expose paired Bluetooth RFCOMM devices even when a wired ESP is selected. Auto uses one filtered WebUSB chooser for supported CH340/CP210x bridges and unambiguous CDC-ACM layouts, including ESP32-C3 native USB. Desktop native COM preserved; no Android fallback to Bluetooth on denial/cancellation. Shared routing for normal flashing, bootloader/recovery and monitor. Existing pinned polyfill, no new dependencies. Mock routing tests only; real phone/cable/programmer tests pending. No live deploy.
+
 # Flasher Studio v0.2.24 (development)
 
 Single-bank G0x1 (G031/G041/G051/G061/G071/G081) and G4 category 2 (G431/G441): 75 base geometries, 128 catalogue package templates. RM0444 rev 6 and RM0440 rev 9 chapter 5. Separate doubleword transport for CMSIS-DAP and ST-LINK, 2 KiB page erase, RDP/WRP/PCROP/securable area preflight, option lock preserved, status/ECC checks, readback and relock. Cache disabled until reset. Exact package search works; some base names still require a package for Builder. No dual-bank, G0 value-line, or G4 other categories enabled yet. No physical tests, private builds or new third-party dependencies. Existing license inventory gate retained.
