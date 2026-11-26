@@ -41,8 +41,9 @@ export function wbDfuPlan(name,image,descriptor,snapshot){
 // Diagnostic session: only SET_ADDRESS + UPLOAD/ABORT/status. Never erase,
 // unprotect, write target bytes, start CPU2 or leave DFU.
 export class WbDfuReadOnly extends StmDfu{
+ async pointer(a){if(!Number.isInteger(a)||a<0||a>=0xffff0000)throw Error('WB DFU virtual FUS addresses not allowed in diagnostic');return super.pointer(a);}
  async output(req,b=new Uint8Array(),value=0){
-  if(!(req===6&&value===0&&b.length===0||req===1&&value===0&&b.length===5&&b[0]===0x21))throw Error('WB DFU diagnostic is read-only');
+  if(!(req===6&&value===0&&b.length===0||req===1&&value===0&&b.length===5&&b[0]===0x21&&new DataView(b.buffer,b.byteOffset+1,4).getUint32(0,true)<0xffff0000))throw Error('WB DFU diagnostic is read-only');
   return super.output(req,b,value);
  }
  async program(){throw Error('WB DFU writing not enabled');}
@@ -61,7 +62,7 @@ export async function inspectWbDfu(s,name,descriptor){
  if(await s.identify()!==id)throw Error('WB DFU device changed');
  let radio=null;try{radio=await readWbRadioInfo(s);}catch{}return {target:name,flashKiB:s.pr.flash/1024,appKiB:layout.limit/1024,pageBytes:s.pr.pageSize,descriptorKiB:bytes/1024,readOnly:true,radio};
 }
-async function withWbDfu(name,usb,fn,write=false){
+async function withWbDfu(name,usb,fn,mode='diagnostic'){
  if(!wbRomDfuCandidate(name)||!usb?.requestDevice)throw Error('WB DFU unavailable');
  const d=await usb.requestDevice({filters:[{vendorId:0x0483,productId:0xdf11}]});
  try{
@@ -70,7 +71,7 @@ async function withWbDfu(name,usb,fn,write=false){
   if(c.length!==1)throw Error('WB DFU ambiguous internal Flash');
   const {i,a}=c[0],pages=dfuGeometry(a.interfaceName);
   await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);
-  const S=write?WbDfuApplication:WbDfuReadOnly;return await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);
+  const S=mode==='application'?WbDfuApplication:mode==='radio-start'?WbDfuRadioStart:WbDfuReadOnly;return await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);
  }finally{if(d.opened)await d.close();}
 }
 
@@ -118,5 +119,38 @@ export class WbDfuApplication extends WbDfuReadOnly{
  }
 }
 export function flashWbDfu(name,image,approve,progress,usb=navigator.usb){
- return withWbDfu(name,usb,(s,d)=>s.program(name,image,d,approve,progress),true);
+ return withWbDfu(name,usb,(s,d)=>s.program(name,image,d,approve,progress),'application');
+}
+
+// AN5185 rev15 tables 24/25. A single explicit start request only.
+// The read-only info table is distinct from GET_STATE, which can switch CPU2
+// back to FUS after repeated commands. No GET_STATE poll after START_WS.
+export class WbDfuRadioStart extends WbDfuReadOnly{
+ #stateQuery=false;#start=false;#used=false;
+ async pointer(a){if(this.#stateQuery&&a===0xffff0054)return StmDfu.prototype.pointer.call(this,a);return super.pointer(a);}
+ async output(req,b=new Uint8Array(),value=0){
+  if(req===1&&value===0&&(this.#start&&b.length===1&&b[0]===0x5a||this.#stateQuery&&b.length===5&&b[0]===0x21&&new DataView(b.buffer,b.byteOffset+1,4).getUint32(0,true)===0xffff0054))return StmDfu.prototype.output.call(this,req,b,value);
+  return super.output(req,b,value);
+ }
+ async startInstalled(name,descriptor,approve){
+  if(this.#used)throw Error('WB start session already used; reconnect and inspect');
+  this.#used=true;
+  if(typeof approve!=='function')throw Error('WB start requires approval');
+  const id=await this.identify(),snapshot=await wbDfuSnapshot(this),info=await inspectWbDfu(this,name,descriptor);
+  const radio=info.radio;
+  if(!radio||radio.lastFusState!==0||radio.lastWirelessState!==0||!radio.wireless||!radio.stackType)throw Error('WB installed wireless stack and FUS idle not confirmed');
+  if(await approve({target:name,version:radio.wireless})!==true)return {cancelled:true};
+  if(await this.identify()!==id||JSON.stringify(await wbDfuSnapshot(this))!==JSON.stringify(snapshot)||JSON.stringify(await readWbRadioInfo(this))!==JSON.stringify(radio))throw Error('WB identity or radio state changed');
+  this.#stateQuery=true;
+  let state;try{state=await this.read(0xffff0054,2);}finally{this.#stateQuery=false;}
+  if(state.length!==2||state[0]!==0||state[1]!==0)throw Error('WB FUS not idle / error; start blocked');
+  await this.idle();this.#start=true;
+  try{await this.download(0,Uint8Array.of(0x5a));}
+  catch(e){throw Error('WB START_WS outcome unknown (reset possible). Do not retry blindly; reconnect and verify installed stack.',{cause:e});}
+  finally{this.#start=false;}
+  return {commandAccepted:true,runningVerified:false};
+ }
+}
+export function startWbWireless(name,approve,usb=navigator.usb){
+ return withWbDfu(name,usb,(s,d)=>s.startInstalled(name,d,approve),'radio-start');
 }

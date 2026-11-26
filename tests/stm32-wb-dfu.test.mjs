@@ -48,3 +48,14 @@ class FakeWbDfu extends WbDfuApplication{
 }
 test('DFU application driver verifies occupied pages and preserves tail',async()=>{const s=new FakeWbDfu(),b=image();const r=await s.program(name,b,desc(240),()=>true);assert.equal(r.verified,true);assert.deepEqual(s.calls.filter(x=>x[0]==='erase'),[['erase',0x08000000],['erase',0x08001000]]);assert.deepEqual(s.memory.slice(0,b.length),b);assert.ok(s.memory.slice(b.length,8192).every(x=>x===255));assert.ok(s.memory.slice(8192).every(x=>x===0x5a));await assert.rejects(s.output(1,Uint8Array.of(0x41,0,0,0,8),0),/read-only/);});
 test('DFU cancel, FUS busy, changed boundary and corrupt readback cannot report success',async()=>{let s=new FakeWbDfu();assert.equal((await s.program(name,image(),desc(240),()=>false)).cancelled,true);assert.deepEqual(s.calls,[]);s=new FakeWbDfu();s.fusBusy=true;await assert.rejects(s.program(name,image(),desc(240),()=>true),/not reported idle/);assert.deepEqual(s.calls,[]);s=new FakeWbDfu();s.change=true;await assert.rejects(s.program(name,image(),desc(240),()=>true),/security changed/);assert.equal(s.calls.length,1);s=new FakeWbDfu();s.corrupt=true;await assert.rejects(s.program(name,image(),desc(240),()=>true),/readback mismatch/);});
+
+import {WbDfuRadioStart} from '../public/stm32-wb-dfu.js';
+class FakeRadioStart extends WbDfuRadioStart{
+ constructor(){super({},0,wbProfile(name),[]);this.calls=[];this.fixture=new FakeWbDfu();this.device={controlTransferOut:async(setup,b)=>{this.calls.push([setup.request,setup.value,...b]);return {status:'ok',bytesWritten:b.length};}};}
+ async identify(){return 'fixture';}
+ async read(a,n){if(a===0xffff0054){this.calls.push(['query']);return Uint8Array.of(this.busy?0x10:0,0);}const b=await this.fixture.read(a,n);if(a===0x20030024&&n===32){const v=new DataView(b.buffer);b[7]=1;v.setUint32(20,0x01180000,true);v.setUint32(24,0x01010010,true);v.setUint32(28,0,true);}return b;}
+ async idle(){}
+ async download(block,data){await this.output(1,data,block);}
+}
+test('Radio start uses one explicit FUS state query and one start; no install or auto retry',async()=>{let s=new FakeRadioStart();assert.deepEqual(await s.startInstalled(name,desc(240),()=>true),{commandAccepted:true,runningVerified:false});assert.deepEqual(s.calls,[['query'],[1,0,0x5a]]);await assert.rejects(s.startInstalled(name,desc(240),()=>true),/already used/);await assert.rejects(s.output(1,Uint8Array.of(0x53),0),/read-only/);s=new FakeRadioStart();s.busy=true;await assert.rejects(s.startInstalled(name,desc(240),()=>true),/not idle/);assert.deepEqual(s.calls,[['query']]);s=new FakeRadioStart();assert.equal((await s.startInstalled(name,desc(240),()=>false)).cancelled,true);assert.deepEqual(s.calls,[]);});
+test('DFU diagnostic cannot access virtual FUS command address',async()=>{const s=new WbDfuReadOnly({},0,{},[]);await assert.rejects(s.pointer(0xffff0054),/virtual/);await assert.rejects(s.output(1,Uint8Array.of(0x21,0x54,0,0xff,0xff),0),/read-only/);});

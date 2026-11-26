@@ -16,17 +16,22 @@ export function nextFusFile(target,current){
  if(v[0]===1&&v[1]===2||v[0]===2&&v[1]<=1)return prefix+'.bin';
  throw Error('Непроверенный путь миграции FUS; проверь Release Notes ST');
 }
-export async function planRadioUpdate({target,currentFus,name,bytes,applicationEnd,acknowledge=false}){
+export function radioUpdateRequirements({target,currentFus,name,applicationEnd,acknowledge=false}){
  if(acknowledge!==true)throw Error('Подтверди резервную копию CPU1 и проверку Release Notes');
  const p=wbProfile(target),options=radioOptions(target),e=options.find(x=>x.name===name);
  if(!e||!e.address)throw Error('Файл не предназначен для этой плотности Flash');
  if(e.kind==='safeboot')throw Error('Safeboot: отдельная процедура ST, автоматический план отключён');
- const verified=await verifyRadioFile(target,name,bytes);
  const next=nextFusFile(target,currentFus);
  if(e.kind==='fus'&&next!==name)throw Error(next?'Следующий разрешённый этап: '+next:'FUS уже соответствует проверенной версии');
  if(e.kind==='wireless'&&next)throw Error('Сначала завершить обновление FUS: '+next);
  if(!Number.isInteger(applicationEnd)||applicationEnd<F||applicationEnd>F+p.flash||applicationEnd%p.pageSize)throw Error('Укажи конец сохраняемой области CPU1, выровненный по странице');
- const end=e.address+Math.ceil(bytes.length/p.pageSize)*p.pageSize;
+ const end=e.address+Math.ceil(e.size/p.pageSize)*p.pageSize;
  if(e.address%p.pageSize||e.address<applicationEnd||end>F+p.flash)throw Error('Область установки пересекает заявленную область CPU1 или выходит за Flash');
- return {schema:1,target,kind:e.kind,file:e.name,version:e.version,fromFus:currentFus,installAddress:'0x'+e.address.toString(16).toUpperCase().padStart(8,'0'),stagingEnd:'0x'+end.toString(16).toUpperCase().padStart(8,'0'),sha256:verified.sha256,releaseNotes:wbRadioDocs(target),execution:'STM32CubeProgrammer',installationAllowed:false,hardwareVerified:false,warning:'SWD FUS Operator may overwrite CPU1. Release-note address is not proof of safe staging. Back up CPU1/data and option-byte configuration, use ST procedure, verify FUS version after every step and read SFSA again.'};
+ return {schema:1,target,kind:e.kind,file:e.name,version:e.version,fromFus:currentFus,installAddress:'0x'+e.address.toString(16).toUpperCase().padStart(8,'0'),stagingEnd:'0x'+end.toString(16).toUpperCase().padStart(8,'0'),releaseNotes:wbRadioDocs(target),execution:'STM32CubeProgrammer',installationAllowed:false,hardwareVerified:false,warning:'SWD FUS Operator may overwrite CPU1. Release-note address is not proof of safe staging. Back up CPU1/data and option-byte configuration, use ST procedure, verify FUS version after every step and read SFSA again.'};
+}
+
+export async function planRadioUpdate(args){
+ const result=radioUpdateRequirements(args);
+ const verified=await verifyRadioFile(args.target,args.name,args.bytes);
+ return {...result,sha256:verified.sha256};
 }
