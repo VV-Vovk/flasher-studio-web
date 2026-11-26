@@ -9,7 +9,7 @@ import {readFileSync} from 'node:fs';
 const cat=JSON.parse(readFileSync(new URL('../public/stm32-targets.json',import.meta.url)));
 const F=0x40022000,SR=F+16,CR=F+20,BASE=0x08000000,UID=Uint8Array.from({length:12},(_,i)=>i+1);
 class Fake extends Stm32SwdSession{
- constructor(name){super(swdProfile(name));const p=this.pr;this.id='stm32-0102030405060708090a0b0c';this.bytes=new Uint8Array(p.flash);this.erased=[];this.written=[];this.registers=new Map([[p.idReg,p.pid],[0xe000ed00,p.core<<4],[F,0x700],[SR,0],[CR,0xc0000000],[F+32,0x2000aa],[F+0x24,0x7fff],[F+0x28,0],[F+0x2c,0x7f],[F+0x30,0x7f],[F+0x34,0x1ff],[F+0x38,0],[F+0x70,0],[F+0x80,0],[F+24,0]]);}
+ constructor(name){super(swdProfile(name));const p=this.pr;this.id='stm32-0102030405060708090a0b0c';this.bytes=new Uint8Array(p.flash);this.erased=[];this.written=[];this.registers=new Map([[p.idReg,p.pid],[0xe000ed00,p.core<<4],[F,0x700],[SR,0],[CR,0xc0000000],[F+32,0x4000aa],[F+0x24,0x7fff],[F+0x28,0],[F+0x2c,0x7f],[F+0x30,0x7f],[F+0x34,0x1ff],[F+0x38,0],[F+0x70,0],[F+0x80,0],[F+24,0]]);}
  async reg(a){if(!this.registers.has(a))throw Error('unexpected register '+a.toString(16));return this.registers.get(a);}
  async put(a,v){if(a===0xe000edf0){this.registers.set(a,1<<17);return;}
   if(a===F+8){if(v===0xcdef89ab)this.registers.set(CR,0x40000000);return;}
@@ -47,4 +47,11 @@ test('doubleword transports emit two aligned 32-bit words or one 8-byte ST-LINK 
  const s=new StLinkF1({productId:0x3748},{});s.cmd=async(...a)=>writes.push(a);s.rwStatus=async()=>{};
  await s.writeDoubleword(BASE,b);assert.deepEqual(writes[2][0],[0xf2,8,0,0,0,8,8,0]);assert.deepEqual(writes[2][2],b);
  await assert.rejects(d.writeDoubleword(BASE+4,b));await assert.rejects(s.writeDoubleword(BASE,new Uint8Array(4)));
+});
+
+test('G0 OPTR bit 22 controls extended parity RAM, not bit 21',async()=>{
+ const s=new Fake('STM32G071RBT6');s.registers.set(F+32,0x2000aa);
+ await assert.rejects(s.program(image(s.pr)),/parity RAM/);assert.equal(s.erased.length,0);
+ const b=image(s.pr);new DataView(b.buffer).setUint32(0,0x20008000,true);
+ await s.program(b);assert.equal(s.erased.length,64);
 });

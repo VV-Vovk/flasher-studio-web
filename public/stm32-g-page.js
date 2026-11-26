@@ -43,7 +43,7 @@ async function complete(s){
 }
 async function checkProtection(s){
  const p=s.pr,op=await s.reg(OPTR),cr=await s.reg(CR),status=await idle(s);
- if((op&255)!==0xaa||(status&(p.g4?0x8000:0x8000))||!(cr&OPTLOCK)||(cr&0x38078007))throw Error('STM32G option/protection or active operation');
+ if((op&255)!==0xaa||(status&0x8000)||!(cr&OPTLOCK)||(cr&0x38078007))throw Error('STM32G option/protection or active operation');
  const wm=p.g4?0x3f:0x7f;
  for(const off of [0x2c,0x30]){
   const v=await s.reg(F+off);
@@ -66,20 +66,19 @@ export async function programGPage(s,b,progress=()=>{}){
  if(!(await s.reg(0xe000edf0)&(1<<17)))throw Error('Core not halted');
  const op=await checkProtection(s);
  // G0 extended parity RAM is optional. Refuse ambiguous stack placement when parity is enabled.
- if(!p.g4&&p.ram>8192&&!(op&(1<<21))){
+ if(!p.g4&&p.ram>8192&&!(op&(1<<22))){
    const sp=new DataView(b.buffer,b.byteOffset,b.byteLength).getUint32(0,true);
    const usable=p.ram===18432?16384:32768;
    if(sp>0x20000000+usable)throw Error('STM32G parity RAM stack mismatch');
  }
- const acr=await s.reg(ACR),cacheOff=acr&~(p.g4?0x700:0x300);
+ const acr=await s.reg(ACR),cacheOff=acr&~(p.g4?0x1f00:0xb00);
  // Keep caches disabled until the required reset; never restore stale data.
- let unlocked=false;
  try{
   if(await s.reg(CR)&LOCK){await s.put(KEY,0x45670123);await s.put(KEY,0xcdef89ab);}
   if(await s.reg(CR)&LOCK)throw Error('STM32G Flash locked');
-  unlocked=true;
   await s.put(ACR,cacheOff);
   if((await s.reg(ACR))&(p.g4?0x700:0x300))throw Error('STM32G cache disable failed');
+  await s.put(ACR,cacheOff|(p.g4?0x1800:0x800));await s.put(ACR,cacheOff);
   await s.put(SR,ERRORS|1);
   const pages=p.flash/p.pageSize;
   for(let page=0;page<pages;page++){
