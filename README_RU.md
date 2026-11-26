@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.21 (development)
+
+Expands single-bank SWD support to F030xC, F038, F042 variants, F048, F058, F070 variants, F078, F091/F098 and F100/F101/F102/F105/F107. Factual geometry cross-checked against the DFP inventory from Builder run 45701467875, RM0091/RM0360, PM0075/PM0063 and CMSIS register definitions. F1 checks Cortex-M3 and relocks even when a Flash status error occurs after unlock. XL-density F101/F103 two-bank devices remain unavailable for SWD until a separate algorithm is implemented. No physical testing; no new private compilation tests. Public PR CI only. No UI additions.
+
 # Flasher Studio v0.2.20
 
 Separate target capability states (build+flash, build only, flash only, unsupported). Unsupported target rows disabled, exact manual entry checked, unsupported programming interfaces disabled. Compiler eligibility uses existing Builder profile inventory and source-only catalogue metadata; it is not a guarantee of any project's compilation. Additional F030/F031/F051/F071/F072 and F103 low/medium/high-density base-part SWD profiles from existing ROM geometry, HSI guard, full F1 verification. F0/F1 are not complete (including F09x, XL/other F1 lines); no hardware certification. No new private CI.
