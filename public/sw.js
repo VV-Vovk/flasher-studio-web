@@ -1,0 +1,8 @@
+const CACHE = 'flasher-studio-live-v0.1.2';
+const SHELL = ['/', '/index.html', '/manifest.webmanifest', '/favicon.ico', '/icons/icon.svg', '/icons/icon-48.png', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png', '/real-build.js', '/github-api.js', '/safety.js'];
+self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(async c=>{await c.addAll(SHELL);await self.skipWaiting();})));
+self.addEventListener('activate', e => e.waitUntil((async()=>{for(const k of await caches.keys()) if((k.startsWith('flasher-studio-preview-')||k.startsWith('flasher-studio-live-')) && k!==CACHE) await caches.delete(k); await self.clients.claim();})()));
+self.addEventListener('fetch', e=>{const r=e.request,u=new URL(r.url);if(r.method!=='GET'||u.origin!==self.location.origin)return;
+ if(r.mode==='navigate'){e.respondWith(fetch(r).catch(async()=> (await caches.match('/index.html')) || Response.error()));return;}
+ if(SHELL.includes(u.pathname)) e.respondWith(fetch(r).catch(async()=> (await caches.match(u.pathname)) || Response.error()));
+});

@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "esp-flasher-byvovk"
+  },
+  "targets": {
+    "esp-flasher-byvovk": {
+      "hosting": {
+        "studio": [
+          "flasher-studio-byvovk"
+        ]
+      }
+    }
+  }
+}
