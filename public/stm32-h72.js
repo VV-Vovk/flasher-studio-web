@@ -5,7 +5,7 @@ const F=0x52002000,BASE=0x08000000,ID=0x5c001000,CPUID=0xe000ed00,DHCSR=0xe000ed
 const KEY=F+4,CR=F+12,SR=F+16,CLEAR=F+20,OPTCR=F+24,OPTSR=F+28,PRAR=F+40,SCAR=F+48,WPSN=F+56,BOOT=F+64;
 const LOCK=1,PG=2,SER=4,START=128,EOP=0x10000,ERR=0x17ee0000,SECTOR=128*1024;
 const patterns=["STM32H723VGHx","STM32H723VGTx","STM32H723ZGIx","STM32H723ZGTx","STM32H723VETx","STM32H723VEHx","STM32H723ZETx","STM32H723ZEIx","STM32H733VGHx","STM32H733VGTx","STM32H733ZGIx","STM32H733ZGTx","STM32H725VGHx","STM32H725IGKx","STM32H725IGTx","STM32H725AGIx","STM32H725RGVx","STM32H725ZGTx","STM32H725VGTx","STM32H725VGYx","STM32H725REVx","STM32H725VETx","STM32H725VEHx","STM32H725ZETx","STM32H725AEIx","STM32H725IETx","STM32H725IEKx","STM32H735VGHx","STM32H735ZGTx","STM32H735VGTx","STM32H735VGYx","STM32H735AGIx","STM32H735IGKx","STM32H735IGTx","STM32H735RGVx","STM32H730VBHx","STM32H730VBTx","STM32H730IBTxQ","STM32H730IBKxQ","STM32H730ZBTx","STM32H730ZBIx","STM32H730ABIxQ"],sizes={B:128,E:512,G:1024};
-export const H72_PROFILES=Object.freeze(Object.fromEntries(patterns.map(n=>[n,Object.freeze({controller:'h72-sector',pid:0x483,core:0xc27,idReg:ID,uid:0x1ff1e800,sizeReg:0x1ff1e880,flash:sizes[n[10]]*1024,ram:128*1024,stackRegions:Object.freeze([Object.freeze([0x20000000,0x20020000]),Object.freeze([0x24000000,0x24020000])]),stackAlign:8,sectorSize:SECTOR,wordSize:32})])));
+export const H72_PROFILES=Object.freeze(Object.fromEntries(patterns.map(n=>[n,Object.freeze({controller:'h72-sector',pid:0x483,core:0xc27,idReg:ID,uid:0x1ff1e800,sizeReg:0x1ff1e880,flash:sizes[n[10]]*1024,ram:128*1024,stackRegions:Object.freeze([Object.freeze([0x20000000,0x20020000]),Object.freeze([0x24000000,0x24050000])]),stackAlign:8,sectorSize:SECTOR,wordSize:32})])));
 export function h72Profile(name){
  const n=String(name).trim().toUpperCase().replace(/TR$/,'');
  for(const [pattern,p] of Object.entries(H72_PROFILES))if(n===pattern.slice(0,11)||new RegExp('^'+pattern.replace('x','[0-9]')+'$').test(n))return p;
@@ -32,10 +32,14 @@ async function complete(s){
  if(st&ERR||!(st&EOP))throw Error('STM32H72/H73 Flash status 0x'+st.toString(16));
  await s.put(CLEAR,EOP);
 }
-async function preflight(s){
+async function preflight(s,b){
  const opt=await s.reg(OPTSR),oc=await s.reg(OPTCR),cr=await s.reg(CR),st=await idle(s);
  if(((opt>>>8)&255)!==0xaa||(opt&0x40200001)||!(oc&1)||(oc&2))throw Error('STM32H72/H73 option or security protection');
- if((await s.reg(F+0x70))&0x40000000)throw Error('STM32H72/H73 option status 2 error');
+ // TCM_AXI_SHARED bits 1:0 in OPTSR2_CUR (RM0468). AXI SRAM is
+ // 320/256/192/128 KiB respectively, and the flash code never changes it.
+ const sharing=(await s.reg(F+0x70))&3;
+ const sp=new DataView(b.buffer,b.byteOffset,b.byteLength).getUint32(0,true);
+ if(sp>=0x24000000&&sp>0x24000000+(320-64*sharing)*1024)throw Error('STM32H72/H73 AXI SRAM size does not match image');
  if(cr&0x000087ce||st&ERR)throw Error('STM32H72/H73 active Flash operation or error: reset and inspect');
  if((await s.reg(BOOT)&0xffff)!==0x0800)throw Error('STM32H72/H73 nonstandard boot address');
  // Refuse all protected ranges; never unlock option bytes or remove protection.
@@ -54,7 +58,7 @@ export async function programH72(s,b,progress=()=>{}){
  if(await identifyH72(s)!==s.id)throw Error('STM32H72/H73 UID changed');
  await s.put(DHCSR,0xa05f0003);
  if(!(await s.reg(DHCSR)&(1<<17)))throw Error('STM32H72/H73 core not halted');
- await preflight(s);
+ await preflight(s,b);
  // Byte parallelism (PSIZE=0), but exactly 32 bytes per programming row.
  // Keep existing ACR timing and never use forced write or bank mass erase.
  try{

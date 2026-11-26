@@ -41,10 +41,10 @@ test('H72 sector erase, full 32-byte row, erased tail, and both stack regions',a
  }
 });
 test('H72 protection, cache, identity and boot checks precede any erase',async()=>{
- for(const [a,v] of [[0x5c001000,0x450],[0xe000ed00,0xc24<<4],[OPT,0xbb00],[OPT,0x20aa00],[F+24,0],[F+0x70,0x40000000],[F+40,0],[F+48,0],[F+56,0xfe],[F+64,0],[0xe000ed14,0x10000],[SR,0x4000000],[CR,0x33]]){
+ for(const [a,v] of [[0x5c001000,0x450],[0xe000ed00,0xc24<<4],[OPT,0xbb00],[OPT,0x20aa00],[F+24,0],[F+40,0],[F+48,0],[F+56,0xfe],[F+64,0],[0xe000ed14,0x10000],[SR,0x4000000],[CR,0x33]]){
   const s=new Fake('STM32H723VGT6');s.regs.set(a,v);await assert.rejects(s.program(image(s.pr)));assert.deepEqual(s.erased,[]);
  }
- const s=new Fake('STM32H723VGT6'),b=image(s.pr);new DataView(b.buffer).setUint32(0,0x24050000,true);await assert.rejects(s.program(b));assert.deepEqual(s.erased,[]);
+ const s=new Fake('STM32H723VGT6'),b=image(s.pr);new DataView(b.buffer).setUint32(0,0x24050008,true);await assert.rejects(s.program(b));assert.deepEqual(s.erased,[]);
 });
 test('H72 failure cases relock when safe; incomplete rows require reset',async()=>{
  for(const flag of ['failUnlock','failErase','failWrite','corrupt','ecc']){
@@ -56,4 +56,14 @@ test('32-byte transport sends exactly eight words on DAP and a 32-byte ST-LINK m
  const b=Uint8Array.from({length:32},(_,i)=>i),calls=[],d=new DapStm32({device:{},writeWord:async(...a)=>calls.push(a)},{});
  await d.writeFlashWord32(B,b);assert.equal(calls.length,8);for(let i=0;i<8;i++)assert.deepEqual(calls[i],[B+i*4,new DataView(b.buffer).getUint32(i*4,true)]);
  const s=new StLinkF1({productId:0x3748},{});s.cmd=async(...a)=>calls.push(a);s.rwStatus=async()=>{};await s.writeFlashWord32(B,b);assert.deepEqual(calls[8][0],[0xf2,8,0,0,0,8,32,0]);assert.deepEqual(calls[8][2],b);await assert.rejects(d.writeFlashWord32(B+4,b));await assert.rejects(s.writeFlashWord32(B,new Uint8Array(8)));
+});
+
+test('H72 validates live shared TCM/AXI RAM configuration before erase',async()=>{
+ for(let sharing=0;sharing<4;sharing++){
+  const s=new Fake('STM32H730VBT6'),b=image(s.pr,true),v=new DataView(b.buffer);
+  s.regs.set(F+0x70,sharing);const limit=0x24000000+(320-64*sharing)*1024;v.setUint32(0,limit,true);
+  await s.program(b);assert.equal(s.erased.length,1);
+  const a=new Fake('STM32H730VBT6');a.regs.set(F+0x70,sharing);v.setUint32(0,limit+8,true);
+  await assert.rejects(a.program(b));assert.deepEqual(a.erased,[]);
+ }
 });

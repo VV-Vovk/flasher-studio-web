@@ -127,3 +127,5 @@ npm test
 firebase deploy --only hosting:studio --project esp-flasher-byvovk
 ```
 Use test boards first; backup important data before writing. See prior version READMEs for limitations.
+
+H72/H73 source-only firmware can use the full AXI stack range only when the connected chip's current TCM_AXI_SHARED setting permits it (320/256/192/128 KiB). The setting is read before erase and never modified.
