@@ -2,7 +2,7 @@
 // No USB/HID dependencies: adapter supplies read, reg, put, writeHalfword.
 // The exact order code is user selected; device ID/size are geometry checks, not package detection.
 import {validateStmVector} from './programmers.js';
-import {SECTOR_PROFILES,identifySector,programSector} from './stm32-sector.js';
+import {SECTOR_PROFILES,sectorProfile,identifySector,programSector} from './stm32-sector.js';
 export {SECTOR_PROFILES};
 import {gPageProfile,identifyGPage,programGPage} from './stm32-g-page.js';
 const u=a=>Uint8Array.from(a),eq=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]),hex=a=>Array.from(a,x=>x.toString(16).padStart(2,'0')).join(''),wait=ms=>new Promise(r=>setTimeout(r,ms));
@@ -61,7 +61,7 @@ function basePart(n){const m=/^(STM32F(?:030|031|038|042|048|051|058|070|071|072
 export function swdProfile(name){
  const n=String(name).toUpperCase().replace(/TR$/,'');
  const key=basePart(n);
- return STLINK_F0_PROFILES[n]||F0_BASE_PROFILES[key]||STLINK_F1_PROFILES[n]||F1_BASE_PROFILES[key]||F3_BASE_PROFILES[key]||SECTOR_PROFILES[n]||gPageProfile(n)||null;
+ return STLINK_F0_PROFILES[n]||F0_BASE_PROFILES[key]||STLINK_F1_PROFILES[n]||F1_BASE_PROFILES[key]||F3_BASE_PROFILES[key]||sectorProfile(n)||gPageProfile(n)||null;
 }
 
 const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022014,OBR:0x4002201c,WRP:0x40022020,DHCSR:0xe000edf0,CPUID:0xe000ed00,FLASH:0x08000000});

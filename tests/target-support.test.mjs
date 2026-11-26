@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {targetCapability,stmCompile,stmTarget,stmPickerRows} from '../public/target-support.js';
+import {targetCapability,stmCompile,stmTarget,stmPickerRows,stmTemplateCapability} from '../public/target-support.js';
 import {swdProfile,F0_BASE_PROFILES,F1_BASE_PROFILES,F3_BASE_PROFILES} from '../public/stm32-swd.js';
 const catalog=JSON.parse(readFileSync(new URL('../public/stm32-targets.json',import.meta.url)));
 test('Capabilities separate supported, compile-only, unavailable, and flash-only',()=>{
@@ -80,4 +80,13 @@ test('F3 all 69 base catalogue devices have a page controller; unsupported packa
  assert.equal(swdProfile('STM32F301K6T6').pid,0x439);
  assert.equal(swdProfile('STM32F334C4T6').pid,0x438);
  assert.equal(swdProfile('STM32F303CCTx'),null);
+});
+
+test('Supported templates offer exact-code entry but are never selectable as wildcard targets',()=>{
+ const t='STM32G474RETx';
+ assert.equal(stmTemplateCapability(t,catalog).state,'both');
+ assert.equal(targetCapability({fi:5,name:t},catalog).selectable,false);
+ assert.equal(stmTemplateCapability('STM32H563ZITx',catalog),null);
+ assert.equal(stmTemplateCapability('STM32F030C6',catalog),null);
+ assert.equal(stmTemplateCapability('STM32F334K4Tx',catalog).state,'both');
 });

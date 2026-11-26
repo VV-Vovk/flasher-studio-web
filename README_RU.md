@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.28 (development)
+
+F2/F4 single-bank expansion: 99 base catalogue profiles covering F205/207/215/217, F401/405/407/410/411/412/415/417/446; 240 catalogue entries. Density-specific RAM and F401 IDs, exact catalogue package matching, F410 64 KiB geometry, CCM stack support for F405/407/415/417, option lock guard. F413/423 and F42x/F43x/F46x/F47x remain pending. Supported order-code templates can now open exact marking entry instead of a disabled placeholder; wildcard targets remain rejected. `npm run coverage:stm32` reports catalogue base coverage without SDK builds. No new dependencies or public vendor binaries. Hardware verification remains pending.
+
 # Flasher Studio v0.2.27 (development)
 
 G0B0 and G4 categories 3/4 (G471/473/474/483/484/491/4A1): 119 additional catalog templates, 77 base geometries. RM0440 rev 9 chapters 3/4; RM0454 G0B0. Category 3 checks all four WRP areas even in single-bank mode, both PCROP areas, secondary ECC flags in 128-bit read mode, live bank swap and secure areas. Both MER bits for category 3 even in single-bank mode. 128/256 KiB category 3 parts in dual-bank mode are rejected before erase because of the address gap, pending segmented image support. G411/G414 remain without SWD due to unverified silicon details. No physical tests, no private builds, no new dependencies. 

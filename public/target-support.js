@@ -33,6 +33,13 @@ export function stmPickerRows(entries,matches,query,catalog=[]){
    return base;
  }))];
 }
+// Probe only the software policy; a template is not an actual order code.
+export function stmTemplateCapability(pattern,catalog=[]){
+ if(typeof pattern!=='string'||!/^STM32[A-Z0-9]+x[A-Z0-9]*$/.test(pattern))return null;
+ const example=pattern.replace('x','6');
+ const c=targetCapability({fi:5,name:example},catalog);
+ return c.selectable?c:null;
+}
 const ESP=new Set(['ESP32','ESP32-C3','ESP32-S3','ESP32-C6','ESP32-S2','ESP32-H2']);
 const E8266=new Set(['NodeMCU','Wemos D1 Mini','Generic ESP8266']);
 const UF2=new Set(['Raspberry Pi Pico','Raspberry Pi Pico W','Raspberry Pi Pico 2','Pico 2 W']);
