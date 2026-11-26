@@ -153,3 +153,7 @@ All 69 real SDK builds passed (23 catalogue templates × CMSIS/HAL/LL), includin
 ## Browser credential manager / PWA title
 
 GitHub credentials use a dedicated form with username/current-password autocomplete. After successful GitHub access verification, supported browsers can offer to save the PAT via PasswordCredential. Native form navigation is blocked; no PAT in localStorage, Firebase or URLs. Browser consent/settings determine whether saving is available; actual Android autofill needs device verification. Manifest uses Flasher Studio for both names without changing app identity. Clearing the field does not delete vault entries.
+
+## v0.2.40 — Android ESP USB cleanup
+
+ESP32-C3 direct USB Serial/JTAG (303a:1001) on Android uses a narrow WebUSB CDC adapter with bounded stream cleanup, no DTR/RTS control requests on close, and no new reads after cancellation. ESP flashing/Recovery shows reset instructions only after confirmed session close; unplug before reset. A 5 s close deadline reports a separate USB error, retains verified Flash result, blocks further wired sessions until page reload; it cannot cancel a hung OS USB operation or prevent a system freeze. Disconnect events are matched to the ESP session and recorded even while busy. Local fixed-code journal capped at 80 entries, export/clear in Settings; no PAT, MAC or raw device output. No Android physical validation yet. Existing Bluetooth and desktop serial behavior retained. Suspected related upstream issue: https://github.com/espressif/esptool-js/issues/199 (not proof of root cause).
