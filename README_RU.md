@@ -177,3 +177,7 @@ Full CubeIDE GNU OTA build opt-in: add `wbOtaLayout: "st-ble-app-0x7000"` alongs
 AN5451 table 7: full-project SRAM audits now cover 32/64/192 KiB SRAM1 in WB30/35/50/55 with fixed SRAM2 mappings. USB DFU scope corrected: WB35/55 only; WB30/50 have no USB peripheral. Separate experimental DFU CPU1 application HEX flow checks live identity/options/FUS reported idle and performs page-limited erase and full readback; no mass erase, CPU2 commands or manifestation. ROM register availability is not hardware verified. BLE OTA app-only sends 20-byte chunks to an already prepared compatible loader, user confirms erased pages, SFSA and backup; reboot indication only, no readback or automatic retry. No vendor binary or source redistribution. FUS version inspection reads only AN5185 table with valid marker; may be unavailable.
 
 Radio/FUS catalogue includes only filenames, sizes and Git blob identifiers from immutable upstream CubeWB v1.24.0; local SHA-1 Git blob check and SHA-256 reporting, no file upload, installation or assertion of runtime compatibility. SLA0044 rev6 review; ST-only use, no automatic redistribution. Official release notes and CubeProgrammer links provided.
+
+## v0.2.45 — WB1x/module full-project geometry
+
+RM0473: 12 KiB SRAM1, 32 KiB SRAM2a, 4 KiB SRAM2b and two-bit SBRSA_B. WB1MMC and WB5MMG use the underlying WB15 and WB55 SRAM geometry. All catalogue WB profiles can audit full GNU projects; OTA remains WB55 192 KiB only, USB DFU remains separately restricted. No hardware verification.
