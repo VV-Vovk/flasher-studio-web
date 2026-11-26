@@ -1,3 +1,14 @@
+# Flasher Studio v0.2.26 (development)
+
+G030/G050/G070 single-bank value line (RM0454 rev 5); G0B1/C1 128/256/512 KiB (RM0444 rev 6). 86 additional catalogue package templates, 41 base geometries. Bank mode read from size and option registers; swapped banks refused. Full main-flash mass erase for bank-capable parts, both-bank WRP/PCROP/SEC/ECC checks, parity SRAM bounds. No option bytes altered. G0B0 and remaining G4 pending. No new dependencies or private builds; hardware tests pending. Main's USB hotfix and license notices preserved.
+
+Public dependency license notices and exact-version inventory check backported from v0.2.23; no new dependencies. Previously distributed ESP stub provenance remains subject to review; no new recovery binary distribution.
+
+# Flasher Studio v0.2.20.1 (Android USB hotfix)
+
+Android Web Serial may expose paired Bluetooth RFCOMM devices even when a wired ESP is selected. Auto uses one filtered WebUSB chooser for supported CH340/CP210x bridges and unambiguous CDC-ACM layouts, including ESP32-C3 native USB. Desktop native COM preserved; no Android fallback to Bluetooth on denial/cancellation. Shared routing for normal flashing, bootloader/recovery and monitor. Existing pinned polyfill, no new dependencies. Mock routing tests only; real phone/cable/programmer tests pending. No live deploy.
+
+
 # Flasher Studio v0.2.25 (Android USB hotfix)
 
 Android Web Serial may expose paired Bluetooth RFCOMM devices even when a wired ESP is selected. Auto uses one filtered WebUSB chooser for supported CH340/CP210x bridges and unambiguous CDC-ACM layouts, including ESP32-C3 native USB. Desktop native COM preserved; no Android fallback to Bluetooth on denial/cancellation. Shared routing for normal flashing, bootloader/recovery and monitor. Existing pinned polyfill, no new dependencies. Mock routing tests only; real phone/cable/programmer tests pending. No live deploy.

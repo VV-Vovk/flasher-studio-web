@@ -10,3 +10,5 @@
 - Before a live release, review the final artifact including binary provenance, inherited notices and user content; if evidence is missing, keep release unpublished. This checklist is not a guarantee of legal compliance.
 
 - G0x1/G431/G441 register algorithm: references RM0444 rev 6 and RM0440 rev 9 ch. 5 (https://www.st.com/resource/en/reference_manual/dm00371828-stm32g0x0-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf and https://www.st.com/resource/en/reference_manual/dm00355726-stm32g4-series-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf). Only factual register values/geometry and original code; no new dependencies, SDK code, or loader binaries in Web.
+
+- G0x0 and G0B1/C1: ST RM0454 rev 5 and RM0444 rev 6 reference manuals, independent register-level implementation. No loader binaries or SDK code redistributed.
