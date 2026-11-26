@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.22 (development)
+
+STM32F101/F103 XL-density dual-bank SWD: PM0068 rev 2, separate bank registers and erase, protection preflight, exact flash size and UID, full readback and independent relock. All 12 XL base models from existing catalogue; F101 80 KiB SRAM, F103 96 KiB SRAM. Redundant package/temperature templates collapsed when their base part has the same catalogue profile; exact order-code search retained. Public unit tests added; no hardware testing or new private builds. The rest of the STM32 families remain incremental work.
+
 # Flasher Studio v0.2.21 (development)
 
 Expands single-bank SWD support to F030xC, F038, F042 variants, F048, F058, F070 variants, F078, F091/F098 and F100/F101/F102/F105/F107. Factual geometry cross-checked against the DFP inventory from Builder run 45701467875, RM0091/RM0360, PM0075/PM0063 and CMSIS register definitions. F1 checks Cortex-M3 and relocks even when a Flash status error occurs after unlock. XL-density F101/F103 two-bank devices remain unavailable for SWD until a separate algorithm is implemented. No physical testing; no new private compilation tests. Public PR CI only. No UI additions.

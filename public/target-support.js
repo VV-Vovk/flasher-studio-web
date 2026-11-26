@@ -19,6 +19,20 @@ export function stmCompile(name,catalog=[]){
  if([...STATIC_STM_BASES].some(k=>n===k||new RegExp('^'+k+'[A-Z][0-9](?:TR)?$').test(n)))return true;
  return catalog.some(x=>x.profile===true&&matchCatalog(x.name,n));
 }
+// Collapse redundant package/temperature templates in browsing, but preserve exact
+// order-code search and variants that have distinct catalogue build capabilities.
+export function stmPickerRows(entries,matches,query,catalog=[]){
+ const all=new Set(entries),byName=new Map(catalog.map(x=>[x.name,x]));
+ let q=String(query||'').trim().toUpperCase().replace(/\s+/g,'');
+ if(q&&!q.startsWith('STM32'))q='STM32'+q;
+ return [...new Set(matches.map(name=>{
+   if(!/^[A-Z0-9]+[A-Z]x$/.test(name))return name;
+   const base=name.slice(0,-2),a=byName.get(name),b=byName.get(base);
+   if(!all.has(base)||!a||!b||a.profile!==b.profile)return name;
+   if(q.length===name.length&&!q.includes('X')&&matchCatalog(name,q))return name;
+   return base;
+ }))];
+}
 const ESP=new Set(['ESP32','ESP32-C3','ESP32-S3','ESP32-C6','ESP32-S2','ESP32-H2']);
 const E8266=new Set(['NodeMCU','Wemos D1 Mini','Generic ESP8266']);
 const UF2=new Set(['Raspberry Pi Pico','Raspberry Pi Pico W','Raspberry Pi Pico 2','Pico 2 W']);

@@ -39,5 +39,5 @@ test('CMSIS-DAP exercises the actual shared F0/F1 algorithms through memory tran
 test('Unknown profiles fail before WebUSB/WebHID prompts',async()=>{
  const denied={requestDevice:async()=>assert.fail('must not open')};
  await assert.rejects(openCmsisDap('STM32H743ZIT6',denied),/неподдерживаемый/);
- await assert.rejects(openCmsisDapHid('STM32F103ZGT6',denied),/неподдерживаемый/);
+ await assert.rejects(openCmsisDapHid('STM32F103CFT6',denied),/неподдерживаемый/);
 });

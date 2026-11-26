@@ -39,7 +39,7 @@ export const STLINK_F1_PROFILES=Object.freeze({
 // Independent factual register/geometry table. DFP inventory from Builder run 45701467875,
 // ST RM0091/RM0360, PM0075/PM0063, and CMSIS device register definitions.
 // For 256 KiB F0 and high-density F1, WRP bit 31 covers the remaining pages.
-// XL F101/F103 devices have two Flash banks and remain deliberately excluded.
+// XL F101/F103: PM0068 dual-bank Flash, 512 KiB bank 1, 256/512 KiB bank 2.
 const extraF0=[[1090,256,32,2048,"STM32F030CC STM32F030RC"],[1092,32,4,1024,"STM32F038C6 STM32F038E6 STM32F038F6 STM32F038G6 STM32F038K6"],[1093,16,6,1024,"STM32F042C4 STM32F042F4 STM32F042G4 STM32F042K4"],[1093,32,6,1024,"STM32F042C6 STM32F042F6 STM32F042G6 STM32F042K6 STM32F042T6 STM32F048C6 STM32F048G6 STM32F048T6 STM32F070C6 STM32F070F6"],[1088,64,8,1024,"STM32F058C8 STM32F058R8 STM32F058T8"],[1096,128,16,2048,"STM32F070CB STM32F070RB STM32F078CB STM32F078RB STM32F078VB"],[1090,128,32,2048,"STM32F091CB STM32F091RB STM32F091VB"],[1090,256,32,2048,"STM32F091CC STM32F091RC STM32F091VC STM32F098CC STM32F098RC STM32F098VC"]];
 const extraF1=[[1056,16,4,1024,"STM32F100C4 STM32F100R4"],[1056,32,4,1024,"STM32F100C6 STM32F100R6"],[1056,64,8,1024,"STM32F100C8 STM32F100R8 STM32F100V8"],[1056,128,8,1024,"STM32F100CB STM32F100RB STM32F100VB"],[1064,256,24,2048,"STM32F100RC STM32F100VC STM32F100ZC"],[1064,384,32,2048,"STM32F100RD STM32F100VD STM32F100ZD"],[1064,512,32,2048,"STM32F100RE STM32F100VE STM32F100ZE"],[1042,16,4,1024,"STM32F101C4 STM32F101R4 STM32F101T4 STM32F102C4 STM32F102R4"],[1042,32,6,1024,"STM32F101C6 STM32F101R6 STM32F101T6 STM32F102C6 STM32F102R6"],[1040,64,10,1024,"STM32F101C8 STM32F101R8 STM32F101T8 STM32F101V8 STM32F102C8 STM32F102R8"],[1040,128,16,1024,"STM32F101CB STM32F101RB STM32F101TB STM32F101VB STM32F102CB STM32F102RB"],[1044,256,32,2048,"STM32F101RC STM32F101VC STM32F101ZC"],[1044,384,48,2048,"STM32F101RD STM32F101VD STM32F101ZD"],[1044,512,48,2048,"STM32F101RE STM32F101VE STM32F101ZE"],[1048,64,64,2048,"STM32F105R8 STM32F105V8"],[1048,128,64,2048,"STM32F105RB STM32F105VB STM32F107RB STM32F107VB"],[1048,256,64,2048,"STM32F105RC STM32F105VC STM32F107RC STM32F107VC"]];
 function expandGroups(groups,make){return Object.fromEntries(groups.flatMap(([pid,kib,ram,page,names])=>names.split(' ').map(n=>[n,make(pid,kib,ram,page)])));}
@@ -49,8 +49,9 @@ import {STM32_ROM_PROFILES} from './stm32-rom-profiles.js';
 const F0_BASES=["STM32F030C6","STM32F030C8","STM32F030F4","STM32F030K6","STM32F030R8","STM32F031C4","STM32F031C6","STM32F031E6","STM32F031F4","STM32F031F6","STM32F031G4","STM32F031G6","STM32F031K4","STM32F031K6","STM32F051C4","STM32F051C6","STM32F051C8","STM32F051K4","STM32F051K6","STM32F051K8","STM32F051R4","STM32F051R6","STM32F051R8","STM32F051T8","STM32F071C8","STM32F071CB","STM32F071RB","STM32F071V8","STM32F071VB","STM32F072C8","STM32F072CB","STM32F072R8","STM32F072RB","STM32F072V8","STM32F072VB"];
 const F1_BASES=["STM32F103C4","STM32F103C6","STM32F103C8","STM32F103CB","STM32F103R4","STM32F103R6","STM32F103R8","STM32F103RB","STM32F103RC","STM32F103RD","STM32F103RE","STM32F103T4","STM32F103T6","STM32F103T8","STM32F103TB","STM32F103V8","STM32F103VB","STM32F103VC","STM32F103VD","STM32F103VE","STM32F103ZC","STM32F103ZD","STM32F103ZE"];
 export const F0_BASE_PROFILES=Object.freeze({...Object.fromEntries(F0_BASES.map(n=>{const p=STM32_ROM_PROFILES[n];return [n,f0Profile(p.pid,p.flash/1024,p.ram/1024,/^STM32F07[12]/.test(n)?2048:1024)];})),...expandGroups(extraF0,f0Profile)});
-export const F1_BASE_PROFILES=Object.freeze({...Object.fromEntries(F1_BASES.map(n=>{const p=STM32_ROM_PROFILES[n];return [n,f1Profile(p.pid,p.flash/1024,p.ram/1024,p.pid===0x414?2048:1024)];})),...expandGroups(extraF1,f1Profile)});
-function basePart(n){const m=/^(STM32F(?:030|031|038|042|048|051|058|070|071|072|078|091|098|100|101|102|103|105|107)[A-Z][468BCDE])(?:[A-Z][0-9])?$/.exec(n);return m?.[1]||'';}
+const XL_PROFILES=Object.fromEntries([101,103].flatMap(line=>['R','V','Z'].flatMap(pkg=>['F','G'].map(d=>['STM32F'+line+pkg+d,Object.freeze({...f1Profile(0x430,d==='F'?768:1024,line===101?80:96,2048),controller:'f1-xl',bankBoundary:512*1024})]))));
+export const F1_BASE_PROFILES=Object.freeze({...XL_PROFILES,...Object.fromEntries(F1_BASES.map(n=>{const p=STM32_ROM_PROFILES[n];return [n,f1Profile(p.pid,p.flash/1024,p.ram/1024,p.pid===0x414?2048:1024)];})),...expandGroups(extraF1,f1Profile)});
+function basePart(n){const m=/^(STM32F(?:030|031|038|042|048|051|058|070|071|072|078|091|098|100|101|102|103|105|107)[A-Z][468BCDEFG])(?:[A-Z][0-9])?$/.exec(n);return m?.[1]||'';}
 
 export function swdProfile(name){
  const n=String(name).toUpperCase().replace(/TR$/,'');
@@ -63,7 +64,7 @@ const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022
 export class Stm32SwdSession {
  constructor(pr){this.pr=pr;}
  async identify(){if(this.pr.controller==='f2f4-sector')return identifySector(this);return this.pr.idReg?this.identifyF0():this.identifyF1();}
- async program(b,progress=()=>{}){if(this.pr.controller==='f2f4-sector')return programSector(this,b,progress);return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
+ async program(b,progress=()=>{}){if(this.pr.controller==='f2f4-sector')return programSector(this,b,progress);if(this.pr.controller==='f1-xl')return this.programF1XL(b,progress);return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
  async identifyF1(){if((await this.reg(0xe0042000)&0xfff)!==this.pr.pid)throw Error('STM32F1 device ID mismatch');if(((await this.reg(0xe000ed00)>>>4)&0xfff)!==0xc23)throw Error('Cortex-M3 required');let b=await this.read(this.pr.sizeReg,2);if(b.length!==2||(b[0]+256*b[1])*1024!==this.pr.flash)throw Error('Flash size mismatch');let uid=await this.read(this.pr.uid,12);if(uid.length!==12||uid.every(x=>!x)||uid.every(x=>x===255))throw Error('Invalid UID');return 'stm32-'+hex(uid);}
 
  async ready(){let end=Date.now()+20000;while(Date.now()<end){let s=await this.reg(0x4002200c);if(!(s&1)){if(s&0x14)throw Error('STM32 Flash status '+s.toString(16));return;}await wait(3);}throw Error('Flash busy timeout');}
@@ -92,6 +93,54 @@ export class Stm32SwdSession {
      await this.put(0x40022010,0);
      for(let i=0;i<this.pr.flash;i+=256){const n=Math.min(256,this.pr.flash-i),expected=new Uint8Array(n).fill(255);expected.set(b.slice(i,i+n));if(!eq(expected,await this.read(0x08000000+i,n)))throw Error('SWD readback mismatch');progress(.9+.1*(i+n)/this.pr.flash);}
    }finally{await this.idleF0();await this.put(0x40022010,0x80);if(!(await this.reg(0x40022010)&0x80))throw Error('Flash relock failed');}
+ }
+
+ // PM0068 rev 2 §§2.3–2.4, 3.9–3.12. Each bank has separate KEYR/SR/CR.
+ async programF1XL(b,progress=()=>{}){
+   if(!(b instanceof Uint8Array)||b.length>this.pr.flash)throw Error('STM32F1 XL Flash range');
+   validateStmVector(b,this.pr);
+   if(await this.identify()!==this.id)throw Error('UID changed');
+   await this.put(0xe000edf0,0xa05f0003);
+   if(!(await this.reg(0xe000edf0)&(1<<17)))throw Error('Core not halted');
+   const boundary=this.pr.bankBoundary,base=0x08000000;
+   const banks=[{key:0x40022004,sr:0x4002200c,cr:0x40022010,start:0,end:boundary},{key:0x40022044,sr:0x4002204c,cr:0x40022050,start:boundary,end:this.pr.flash}];
+   const idle=async bank=>{const end=Date.now()+20000;do{const s=await this.reg(bank.sr);if(!(s&1))return s;await wait(3);}while(Date.now()<end);throw Error('STM32F1 XL bank busy timeout');};
+   const complete=async bank=>{const s=await idle(bank);if(s&0x14)throw Error('STM32F1 XL Flash status '+s.toString(16));if(!(s&0x20))throw Error('STM32F1 XL missing EOP');await this.put(bank.sr,0x20);};
+   for(const bank of banks)await idle(bank);
+   // WRP[31] covers pages 62 onward, including bank 2. Never change option bytes.
+   if((await this.reg(0x4002201c)&3)||(await this.reg(0x40022020)>>>0)!==0xffffffff)throw Error('STM32F1 XL Flash protection present');
+   await this.enableHsi();
+   let failure;
+   try{
+     // Unlock/check both banks before the first destructive operation.
+     for(const bank of banks){
+       if(await this.reg(bank.cr)&0x80){await this.put(bank.key,0x45670123);await this.put(bank.key,0xcdef89ab);}
+       if(await this.reg(bank.cr)&0x80)throw Error('STM32F1 XL bank locked');
+       await this.put(bank.sr,0x34);
+     }
+     // Existing user confirmation covers full main Flash, not option/system memory.
+     for(const bank of banks){await this.put(bank.cr,4);await this.put(bank.cr,0x44);await complete(bank);await this.put(bank.cr,0);}
+     for(const bank of banks){
+       await this.put(bank.cr,1);
+       for(let i=bank.start;i<Math.min(bank.end,b.length);i+=2){
+         const p=u([b[i],b[i+1]??255]);
+         if(p[0]!==255||p[1]!==255){await this.writeHalfword(base+i,p);await complete(bank);}
+         if(i%256===0)progress(i/b.length*.9);
+       }
+       await this.put(bank.cr,0);
+     }
+     for(let i=0;i<this.pr.flash;i+=256){
+       const n=Math.min(256,this.pr.flash-i),expected=new Uint8Array(n).fill(255);
+       expected.set(b.slice(i,i+n));
+       if(!eq(expected,await this.read(base+i,n)))throw Error('STM32F1 XL SWD readback mismatch @0x'+(base+i).toString(16));
+       progress(.9+.1*(i+n)/this.pr.flash);
+     }
+   }catch(e){failure=e;throw e;}finally{
+     // Attempt both locks independently; a failure on one bank must not skip the other.
+     const errors=[];
+     for(const bank of banks){try{await idle(bank);await this.put(bank.cr,0x80);if(!(await this.reg(bank.cr)&0x80))throw Error('STM32F1 XL bank relock failed');}catch(e){errors.push(e);}}
+     if(errors.length)throw new AggregateError(failure?[failure,...errors]:errors,'STM32F1 XL Flash relock failed');
+   }
  }
 
  async identifyF0(){
