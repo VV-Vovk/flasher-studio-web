@@ -80,6 +80,6 @@ test('WB full-project SWD checks live shared RAM before erase, and preserves CPU
 });
 test('WB full-project aborts after first erase if shared boundary changes',async()=>{
  const s=new Fake('STM32WB55RGV6');s.regs.set(F+0x3c,0);s.regs.set(RV,(s.regs.get(RV)|(10<<18))>>>0);const put=s.put.bind(s);
- s.put=async(a,v)=>{await put(a,v);if(a===CR&&(v&0x10000))s.regs.set(RV,s.regs.get(RV)&~(31<<18));};
+ s.put=async(a,v)=>{await put(a,v);if(a===CR&&(v&0x10000))s.regs.set(RV,(s.regs.get(RV)&~(31<<18))>>>0);};
  await assert.rejects(s.program(image(s.pr),()=>{},fullProject()),/boundary/);assert.deepEqual(s.erased,[0]);assert.deepEqual(s.written,[]);
 });
