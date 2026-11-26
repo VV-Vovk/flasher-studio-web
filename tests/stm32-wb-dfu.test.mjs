@@ -235,3 +235,28 @@ test('enter FUS only on explicit approval and NOT_RUNNING response; no command r
  s=new FakeEnter();s.disconnect=true;assert.equal((await s.enter(name,desc(240),()=>true)).outcomeUnknown,true);assert.equal(s.calls,2);
  s=new FakeEnter();s.fixture.running=false;assert.equal((await s.enter(name,desc(240),()=>true)).alreadyIdle,true);assert.equal(s.calls,0);
 });
+
+import {wbContainsUpgradeMarker} from '../public/stm32-wb-dfu.js';
+test('reject possible second upgrade image in preserved CPU1',()=>{
+ const b=new Uint8Array(64);assert.equal(wbContainsUpgradeMarker(b),false);
+ new DataView(b.buffer).setUint32(12,0xd3a12c5e,true);assert.equal(wbContainsUpgradeMarker(b),true);
+});
+test('direct new-format upgrade with nonblank CPU1: live address, exact backup, no erase, one command',async()=>{
+ const entry=WB_RADIO_FILES['5x'].find(e=>e.name==='stm32wb5x_BLE_Stack_full_fw.bin'),bytes=new Uint8Array(entry.size).fill(0xa5),v=new DataView(bytes.buffer),tag=bytes.length-20,body=tag-20-20;
+ v.setUint32(body,0x200,true);v.setUint32(body+8,0x0220,true);v.setUint32(body+12,0x01180000,true);v.setUint32(body+16,0xb10c8b99,true);v.setUint32(tag+8,20,true);v.setUint32(tag+16,0xd3a12c5e,true);
+ const start=wbDirectAddress(wbProfile(name),240*4096,bytes.length,2),end=start+Math.ceil(bytes.length/4096)*4096;
+ const backup=new Uint8Array(4096).fill(0x5a),options={file:entry.name,bytes,applicationEnd:0x08001000,acknowledge:true,backup,direct:true};
+ class Direct extends WbDfuRadioStage{
+  constructor(){super({},0,wbProfile(name),[]);this.fixture=new FakeRadioDelete();this.memory=this.fixture.fixture.memory;this.memory.fill(255,4096,240*4096);this.calls=[];this.device={controlTransferOut:async(setup,b)=>{assert.equal(setup.request,1);if(setup.value===0){assert.deepEqual([...b],[0x53]);this.calls.push('upgrade');}else{assert.equal(setup.value,2);assert.ok(this.addr>=start&&this.addr+b.length<=end);this.memory.set(b,this.addr-0x08000000);this.calls.push(this.addr);}return {status:'ok',bytesWritten:b.length};}};}
+  async identify(){return 'fixture';}async read(a,n){return this.fixture.read(a,n);}async idle(){}async pointer(a){this.addr=a;}async download(block,b){await this.output(1,b,block);}
+ }
+ const original=Object.getOwnPropertyDescriptor(globalThis,'crypto');
+ Object.defineProperty(globalThis,'crypto',{configurable:true,value:{subtle:{async digest(alg){return alg==='SHA-1'?Uint8Array.from(entry.blob.match(/../g),x=>parseInt(x,16)).buffer:new Uint8Array(32).buffer;}}}});
+ try{
+  let s=new Direct(),r=await s.stage(name,desc(240),options,()=>true,()=>{},()=>true);
+  assert.equal(r.direct,true);assert.equal(r.commandAccepted,true);assert.equal(r.start,start);assert.equal(r.preserveBytes,4096);assert.deepEqual(s.memory.slice(0,4096),backup);assert.deepEqual(s.memory.slice(start-0x08000000,start-0x08000000+bytes.length),bytes);assert.equal(s.calls.filter(x=>x==='upgrade').length,1);
+  s=new Direct();s.memory[0]=1;await assert.rejects(s.stage(name,desc(240),options,()=>true,()=>{},()=>true),/backup differs/);assert.equal(s.calls.length,0);
+  s=new Direct();s.memory[4096]=1;await assert.rejects(s.stage(name,desc(240),options,()=>true,()=>{},()=>true),/not blank/);assert.equal(s.calls.length,0);
+  s=new Direct();await assert.rejects(s.stage(name,desc(240),{...options,backup:null},()=>true,()=>{},()=>true),/exact CPU1 backup/);
+ }finally{if(original)Object.defineProperty(globalThis,'crypto',original);else delete globalThis.crypto;}
+});

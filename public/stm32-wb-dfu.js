@@ -228,6 +228,7 @@ export class WbDfuRadioStage extends WbDfuReadOnly{
   const expectedBlock=i=>{const b=new Uint8Array(256).fill(255);b.set(data.slice(i,i+256));return b;};
   const preserveBytes=activate?applicationEnd-BASE:0;
   if(activate&&snapshot.pcrop.some(([a,z])=>(a&this.pr.pcropMask)<=(z&this.pr.pcropMask)&&(a&this.pr.pcropMask)*this.pr.pageSize/2<plan.limit))throw Error('WB activation scan intersects PCROP');
+  if(preserveBytes&&wbContainsUpgradeMarker(saved))throw Error('WB CPU1 backup contains a possible FUS image marker; use official procedure');
   const preserveSha=preserveBytes?await wbDigest(saved):null;
   const scanOutside=async()=>{
    for(let a=BASE;a<BASE+plan.limit;a+=256){
@@ -235,9 +236,9 @@ export class WbDfuRadioStage extends WbDfuReadOnly{
     else if(a<plan.start||a>=plan.end)await blank(a,256);
    }
   };
-  // FUS_FW_UPGRADE scans for an image without an explicit address. Initially
-  // enable it only for a completely blank nonsecure region apart from this
-  // exact reviewed image. No application/NVM relocation is promised.
+  // FUS_FW_UPGRADE scans for an image without an explicit address.
+  // Require exact saved CPU1 bytes and otherwise blank nonsecure Flash except
+  // the exact reviewed image. No application/NVM relocation is promised.
   // Resume only from a byte-for-byte identical previous stage; never from
   // a partial image and never by erasing it.
   let resume=false;
@@ -366,7 +367,7 @@ export class WbDfuRadioDelete extends WbDfuReadOnly{
   // before making the old stack unavailable. Recalculate placement after delete.
   const currentFus=versionString(radio.fus);
   const plan=await planRadioUpdate({target:name,currentFus,name:file,bytes:data,applicationEnd:BASE,acknowledge});
-  if(plan.kind!=='wireless')throw Error('WB delete requires a wireless replacement BIN');
+  if(!['wireless','fus'].includes(plan.kind))throw Error('WB delete requires a verified wireless replacement or next FUS BIN');
   const pending={kind:'delete',target:name,uid:before.id,file,sha256:plan.sha256,expectedVersion:currentFus,oldVersion:versionString(radio.wireless),oldType:radio.stackType,oldAppKiB:before.info.appKiB,commandAttempted:false};
   if(await approve({...pending})!==true)return {cancelled:true};
   const again=await this.#check(name,descriptor);
@@ -482,3 +483,9 @@ export class WbDfuRadioEnter extends WbDfuReadOnly{
 }
 export function enterWbFus(name,approve,usb=navigator.usb){return withWbDfu(name,usb,(s,d)=>s.enter(name,d,approve),'radio-enter');}
 export function verifyWbFusEntry(name,pending,usb=navigator.usb){return withWbDfu(name,usb,(s,d)=>s.verifyEntry(name,d,pending),'radio-enter');}
+
+export function wbContainsUpgradeMarker(bytes){
+ const v=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength);
+ for(let i=0;i+4<=bytes.length;i+=4)if([0x23372991,0xb10c8b99,0x32279221,0xd3a12c5e,0xe2b51d4a,0x42769811,0x927a6741].includes(v.getUint32(i,true)))return true;
+ return false;
+}
