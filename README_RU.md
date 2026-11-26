@@ -78,3 +78,7 @@ npm test
 firebase deploy --only hosting:studio --project esp-flasher-byvovk
 ```
 Use test boards first; backup important data before writing. See prior version READMEs for limitations.
+
+## Browser credential manager / PWA title
+
+GitHub credentials use a dedicated form with username/current-password autocomplete. After successful GitHub access verification, supported browsers can offer to save the PAT via PasswordCredential. Native form navigation is blocked; no PAT in localStorage, Firebase or URLs. Browser consent/settings determine whether saving is available; actual Android autofill needs device verification. Manifest uses Flasher Studio for both names without changing app identity. Clearing the field does not delete vault entries.
