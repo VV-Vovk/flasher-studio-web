@@ -1,7 +1,6 @@
-// CMSIS-DAP v2 USB bulk transport, ARM ADIv5 MEM-AP, STM32F103 medium density only.
+// CMSIS-DAP v2 USB bulk / v1 HID, ARM ADIv5 MEM-AP, explicit shared STM32 profiles.
 // Protocol: https://arm-software.github.io/CMSIS-DAP/latest/group__DAP__Transfer.html
-import {StLinkF1} from './extra-programmers.js';
-import {STM32_UART} from './programmers.js';
+import {Stm32SwdSession,swdProfile} from './stm32-swd.js';
 const u=a=>Uint8Array.from(a), le=n=>[n&255,n>>>8&255,n>>>16&255,n>>>24], word=(a,p=0)=>new DataView(a.buffer,a.byteOffset+p,4).getUint32(0,true), wait=ms=>new Promise(r=>setTimeout(r,ms));
 export class DapLink {
  constructor(device,epIn,epOut,packet=64){Object.assign(this,{device,epIn,epOut,packet});}
@@ -17,9 +16,9 @@ export class DapLink {
  async writeHalf(addr,value){if(addr%2)throw Error('MEM-AP halfword alignment');await this.setSize(1);await this.ap(4,addr);await this.ap(12,(value<<((addr&2)*8))>>>0);await this.dp(12);}
  async close(){try{await this.ok([3]);}finally{await this.device.close();}}
 }
-// Share the existing F1 erase, protection, verification and identity logic; no option-byte operations.
-export class DapF1 extends StLinkF1{
- constructor(link,pr){super({productId:0x3748},pr);this.link=link;this.device=link.device;}
+// Share Flash algorithms without inheriting the ST-LINK USB implementation.
+export class DapStm32 extends Stm32SwdSession{
+ constructor(link,pr){super(pr);this.link=link;this.device=link.device;}
  async init(){await this.link.init();return this.identify();}
  async read(a,n){if(n<1||n>1024)throw Error('DAP read length');let start=a&~3,b=new Uint8Array(Math.ceil((a-start+n)/4)*4);for(let i=0;i<b.length;i+=4)b.set(le(await this.link.readWord(start+i)),i);return b.slice(a-start,a-start+n);}
  async reg(a){return this.link.readWord(a);}
@@ -27,7 +26,8 @@ export class DapF1 extends StLinkF1{
  async writeHalfword(a,b){await this.link.writeHalf(a,b[0]|b[1]<<8);}
  async close(){await this.link.close();}
 }
-export async function openCmsisDap(name,usb=navigator.usb){let pr=STM32_UART[name];if(!pr||!/^STM32F103C[8B]T6$/.test(name)||!usb)throw Error('CMSIS-DAP v2: STM32F103C8/CB и WebUSB required');let d=await usb.requestDevice({filters:[{classCode:255}]});try{await d.open();if(!d.configuration)await d.selectConfiguration(1);let choices=[];for(let i of d.configuration.interfaces)for(let a of i.alternates){if(a.interfaceClass!==255||!/CMSIS.DAP/i.test(a.interfaceName||''))continue;let input=a.endpoints.filter(e=>e.type==='bulk'&&e.direction==='in'),out=a.endpoints.filter(e=>e.type==='bulk'&&e.direction==='out');if(input.length>=1&&out.length===1)choices.push({i,a,input:input[0],out:out[0]});}if(choices.length!==1)throw Error('Требуется однозначный USB bulk интерфейс CMSIS-DAP v2 (не HID v1)');let {i,a,input,out}=choices[0];await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);let s=new DapF1(new DapLink(d,input.endpointNumber,out.endpointNumber,Math.max(64,input.packetSize||64)),pr);s.id=await s.init();return s;}catch(e){await d.close().catch(()=>{});throw e;}}
+export class DapF1 extends DapStm32{}
+export async function openCmsisDap(name,usb=navigator.usb){let pr=swdProfile(name);if(!pr||!usb)throw Error('CMSIS-DAP v2: неподдерживаемый STM32 или WebUSB недоступен');let d=await usb.requestDevice({filters:[{classCode:255}]});try{await d.open();if(!d.configuration)await d.selectConfiguration(1);let choices=[];for(let i of d.configuration.interfaces)for(let a of i.alternates){if(a.interfaceClass!==255||!/CMSIS.DAP/i.test(a.interfaceName||''))continue;let input=a.endpoints.filter(e=>e.type==='bulk'&&e.direction==='in'),out=a.endpoints.filter(e=>e.type==='bulk'&&e.direction==='out');if(input.length>=1&&out.length===1)choices.push({i,a,input:input[0],out:out[0]});}if(choices.length!==1)throw Error('Требуется однозначный USB bulk интерфейс CMSIS-DAP v2 (не HID v1)');let {i,a,input,out}=choices[0];await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);let s=new DapStm32(new DapLink(d,input.endpointNumber,out.endpointNumber,Math.max(64,input.packetSize||64)),pr);s.id=await s.init();return s;}catch(e){await d.close().catch(()=>{});throw e;}}
 // CMSIS-DAP v1: fixed-size HID reports. Desktop Chromium WebHID only.
 // Reject nonstandard report layouts; no generic HID devices are opened.
 export class DapHidLink extends DapLink {
@@ -35,4 +35,4 @@ export class DapHidLink extends DapLink {
  async exchange(cmd,min=2){if(this.failed||this.pending||this.packet!==64||cmd.length>this.packet)throw Error('DAP HID session invalid or busy');this.pending=true;let timer,handler;try{let buf=new Uint8Array(this.packet);buf.set(cmd);let result=new Promise((resolve,reject)=>{handler=e=>{if(e.reportId!==this.inputId)return;let d=e.data;if(!d||d.byteLength!==this.packet){reject(Error('DAP HID report size'));return;}let b=new Uint8Array(d.buffer,d.byteOffset,d.byteLength).slice();if(b[0]!==cmd[0]||b.length<min){reject(Error('DAP HID response mismatch'));return;}resolve(b);};this.device.addEventListener('inputreport',handler);timer=setTimeout(()=>reject(Error('DAP HID timeout')),3000);});let [b]=await Promise.all([result,this.device.sendReport(this.outputId,buf)]);return b;}catch(e){this.failed=true;throw e;}finally{clearTimeout(timer);if(handler)this.device.removeEventListener('inputreport',handler);this.pending=false;}}
 }
 export function hidReportIds(d){if(!/CMSIS.DAP|DAPLink/i.test(d.productName||''))throw Error('Требуется CMSIS-DAP HID / DAPLink');let candidates=[];function size(r){return (r.items||[]).reduce((n,i)=>n+i.reportSize*i.reportCount,0);}for(let c of d.collections||[]){if(c.usagePage!==0xff00)continue;let i=(c.inputReports||[]).filter(r=>size(r)===512),o=(c.outputReports||[]).filter(r=>size(r)===512);if(i.length===1&&o.length===1)candidates.push([i[0].reportId,o[0].reportId]);}if(candidates.length!==1)throw Error('CMSIS-DAP HID: требуется однозначная пара 64-байтных отчётов');return candidates[0];}
-export async function openCmsisDapHid(name,hid=navigator.hid){let pr=STM32_UART[name];if(!pr||!/^STM32F103C[8B]T6$/.test(name)||!hid)throw Error('CMSIS-DAP v1: STM32F103C8/CB и WebHID required');let ds=await hid.requestDevice({filters:[{usagePage:0xff00}]});if(ds.length!==1)throw Error('Выбери один CMSIS-DAP v1');let d=ds[0],ids=hidReportIds(d);try{await d.open();let link=new DapHidLink(d,...ids),s=new DapF1(link,pr);s.id=await s.init();if(link.packet!==64)throw Error('CMSIS-DAP HID packet size unsupported');return s;}catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}}
+export async function openCmsisDapHid(name,hid=navigator.hid){let pr=swdProfile(name);if(!pr||!hid)throw Error('CMSIS-DAP v1: неподдерживаемый STM32 или WebHID недоступен');let ds=await hid.requestDevice({filters:[{usagePage:0xff00}]});if(ds.length!==1)throw Error('Выбери один CMSIS-DAP v1');let d=ds[0],ids=hidReportIds(d);try{await d.open();let link=new DapHidLink(d,...ids),s=new DapStm32(link,pr);s.id=await s.init();if(link.packet!==64)throw Error('CMSIS-DAP HID packet size unsupported');return s;}catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}}

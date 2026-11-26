@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.16
+
+Shared STM32 SWD architecture: independent profile registry and F0/F1 algorithms (`stm32-swd.js`), separate ST-LINK and CMSIS-DAP adapters. All 20 existing explicit profiles are now routed through either ST-LINK/V2/V2-1 or CMSIS-DAP v2 USB / v1 HID. No extra primary-screen controls; existing optional programmer tools remain unchanged. FS10 installer remains F103C8 only. Existing erase/verification policies preserved. Actual programmer and phone hardware remain untested. Other flash architectures not enabled yet.
+
 # Flasher Studio v0.2.15
 
 ST-LINK/V2 and V2-1 SWD: explicit 14 STM32F0 and 6 STM32F103 medium-density order-code profiles. RM0360/RM0091 F0 1/2 KiB page erase, full-flash readback, 4 KiB protection sectors; 32-bit WRP masks checked unsigned. F1 medium-density uses existing F103 driver. ID and size checks do not distinguish every package with shared silicon. No blanket family support, no options/OTP modifications, no hardware verification. Other STM32 families remain unsupported by ST-LINK. Sources: ST RM0360, RM0091, PM0075, STM32F030/F042/F070/F072/F103 datasheets.
