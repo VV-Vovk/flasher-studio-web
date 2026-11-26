@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.35 (development)
+
+WB coverage: 18 catalogue base groups / 23 package templates. Added WB55 640 KiB and WB15/10/1M physical 320 KiB, 2 KiB erase pages and 1 KiB PCROP units, RM0473/RM0434. Reset-and-halt via CPU1 vector catch required before erase; no CPU2 control/security writes. The WB compiler candidate remains in the private Builder branch develop/wb-cpu1, not merged and not yet SDK-smoke-tested. Flash-only until actual compile verification. No hardware testing, FUS or radio binaries redistributed.
+
 # Flasher Studio v0.2.34 (development)
 
 Priority STM32WB55/50/35/30/5M: 14 SWD base groups (17 package templates). RM0434: CPU1 only, live SFSA and CPU2 boot vector, RDP0, FSD/ESE, CPU2 not started, page erase only within incoming application, verification of erased page tail, no CPU2/FUS/security updates. No mass erase. Existing data in overwritten pages is lost; remaining pages preserved. User must reset/halt CPU1 before CPU2 boots. WB1x uses another geometry (RM0473) and is not enabled. Flash-only pending verified Builder builds. No new dependencies or wireless blobs; no hardware tests.
