@@ -1,0 +1,8 @@
+node_modules/
+public/usb-vendor.js
+.firebase/
+firebase-debug*.log
+__pycache__/
+*.pyc
+.env
+.env.*
