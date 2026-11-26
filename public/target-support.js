@@ -3,6 +3,7 @@ import {swdProfile} from './stm32-swd.js';
 import {stmUartProfile} from './stm32-rom-profiles.js';
 import {DFU_PROFILES,extendedAvrProfile} from './extra-programmers.js';
 import {avrProfile} from './programmers.js';
+import {nrfZephyrTarget} from './nrf-arduino-profiles.js';
 import {wbCpu1CompileTarget} from './stm32-wb.js';
 const STATIC_STM_BASES=new Set(["STM32F030F4","STM32F030K6","STM32F030C6","STM32F030C8","STM32F030R8","STM32F103C8","STM32F103CB","STM32C011F4","STM32C011F6","STM32C031C6","STM32C031F6","STM32G071CB","STM32G071RB","STM32G030F6","STM32G030K8","STM32G431CB","STM32G431RB","STM32G431KB","STM32F401CC","STM32F401RC","STM32F411CE","STM32F411RE","STM32F303CB","STM32F303CC","STM32F303RC","STM32F205RG","STM32L072CB","STM32L072CZ","STM32L432KC","STM32F070F6","STM32F042F6","STM32F042C6","STM32F042K6","STM32F070C6","STM32F070CB","STM32F070RB","STM32F072RB","STM32F072CB","STM32F103R8","STM32F103RB","STM32F103V8","STM32F103VB"]);
 const ALIASES={'Blue Pill STM32F103':'STM32F103C8T6','Black Pill F411':'STM32F411CEU6'};
@@ -51,7 +52,8 @@ export function targetCapability({fi,chip,board,name=board,arduino=false,bareAvr
  else if(fi===0&&ESP.has(chip)&&n&&n!=='—'){compile=true;methods=['USB-UART','Native USB','Native USB (если доступен)'];}
  else if(fi===1&&E8266.has(n)){compile=true;methods=['USB-UART'];}
  else if(fi===2){compile=arduino||bareAvr;if(bareAvr)methods=['ISP-программатор'];else if(extendedAvrProfile(n))methods=['USB','USB-UART','Native USB'];else if(avrProfile(n))methods=['USB','USB-UART'];}
- else if(fi===3||fi===6){compile=arduino;}
+ else if(fi===3){compile=arduino;}
+ else if(fi===6){compile=arduino||!!nrfZephyrTarget(n,chip);}
  else if(fi===4){compile=arduino;if(UF2.has(n))methods=['UF2'];}
  if(legacy)compile=legacyEsp;
  const state=compile?(methods.length?'both':'compile'):methods.length?'flash':'none';
