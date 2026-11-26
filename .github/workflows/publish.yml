@@ -1,0 +1,46 @@
+name: Publish Flasher Studio to Firebase
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_live:
+        description: 'Publish tested main branch to the live Flasher Studio site'
+        type: boolean
+        required: true
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: flasher-studio-firebase-live
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main' && inputs.confirm_live
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: npm run vendor && test -s public/usb-vendor.js
+      - run: npm test
+      - run: python -m unittest discover -s tests -p '*_test.py'
+      - uses: actions/upload-artifact@v6
+        with:
+          name: flasher-studio-release-${{ github.sha }}
+          path: public/
+          if-no-files-found: error
+          retention-days: 7
+      - name: Deploy only Flasher Studio Hosting target
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FLASHER_STUDIO_FIREBASE_SERVICE_ACCOUNT }}
+          projectId: esp-flasher-byvovk
+          target: studio
+          channelId: live
