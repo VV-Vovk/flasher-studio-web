@@ -6,9 +6,9 @@ export const BOARD_PROFILES = Object.freeze({
   'esp32s3-devkit': {label: 'ESP32-S3 DevKit', chip: 'esp32s3'},
   'esp32c6-devkit': {label: 'ESP32-C6 DevKit', chip: 'esp32c6'},
 });
-export const CHIPS = Object.freeze({esp32: 'ESP32', esp32c3:'ESP32-C3', esp32s3:'ESP32-S3', esp32c6:'ESP32-C6'});
+export const CHIPS = Object.freeze({esp32: 'ESP32', esp32c3:'ESP32-C3', esp32s3:'ESP32-S3', esp32c6:'ESP32-C6', esp32s2:'ESP32-S2', esp32h2:'ESP32-H2', esp8266:'ESP8266'});
 // Image-header chip IDs from Espressif's esptool format.
-const HEADER_IDS = Object.freeze({esp32:0, esp32c3:5, esp32s3:9, esp32c6:13});
+const HEADER_IDS = Object.freeze({esp32:0, esp32c3:5, esp32s3:9, esp32c6:13, esp32s2:2, esp32h2:16});
 const HEX64 = /^[0-9a-f]{64}$/i;
 const SAFE_NAME = /^[a-z0-9][a-z0-9._-]{0,79}$/;
 const MAX_IMAGE = 32 * 1024 * 1024;
@@ -19,7 +19,10 @@ export function chipFromDescription(value) {
   if (/ESP32-C3(?![0-9])/.test(s)) return 'esp32c3';
   if (/ESP32-S3(?![0-9])/.test(s)) return 'esp32s3';
   if (/ESP32-C6(?![0-9])/.test(s)) return 'esp32c6';
-  // Do not mistake unhandled variants, e.g. ESP32-S2, C5, C2, H2, for ESP32.
+  if (/ESP32-S2(?![0-9])/.test(s)) return 'esp32s2';
+  if (/ESP32-H2(?![0-9])/.test(s)) return 'esp32h2';
+  if (/\bESP8266(?:EX)?\b/.test(s)) return 'esp8266';
+  // Do not mistake unhandled variants, e.g. ESP32-C5 or C2, for ESP32.
   if (/\bESP32\b/.test(s) && !/ESP32[- ]/.test(s)) return 'esp32';
   return null;
 }
@@ -99,4 +102,44 @@ export function checkImageHeader(bytes, expectedChip) {
   const expected = HEADER_IDS[expectedChip];
   if (imageChipId !== expected) throw Error(`Заголовок BIN: chip ID ${imageChipId}, но ожидался ${expected} (${CHIPS[expectedChip]}). Запись заблокирована.`);
   return {kind:'esp-image', info:`ESP image · Chip ID ${imageChipId}`};
+}
+
+// ESP8266 Arduino core 3.1.2 image: eboot at zero, app at 0x1000.
+// Different from ESP32 extended headers; legacy ESP8266 does not encode chip ID.
+// Format references: Espressif ESP8266 firmware image format; Arduino ESP8266 3.1.2
+// platform.txt / tools/elf2bin.py. This independent validator does not include upstream code.
+export function validateEsp8266Arduino(b,flashBytes){
+ if(!(b instanceof Uint8Array)||!Number.isSafeInteger(flashBytes)||flashBytes<262144||b.length<=0x1020||b.length>flashBytes||b.length>16*1048576)throw Error('ESP8266: недопустимый размер BIN');
+ const v=new DataView(b.buffer,b.byteOffset,b.byteLength),sizes=[512,256,1024,2048,4096,2048,4096,0,8192,16384];
+ function image(offset,limit,check){
+   if(b[offset]!==0xe9||b[offset+1]===0||b[offset+1]>16||b[offset+2]>3||![0,1,2,15].includes(b[offset+3]&15))throw Error('ESP8266: неверный заголовок eboot/app');
+   if(sizes[b[offset+3]>>>4]*1024!==flashBytes)throw Error('ESP8266: размер Flash в образе не совпадает с чипом');
+   const entry=v.getUint32(offset+4,true);
+   if(entry<0x40100000||entry>=0x40110000)throw Error('ESP8266: неверная точка входа');
+   let p=offset+8,checksum=0xef;
+   for(let i=0;i<b[offset+1];i++){
+     if(p+8>limit)throw Error('ESP8266: неполный сегмент');
+     let addr=v.getUint32(p,true),n=v.getUint32(p+4,true);p+=8;
+     if(p+n>limit||addr<0x3ffe0000||addr>=0x40400000||addr+n>0x40400000)throw Error('ESP8266: недопустимый сегмент');
+     if(check)for(let k=p;k<p+n;k++)checksum^=b[k];
+     p+=n;
+   }
+   const end=offset+Math.ceil((p-offset+1)/16)*16;
+   if(end>limit||(check&&b[end-1]!==checksum))throw Error('ESP8266: контрольная сумма eboot');
+   return end;
+ }
+ const bootEnd=image(0,0x1000,true);
+ // Arduino fills the remainder of the first sector with 0xAA.
+ if(!b.subarray(bootEnd,0x1000).every(x=>x===0xaa))throw Error('ESP8266: неверный раздел eboot');
+ const appEnd=image(0x1000,b.length,false);
+ if(appEnd!==b.length||v.getUint32(0x1010,true)!==b.length)throw Error('ESP8266: требуется полный несжатый Arduino BIN');
+ // CRC-32/MPEG-2 over the complete image with its two embedded CRC fields zeroed.
+ // The app segment XOR predates inserting the CRC fields, so use the full CRC.
+ let crc=0xffffffff;
+ for(let i=0;i<b.length;i++){
+   crc=(crc^((i>=0x1010&&i<0x1018?0:b[i])<<24))>>>0;
+   for(let j=0;j<8;j++)crc=((crc<<1)^((crc&0x80000000)?0x04c11db7:0))>>>0;
+ }
+ if(crc!==v.getUint32(0x1014,true))throw Error('ESP8266: CRC32 образа не совпадает');
+ return {kind:'esp8266-arduino',offset:0,size:b.length,flashBytes};
 }

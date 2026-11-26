@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.17
+
+Wired ESP8266 (NodeMCU, D1 mini, Generic) experimental support: Arduino ESP8266 core 3.1.2 combined uncompressed eboot+app BIN at 0x0, flash capacity, segment geometry, boot checksum and full image CRC verified before write. Cloud archive selection limited to one BIN with exact Arduino core metadata; manual file must pass same format. No ESP8266 OTA installation, no arbitrary SDK image / filesystem / segment layouts. Added ESP32-S2 and H2 ordinary merged BIN route, matching chip headers and offsets. All writes still require physical connection and readback. No hardware verification. No private CI runs triggered. Arduino Nano/old bootloader routes unchanged.
+
 # Flasher Studio v0.2.16
 
 Shared STM32 SWD architecture: independent profile registry and F0/F1 algorithms (`stm32-swd.js`), separate ST-LINK and CMSIS-DAP adapters. All 20 existing explicit profiles are now routed through either ST-LINK/V2/V2-1 or CMSIS-DAP v2 USB / v1 HID. No extra primary-screen controls; existing optional programmer tools remain unchanged. FS10 installer remains F103C8 only. Existing erase/verification policies preserved. Actual programmer and phone hardware remain untested. Other flash architectures not enabled yet.
