@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.14
+
+STM32F070F6P6 (TR ordering suffix accepted) via ST-LINK/V2 or V2-1: RM0360 Flash controller, 32 KiB / 6 KiB RAM, 1 KiB page erase, halfword writes, ID 0x445 at 0x40015800, CPUID Cortex-M0, flash-size and UID verification, reject read/write protection and option-byte errors, verify entire main flash including erased tail, relock. No option bytes changed, no recovery bootloader required. Full erase confirmation remains. After programming power-cycle with BOOT0 low. Same device ID/geometry may be shared by other silicon; exact board selection required. Builder profile v0.2.9. Physical ST-LINK/Android tests pending. F103 paths unchanged.
+
 # Flasher Studio v0.2.13
 
 ESP32-C3 private cloud Recovery: reuse the existing private Builder token and workflow build-esp-recovery.yml (Builder v0.2.8), exact settings, dispatch/resume, verified chunked download, IndexedDB cache and install dialog. No local Docker or manual file transfer required in the normal flow. Private Actions quota applies. Public ESP redistribution remains HOLD; hardware test pending. Custom cloud build limited to C3; S3/C6 remain previous experimental private candidates. Existing own ZIP import remains in advanced details.

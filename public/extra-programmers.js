@@ -60,7 +60,82 @@ export class StLinkF1{
  async close(){// target remains halted after write: user resets the board manually
  await this.device.close();}
 }
-export async function openStLink(name){let pr=STM32_UART[name];if(!pr||!/^STM32F103C[8B]T6$/.test(name))throw Error('SWD profile unsupported');let d=await navigator.usb.requestDevice({filters:[0x3748,0x374b,0x3752].map(productId=>({vendorId:0x0483,productId}))});let a=new StLinkF1(d,pr);try{await d.open();if(!d.configuration)await d.selectConfiguration(1);let iface=d.configuration.interfaces.find(i=>i.interfaceNumber===0&&i.alternate.interfaceClass===255&&i.alternate.endpoints.some(e=>e.direction==='in'&&e.endpointNumber===1)&&i.alternate.endpoints.some(e=>e.direction==='out'&&e.endpointNumber===a.out));if(!iface)throw Error('ST-LINK endpoint mismatch');await d.claimInterface(iface.interfaceNumber);a.id=await a.init();return a;}catch(e){await d.close().catch(()=>{});throw e;}}
+// RM0360 rev 5: F070x6, 32 KiB main flash, 1 KiB pages, halfword programming.
+// Device ID and size identify compatible silicon geometry, not exact package/order code.
+export const STLINK_F0_PROFILES=Object.freeze({
+ STM32F070F6P6:Object.freeze({pid:0x445,flash:32768,ram:6144,uid:0x1ffff7ac,sizeReg:0x1ffff7cc,idReg:0x40015800,pageSize:1024,wrpMask:0xff})
+});
+export function stLinkProfile(name){
+ const n=String(name).toUpperCase().replace(/^STM32F070F6P6TR$/,'STM32F070F6P6');
+ return Object.hasOwn(STLINK_F0_PROFILES,n)?STLINK_F0_PROFILES[n]:/^STM32F103C[8B]T6$/.test(n)?STM32_UART[n]:null;
+}
+const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022014,OBR:0x4002201c,WRP:0x40022020,DHCSR:0xe000edf0,CPUID:0xe000ed00,FLASH:0x08000000});
+export class StLinkF0 extends StLinkF1{
+ async identify(){
+   if((await this.reg(this.pr.idReg)&0xfff)!==this.pr.pid)throw Error('STM32F070x6 device ID mismatch');
+   if(((await this.reg(F0REG.CPUID)>>>4)&0xfff)!==0xc20)throw Error('Cortex-M0 required');
+   const b=await this.read(this.pr.sizeReg,2);
+   if((b[0]+256*b[1])*1024!==this.pr.flash)throw Error('STM32F0 Flash size mismatch');
+   const uid=await this.read(this.pr.uid,12);
+   if(uid.length!==12||uid.every(x=>x===0)||uid.every(x=>x===255))throw Error('Invalid UID');
+   return 'stm32-'+hex(uid);
+ }
+ async idleF0(){
+   const end=Date.now()+10000;
+   do{const s=await this.reg(F0REG.SR);if(!(s&1))return s;await wait(3);}while(Date.now()<end);
+   throw Error('STM32F0 Flash busy timeout');
+ }
+ async completeF0(){
+   const s=await this.idleF0();
+   if(s&0x14)throw Error('STM32F0 Flash status '+s.toString(16));
+   if(!(s&0x20))throw Error('STM32F0 missing EOP');
+   await this.put(F0REG.SR,0x20);
+ }
+ async program(b,progress=()=>{}){
+   if(!(b instanceof Uint8Array)||b.length>this.pr.flash)throw Error('STM32F0 Flash range');
+   validateStmVector(b,this.pr);
+   if(await this.identify()!==this.id)throw Error('UID changed');
+   await this.put(F0REG.DHCSR,0xa05f0003);
+   if(!(await this.reg(F0REG.DHCSR)&(1<<17)))throw Error('Core not halted');
+   await this.idleF0();
+   // Reject all read-protection levels except 0, any option-byte error, and any
+   // protected sector among the eight implemented 4 KiB sectors.
+   if((await this.reg(F0REG.OBR)&7)!==0||(await this.reg(F0REG.WRP)&this.pr.wrpMask)!==this.pr.wrpMask)throw Error('STM32F0 Flash protection present');
+   if(await this.reg(F0REG.CR)&0x80){
+     await this.put(F0REG.KEY,0x45670123);await this.put(F0REG.KEY,0xcdef89ab);
+   }
+   if(await this.reg(F0REG.CR)&0x80)throw Error('STM32F0 Flash locked');
+   try{
+     await this.put(F0REG.SR,0x34);
+     // Existing UI explicitly confirms a complete main-flash erase. Never
+     // erase/alter option bytes or system memory.
+     for(let i=0;i<this.pr.flash;i+=this.pr.pageSize){
+       await this.put(F0REG.CR,2);await this.put(F0REG.AR,F0REG.FLASH+i);
+       await this.put(F0REG.CR,0x42);await this.completeF0();
+     }
+     await this.put(F0REG.CR,1);
+     for(let i=0;i<b.length;i+=2){
+       const p=u([b[i],b[i+1]??255]);
+       if(p[0]!==255||p[1]!==255){await this.writeHalfword(F0REG.FLASH+i,p);await this.completeF0();}
+       if(i%256===0)progress(i/b.length*0.9);
+     }
+     await this.put(F0REG.CR,0);
+     // Verify the whole main flash including erased tail and odd-byte padding.
+     for(let i=0;i<this.pr.flash;i+=256){
+       const n=Math.min(256,this.pr.flash-i),expected=new Uint8Array(n).fill(255);
+       expected.set(b.slice(i,i+n));
+       if(!eq(expected,await this.read(F0REG.FLASH+i,n)))throw Error('STM32F0 SWD readback mismatch @0x'+(F0REG.FLASH+i).toString(16));
+       progress(0.9+0.1*(i+n)/this.pr.flash);
+     }
+   }finally{
+     // If the device is still busy or lost, report the failure rather than
+     // attempting option reload/unprotect. User power-cycles after programming.
+     await this.idleF0();await this.put(F0REG.CR,0x80);
+     if(!(await this.reg(F0REG.CR)&0x80))throw Error('STM32F0 Flash relock failed');
+   }
+ }
+}
+export async function openStLink(name){let pr=stLinkProfile(name);if(!pr)throw Error('SWD profile unsupported');let d=await navigator.usb.requestDevice({filters:[0x3748,0x374b,0x3752].map(productId=>({vendorId:0x0483,productId}))});let a=pr.idReg?new StLinkF0(d,pr):new StLinkF1(d,pr);try{await d.open();if(!d.configuration)await d.selectConfiguration(1);let iface=d.configuration.interfaces.find(i=>i.interfaceNumber===0&&i.alternate.interfaceClass===255&&i.alternate.endpoints.some(e=>e.direction==='in'&&e.endpointNumber===1)&&i.alternate.endpoints.some(e=>e.direction==='out'&&e.endpointNumber===a.out));if(!iface)throw Error('ST-LINK endpoint mismatch');await d.claimInterface(iface.interfaceNumber);a.id=await a.init();return a;}catch(e){await d.close().catch(()=>{});throw e;}}
 export async function verifyBootZip(bytes,entry){if(!entry||await sha256Hex(bytes)!==entry.package.sha256||bytes.length!==entry.package.size)throw Error('ZIP не совпадает с CI-каталогом');let files=await unpackZip(bytes),m=entry.manifest;for(let f of m.files){let b=files.get(f.file);if(!b||b.length!==f.size||await sha256Hex(b)!==f.sha256)throw Error('Boot package SHA-256 '+f.file);}return {m,files};}
 function avrBootImage(m,hex){if(m.kind!=='avr-isp'||!['atmega328','atmega328p'].includes(m.target.mcu)||m.target.flashBytes!==32768)throw Error('USBasp boot profile unsupported');let ranges=parseHex(new TextDecoder().decode(hex));if(ranges.some(r=>r.address<m.applicationMaxBytes||r.address+r.data.length>32768))throw Error('Bootloader writes application area');let image=new Uint8Array(32768).fill(255);for(let r of ranges)image.set(r.data,r.address);return {m,image};}
 export async function avrBootPackage(bytes,entry){let {m,files}=await verifyBootZip(bytes,entry);return avrBootImage(m,files.get('bootloader.hex'));}
