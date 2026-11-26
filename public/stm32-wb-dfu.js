@@ -227,6 +227,7 @@ export class WbDfuRadioStage extends WbDfuReadOnly{
   const span=plan.end-plan.start;
   const expectedBlock=i=>{const b=new Uint8Array(256).fill(255);b.set(data.slice(i,i+256));return b;};
   const preserveBytes=activate?applicationEnd-BASE:0;
+  if(activate&&snapshot.pcrop.some(([a,z])=>(a&this.pr.pcropMask)<=(z&this.pr.pcropMask)&&(a&this.pr.pcropMask)*this.pr.pageSize/2<plan.limit))throw Error('WB activation scan intersects PCROP');
   const preserveSha=preserveBytes?await wbDigest(saved):null;
   const scanOutside=async()=>{
    for(let a=BASE;a<BASE+plan.limit;a+=256){
@@ -315,7 +316,7 @@ export function verifyWbRadioAfterUpgrade(name,pending,usb=navigator.usb){
   const settled=entry.kind==='fus'?info.radio.lastFusState===0||info.radio.lastFusState===4:info.radio.lastFusState===4&&info.radio.lastWirelessState===1||info.radio.lastFusState===0&&info.radio.lastWirelessState===0;
   let cpu1Verified=null;
   if(pending.preserveBytes){
-   if(!Number.isInteger(pending.preserveBytes)||pending.preserveBytes<0||pending.preserveBytes%info.pageBytes||pending.preserveBytes>info.appKiB*1024||!/^\w{64}$/.test(pending.preserveSha||''))cpu1Verified=false;
+   if(!Number.isInteger(pending.preserveBytes)||pending.preserveBytes<0||pending.preserveBytes%info.pageBytes||pending.preserveBytes>info.appKiB*1024||!/^[a-f0-9]{64}$/.test(pending.preserveSha||''))cpu1Verified=false;
    else cpu1Verified=await wbDigest(await wbReadRange(s,pending.preserveBytes))===pending.preserveSha;
   }
   const finalInfo=await inspectWbDfu(s,name,d);
@@ -458,7 +459,7 @@ export class WbDfuRadioEnter extends WbDfuReadOnly{
   if(this.#used)throw Error('WB FUS entry session used');this.#used=true;
   if(typeof approve!=='function')throw Error('WB FUS entry approval required');
   const id=await this.identify(),snap=await wbDfuSnapshot(this),info=await inspectWbDfu(this,name,descriptor);
-  if(info.radio?.lastFusState===0&&info.radio?.lastWirelessState===0)return {alreadyIdle:true};
+  if(info.radio?.lastFusState===0&&info.radio?.lastWirelessState===0)return {alreadyIdle:true,reportedOnly:true};
   if(info.radio&&(info.radio.lastFusState!==4||info.radio.lastWirelessState!==1))throw Error('WB FUS busy or state unknown');
   const pending={target:name,uid:id,kind:'enter',file:'FUS_GET_STATE',commandAttempted:false};
   if(await approve({...pending})!==true)return {cancelled:true};
