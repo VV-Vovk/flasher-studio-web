@@ -13,7 +13,7 @@ export const NRF_SWD=Object.freeze({
 export function nrfGeometry(chip,info){
  const p=NRF_SWD[chip];
  if(!p||info.part!==p.part||info.page!==4096||!p.variants.some(([f,r])=>f===info.flashKiB&&r===info.ramKiB)||info.pages*info.page!==info.flashKiB*1024||((info.cpuid>>>4)&0xfff)!==0xc24)throw Error('nRF: FICR/core/geometry mismatch');
- if(!Array.isArray(info.uid)||info.uid.length!==2||info.uid.every(v=>v===0)||info.uid.every(v=>v===0xffffffff))throw Error('nRF: invalid DEVICEID');
+ if(!Array.isArray(info.uid)||info.uid.length!==2||!info.uid.every(v=>Number.isInteger(v)&&v>=0&&v<=0xffffffff)||info.uid.every(v=>v===0)||info.uid.every(v=>v===0xffffffff))throw Error('nRF: invalid DEVICEID');
  return Object.freeze({chip,flash:info.flashKiB*1024,ram:info.ramKiB*1024,page:info.page,uid:info.uid.map(v=>v.toString(16).padStart(8,'0')).join('')});
 }
 export function nrfImage(ranges,p){
@@ -32,8 +32,9 @@ export class NrfSwd{
  async info(){const r=a=>this.link.readWord(a);return nrfGeometry(this.chip,{part:await r(F+0x100),page:await r(F+0x10),pages:await r(F+0x14),ramKiB:await r(F+0x10c),flashKiB:await r(F+0x110),uid:[await r(F+0x60),await r(F+0x64)],cpuid:await r(CPUID)});}
  async read(a,n){const b=new Uint8Array(n),v=new DataView(b.buffer);for(let i=0;i<n;i+=4)v.setUint32(i,await this.link.readWord(a+i),true);return b;}
  async ready(){const end=Date.now()+2000;while(await this.link.readWord(N+0x400)!==1){if(Date.now()>end)throw Error('nRF NVMC timeout');await wait(5);}}
+ async halted(){const dh=await this.link.readWord(DHCSR);if(!(dh&0x20000)||(dh&0x02000000))throw Error('nRF core not halted or reset detected');}
  async guard(p){const a=await this.info();if(JSON.stringify(a)!==JSON.stringify(p))throw Error('nRF identity changed');const r=x=>this.link.readWord(x);
-  const dh=await r(DHCSR);if(!(dh&0x20000)||(dh&0x02000000))throw Error('nRF core not halted or reset detected');
+  await this.halted();
   if(NRF_SWD[this.chip].protection==='bprot'){for(const off of [0x600,0x604,0x610,0x614])if(await r(0x40000000+off)!==0)throw Error('nRF BPROT active');}
   else {for(let i=0;i<8;i++){const base=N+0x800+i*0x10;if(await r(base+4)!==0||await r(base+8)!==0)throw Error('nRF ACL configured');}}
  }
@@ -55,14 +56,14 @@ export class NrfSwd{
     if((await this.read(a,p.page)).some(v=>v!==255))throw Error('nRF page changed');
     await this.link.writeWord(N+0x504,1);
     if(await this.link.readWord(N+0x504)!==1)throw Error('nRF write mode refused');
-    for(let i=a;i<a+p.page;i+=4){const w=v.getUint32(i,true);if(w!==0xffffffff){await this.link.writeWord(i,w);await this.ready();}}
+    for(let i=a;i<a+p.page;i+=4){const w=v.getUint32(i,true);if(w!==0xffffffff){await this.halted();await this.link.writeWord(i,w);await this.ready();await this.halted();}}
     await this.link.writeWord(N+0x504,0);await this.ready();
     if(await this.link.readWord(N+0x504)!==0)throw Error('nRF NVMC relock failed');
     if(!eq(await this.read(a,p.page),plan.bytes.slice(a,a+p.page)))throw Error('nRF page readback mismatch');
     progress(.25+.75*(a+p.page)/plan.bytes.length);
    }
    await this.guard(p);return {verified:true,bytes:plan.used,pages:plan.pages,uid:p.uid,executionVerified:false};
-  }finally{await this.link.writeWord(N+0x504,0);await this.ready();if(await this.link.readWord(N+0x504)!==0)throw Error('nRF NVMC read-only restoration failed');}
+  }finally{if(JSON.stringify(await this.info())!==JSON.stringify(p))throw Error('nRF identity changed; cannot safely restore NVMC');await this.link.writeWord(N+0x504,0);await this.ready();if(await this.link.readWord(N+0x504)!==0)throw Error('nRF NVMC read-only restoration failed');}
  }
 }
 export async function withNrfSwd(chip,fn,usb=navigator.usb){

@@ -24,3 +24,13 @@ test('nRF blank-only write, verify, relock, reject occupied or protected pages',
  f=new Fake();f.regs.set(0x40000600,1);s=new NrfSwd(f,'nRF52832');await assert.rejects(s.program(image(),()=>true),/BPROT/);
  f=new Fake();f.corrupt=true;s=new NrfSwd(f,'nRF52832');await assert.rejects(s.program(image(),()=>true),/readback/);assert.equal(f.regs.get(0x4001e504),0);
 });
+
+test('nRF52840 exact geometry and ACL reject; reset during write never reports success',async()=>{
+ const x={...info,part:0x52840,flashKiB:1024,ramKiB:256,pages:256};
+ assert.equal(nrfGeometry('nRF52840',x).flash,1048576);
+ const f=new Fake();for(const [a,v] of [[0x10000100,x.part],[0x10000014,x.pages],[0x1000010c,x.ramKiB],[0x10000110,x.flashKiB],[0x4001e808,1]])f.regs.set(a,v);
+ await assert.rejects(new NrfSwd(f,'nRF52840').program(image(),()=>true),/ACL/);assert.ok(f.calls.every(([a])=>a===0xe000edf0));
+ const r=new Fake(),write=r.writeWord.bind(r);r.writeWord=async(a,w)=>{await write(a,w);if(a===0)r.regs.set(0xe000edf0,0x02020000);};
+ await assert.rejects(new NrfSwd(r,'nRF52832').program(image(),()=>true),/reset detected/);
+ assert.equal(r.regs.get(0x4001e504),0);assert.equal(r.memory[1],0xffffffff);
+});
