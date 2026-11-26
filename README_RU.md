@@ -181,3 +181,5 @@ Radio/FUS catalogue includes only filenames, sizes and Git blob identifiers from
 ## v0.2.45 — WB1x/module full-project geometry
 
 RM0473: 12 KiB SRAM1, 32 KiB SRAM2a, 4 KiB SRAM2b and two-bit SBRSA_B. WB1MMC and WB5MMG use the underlying WB15 and WB55 SRAM geometry. All catalogue WB profiles can audit full GNU projects; OTA remains WB55 192 KiB only, USB DFU remains separately restricted. No hardware verification.
+
+Radio/FUS guided update planner: exact version and density-specific install-address metadata from pinned ST v1.24.0 release notes; rejects absent images, unreviewed migration, downgrade, Safeboot, mismatched local file and overlap with declared application. Actual installation remains in STM32CubeProgrammer, not browser; no auto deletion, security changes or acceptance of license. SWD FUS Operator can overwrite CPU1. Verify installed version and SFSA after every operation. No vendor binaries bundled.
