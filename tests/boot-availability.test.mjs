@@ -30,11 +30,30 @@ test('Missing package checksum or unexpected auto-install is rejected',()=>{
  assert.equal(route({selected:true,espChip:'esp32c3'},[{...c,package:{...c.package,sha256:''}}]),null);
  assert.equal(route({selected:true,espChip:'esp32c3'},[{...c,manifest:{...c.manifest,autoInstall:true}}]),null);
 });
-test('Initial install controls are hidden before catalog loading and source guards are wired',()=>{
- assert.match(html,/id="opBoot14" hidden/);
- assert.match(html,/id="deviceBootPanel14" hidden/);
+test('Initial install controls are disabled but visible and source guards are wired',()=>{
+ assert.match(html,/id="opBoot14" disabled/);
+ assert.match(html,/id="bootSetupDevice" disabled/);
+ assert.match(html,/id="deviceBootPanel14">/);
  assert.match(html,/if\(!p&&operation14==='boot'\)/);
  assert.match(html,/source14!==p.source\|\|!p.wired.includes\(wired14\)/);
  const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
  for(const s of scripts)new vm.Script(s[1]);
+});
+
+test('Boot controls remain visible and toggle disabled state with compatible target',()=>{
+ const source=html.match(/function syncBootInstall27\([\s\S]*?\n\}/)[0];
+ const ids=['opBoot14','bootSetupBuild','bootSetupDevice','deviceBootPanel14','bootAvailability28'];
+ const elements=Object.fromEntries(ids.map(id=>[id,{hidden:true,disabled:false,child:{},querySelector(){return this.child;}}]));
+ const ctx=vm.createContext({$:id=>elements[id],targetState:'none'});
+ const sync=vm.runInContext(source+'\nsyncBootInstall27;',ctx);
+ for(const plan of [null,{kind:'esp'},null]){
+  ctx.targetState=plan?'manual':'none';sync(plan);
+  for(const id of ['opBoot14','bootSetupDevice']){
+   assert.equal(elements[id].hidden,false);assert.equal(elements[id].disabled,!plan);
+  }
+  assert.equal(elements.deviceBootPanel14.hidden,false);
+  assert.equal(elements.bootSetupBuild.hidden,true);
+ }
+ ctx.targetState='manual';sync(null);
+ assert.match(elements.opBoot14.child.textContent,/Нет совместимого/);
 });
