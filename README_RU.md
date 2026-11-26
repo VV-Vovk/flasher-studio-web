@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.20
+
+Separate target capability states (build+flash, build only, flash only, unsupported). Unsupported target rows disabled, exact manual entry checked, unsupported programming interfaces disabled. Compiler eligibility uses existing Builder profile inventory and source-only catalogue metadata; it is not a guarantee of any project's compilation. Additional F030/F031/F051/F071/F072 and F103 low/medium/high-density base-part SWD profiles from existing ROM geometry, HSI guard, full F1 verification. F0/F1 are not complete (including F09x, XL/other F1 lines); no hardware certification. No new private CI.
+
 # Flasher Studio v0.2.19
 
 Seven additional exact single-bank F2/F4 SWD profiles using the shared ST-LINK and CMSIS-DAP transports. RM0033 / RM0368 / RM0383 / RM0090. Sector erase, conservative x8 programming (slow), RDP/WRP/PCROP guards, cache invalidation, full main Flash verification, relock. No Option Bytes changes. F407 vector validation currently accepts main SRAM only (128 KiB, not CCM). No dual-bank support; no hardware tests. No UI controls added. F205/F401/F411 have explicit Builder profiles; F207/F407 use existing catalog resolver and are not newly compiled in this update. Public CI only.

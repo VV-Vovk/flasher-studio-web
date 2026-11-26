@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {StLinkF0,stLinkProfile,STLINK_F0_PROFILES,STLINK_F1_PROFILES} from '../public/extra-programmers.js';
 const KEY=0x40022004,SR=0x4002200c,CR=0x40022010,AR=0x40022014,OBR=0x4002201c,WRP=0x40022020,BASE=0x08000000,DH=0xe000edf0;
 class Mock extends StLinkF0{
- constructor(name='STM32F070F6P6'){super({productId:0x3748},stLinkProfile(name));this.memory=new Uint8Array(this.pr.flash).fill(0);this.registers=new Map([[0x40015800,0x10006000|this.pr.pid],[0xe000ed00,0x410cc200],[CR,0x80],[SR,0],[OBR,0],[WRP,this.pr.wrpMask],[DH,0]]);this.writes=[];this.pages=[];this.id='stm32-0102030405060708090a0b0c';}
+ constructor(name='STM32F070F6P6'){super({productId:0x3748},stLinkProfile(name));this.memory=new Uint8Array(this.pr.flash).fill(0);this.registers=new Map([[0x40015800,0x10006000|this.pr.pid],[0xe000ed00,0x410cc200],[CR,0x80],[SR,0],[OBR,0],[WRP,this.pr.wrpMask],[DH,0],[0x40021000,3]]);this.writes=[];this.pages=[];this.id='stm32-0102030405060708090a0b0c';}
  async reg(a){if(!this.registers.has(a))throw Error('Unknown register '+a.toString(16));return this.registers.get(a);}
  async read(a,n){if(a===this.pr.sizeReg)return Uint8Array.of(this.pr.flash/1024,0);if(a===this.pr.uid)return Uint8Array.from({length:12},(_,i)=>i+1);if(a<BASE||a+n>BASE+this.memory.length)throw Error('Read range');return this.memory.slice(a-BASE,a-BASE+n);}
  async put(a,v){this.writes.push([a,v]);if(a===KEY){if(v===0xcdef89ab)this.registers.set(CR,0);return;}if(a===DH){this.registers.set(DH,1<<17);return;}if(a===SR){this.registers.set(SR,this.registers.get(SR)&~v);return;}if(a===CR&&v===0x42){let p=this.registers.get(AR)-BASE;assert.equal(p%this.pr.pageSize,0);assert.ok(p>=0&&p<this.pr.flash);this.pages.push(p);this.memory.fill(255,p,p+this.pr.pageSize);this.registers.set(SR,0x20);}this.registers.set(a,v);}
@@ -36,5 +36,5 @@ test('All explicit F0 geometry profiles: erase exactly all pages and verify full
    const blocked=new Mock(name);blocked.registers.set(WRP,(pr.wrpMask&~1)>>>0);await assert.rejects(blocked.program(b),/protection/);assert.equal(blocked.pages.length,0);
  }
  assert.equal(stLinkProfile('STM32F103VBT6TR').flash,131072);
- assert.equal(stLinkProfile('STM32F103RCT6'),null);
+ assert.equal(stLinkProfile('STM32F103RCT6').flash,262144);
 });
