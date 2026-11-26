@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.36 (development)
+
+WB: AN5185 Rev 15 factory high FUS mapping for smaller WB5x/3x; SFSA at physical end accepted only for documented FUS vectors, no extension beyond advertised Flash. WB30/35 reserved WRP/PCROP fields masked, OPTNV and OPTSTRT preflight, CPU1 halt and sticky reset monitored during erase/write. UI reports actual CPU1 budget and SFSA at connection and checks again before confirmation. USB DFU remains disabled for WB pending proof of safe nonsecure page-only writes and trustworthy device/region identity. Focused Builder SDK smoke in separate branch. No hardware testing, no new dependencies or wireless blobs.
+
 # Flasher Studio v0.2.35 (development)
 
 WB coverage: 18 catalogue base groups / 23 package templates. Added WB55 640 KiB and WB15/10/1M physical 320 KiB, 2 KiB erase pages and 1 KiB PCROP units, RM0473/RM0434. Reset-and-halt via CPU1 vector catch required before erase; no CPU2 control/security writes. The WB compiler candidate remains in the private Builder branch develop/wb-cpu1, not merged and not yet SDK-smoke-tested. Flash-only until actual compile verification. No hardware testing, FUS or radio binaries redistributed.

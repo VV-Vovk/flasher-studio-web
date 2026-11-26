@@ -28,3 +28,5 @@
 - WB CPU1 application driver: original register-level implementation using factual RM0434/AN5451 descriptions. No ST FUS or wireless binary redistribution, no option modifications. Restricted wireless middleware stays excluded.
 
 - WB1x RM0473/AN5811 and WB55 640 KiB geometry from factual DFP metadata; no third-party Flash implementation or FUS/wireless binaries included.
+
+- WB factory high FUS mapping and flash checks based on factual AN5185 Rev 15 and RM0434 register definitions; no FUS implementation or binaries added.
