@@ -6,6 +6,7 @@ import {SECTOR_PROFILES,sectorProfile,identifySector,programSector} from './stm3
 export {SECTOR_PROFILES};
 import {gPageProfile,identifyGPage,programGPage} from './stm32-g-page.js';
 import {clPageProfile,identifyCL,programCL} from './stm32-cl-page.js';
+import {l0Profile,identifyL0,programL0} from './stm32-l0.js';
 const u=a=>Uint8Array.from(a),eq=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]),hex=a=>Array.from(a,x=>x.toString(16).padStart(2,'0')).join(''),wait=ms=>new Promise(r=>setTimeout(r,ms));
 // RM0360 rev 5: F070x6, 32 KiB main flash, 1 KiB pages, halfword programming.
 // Device ID and size identify compatible silicon geometry, not exact package/order code.
@@ -62,15 +63,15 @@ function basePart(n){const m=/^(STM32F(?:030|031|038|042|048|051|058|070|071|072
 export function swdProfile(name){
  const n=String(name).toUpperCase().replace(/TR$/,'');
  const key=basePart(n);
- return STLINK_F0_PROFILES[n]||F0_BASE_PROFILES[key]||STLINK_F1_PROFILES[n]||F1_BASE_PROFILES[key]||F3_BASE_PROFILES[key]||sectorProfile(n)||gPageProfile(n)||clPageProfile(n)||null;
+ return STLINK_F0_PROFILES[n]||F0_BASE_PROFILES[key]||STLINK_F1_PROFILES[n]||F1_BASE_PROFILES[key]||F3_BASE_PROFILES[key]||sectorProfile(n)||gPageProfile(n)||clPageProfile(n)||l0Profile(n)||null;
 }
 
 const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022014,OBR:0x4002201c,WRP:0x40022020,DHCSR:0xe000edf0,CPUID:0xe000ed00,FLASH:0x08000000});
 
 export class Stm32SwdSession {
  constructor(pr){this.pr=pr;}
- async identify(){if(this.pr.controller==='cl-page')return identifyCL(this);if(this.pr.controller==='g-single-page')return identifyGPage(this);if(this.pr.controller==='f2f4-sector')return identifySector(this);return this.pr.idReg?this.identifyF0():this.identifyF1();}
- async program(b,progress=()=>{}){if(this.pr.controller==='cl-page')return programCL(this,b,progress);if(this.pr.controller==='g-single-page')return programGPage(this,b,progress);if(this.pr.controller==='f2f4-sector')return programSector(this,b,progress);if(this.pr.controller==='f1-xl')return this.programF1XL(b,progress);return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
+ async identify(){if(this.pr.controller==='l0-pecr')return identifyL0(this);if(this.pr.controller==='cl-page')return identifyCL(this);if(this.pr.controller==='g-single-page')return identifyGPage(this);if(this.pr.controller==='f2f4-sector')return identifySector(this);return this.pr.idReg?this.identifyF0():this.identifyF1();}
+ async program(b,progress=()=>{}){if(this.pr.controller==='l0-pecr')return programL0(this,b,progress);if(this.pr.controller==='cl-page')return programCL(this,b,progress);if(this.pr.controller==='g-single-page')return programGPage(this,b,progress);if(this.pr.controller==='f2f4-sector')return programSector(this,b,progress);if(this.pr.controller==='f1-xl')return this.programF1XL(b,progress);return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
  async identifyF1(){if((await this.reg(0xe0042000)&0xfff)!==this.pr.pid)throw Error('STM32F1 device ID mismatch');if(((await this.reg(0xe000ed00)>>>4)&0xfff)!==0xc23)throw Error('Cortex-M3 required');let b=await this.read(this.pr.sizeReg,2);if(b.length!==2||(b[0]+256*b[1])*1024!==this.pr.flash)throw Error('Flash size mismatch');let uid=await this.read(this.pr.uid,12);if(uid.length!==12||uid.every(x=>!x)||uid.every(x=>x===255))throw Error('Invalid UID');return 'stm32-'+hex(uid);}
 
  async ready(){let end=Date.now()+20000;while(Date.now()<end){let s=await this.reg(0x4002200c);if(!(s&1)){if(s&0x14)throw Error('STM32 Flash status '+s.toString(16));return;}await wait(3);}throw Error('Flash busy timeout');}
