@@ -67,3 +67,19 @@ test('WB35 reserved bits cannot hide WRP or PCROP covering app',async()=>{
 test('WB unexpected reset while erasing aborts before further erase or programming',async()=>{
  const s=new Fake('STM32WB55RGV6');s.resetDuringErase=true;await assert.rejects(s.program(image(s.pr)),/reset during/);assert.deepEqual(s.erased,[0]);assert.deepEqual(s.written,[]);
 });
+
+function fullProject(){return {flashKiB:32,audit:{schema:1,layout:'wb55-sram192-rm0434',sections:[{name:'.text',start:B,endExclusive:B+4097,area:'flash',loadStart:B},{name:'MAPPING_TABLE',start:0x20030000,endExclusive:0x20030020,area:'sram2a',loadStart:null},{name:'MB_MEM2',start:0x20030020,endExclusive:0x20030400,area:'sram2a',loadStart:null}]}};}
+test('WB full-project SWD checks live shared RAM before erase, and preserves CPU2',async()=>{
+ const s=new Fake('STM32WB55RGV6');s.regs.set(F+0x3c,0);s.regs.set(RV,(s.regs.get(RV)|(10<<18)|(15<<25))>>>0);
+ const project=fullProject(),b=image(s.pr);assert.equal((await s.wbProjectMemory(project)).aEnd,0x20032800);
+ await s.program(b,()=>{},project);assert.deepEqual(s.erased,[0,1]);assert.deepEqual(s.mem.slice(0,b.length),b);assert.ok(s.mem.slice(8192).every(x=>x===0x5a));
+ for(const mode of ['secure','ipcc','budget']){
+  const t=new Fake('STM32WB55RGV6');t.regs.set(F+0x3c,mode==='ipcc'?1:0);if(mode!=='secure')t.regs.set(RV,(t.regs.get(RV)|(10<<18))>>>0);const p=fullProject();if(mode==='budget')p.flashKiB=1024;
+  await assert.rejects(t.program(image(t.pr),()=>{},p),/boundary|IPCCDBA|budget/);assert.deepEqual(t.erased,[]);assert.deepEqual(t.written,[]);
+ }
+});
+test('WB full-project aborts after first erase if shared boundary changes',async()=>{
+ const s=new Fake('STM32WB55RGV6');s.regs.set(F+0x3c,0);s.regs.set(RV,(s.regs.get(RV)|(10<<18))>>>0);const put=s.put.bind(s);
+ s.put=async(a,v)=>{await put(a,v);if(a===CR&&(v&0x10000))s.regs.set(RV,s.regs.get(RV)&~(31<<18));};
+ await assert.rejects(s.program(image(s.pr),()=>{},fullProject()),/boundary/);assert.deepEqual(s.erased,[0]);assert.deepEqual(s.written,[]);
+});
