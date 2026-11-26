@@ -1,4 +1,4 @@
-# Flasher Studio v0.2.38 (development)
+# Flasher Studio v0.2.39 (development)
 
 WB: AN5185 Rev 15 factory high FUS mapping for smaller WB5x/3x; SFSA at physical end accepted only for documented FUS vectors, no extension beyond advertised Flash. WB30/35 reserved WRP/PCROP fields masked, OPTNV and OPTSTRT preflight, CPU1 halt and sticky reset monitored during erase/write. UI reports actual CPU1 budget and SFSA at connection and checks again before confirmation. USB DFU remains disabled for WB pending proof of safe nonsecure page-only writes and trustworthy device/region identity. Focused Builder SDK smoke in separate branch. No hardware testing, no new dependencies or wireless blobs.
 
@@ -149,3 +149,7 @@ Real STM32CubeWB v1.24.0 CPU1 compiler smoke passed 9/9 (WB55RGV6, WB35CEU6A, WB
 ## WB CPU1 preview in Web v0.2.38
 
 All 69 real SDK builds passed (23 catalogue templates × CMSIS/HAL/LL), including negative mailbox link test. Exact WB order codes now offer CPU1-only compilation in this development web branch. C/CPP/ZIP requests are routed to private Builder `develop/wb-cpu1`; upload, dispatch, polling, resume and artifact metadata use the same validated branch. Other families continue using main. No wireless SDK or FUS, no public deployment, no hardware verification. Source remains in private Git history; do not merge request files to public branches. Default app budget 32 KiB; actual SFSA checked before SWD programming.
+
+## Browser credential manager / PWA title
+
+GitHub credentials use a dedicated form with username/current-password autocomplete. After successful GitHub access verification, supported browsers can offer to save the PAT via PasswordCredential. Native form navigation is blocked; no PAT in localStorage, Firebase or URLs. Browser consent/settings determine whether saving is available; actual Android autofill needs device verification. Manifest uses Flasher Studio for both names without changing app identity. Clearing the field does not delete vault entries.
