@@ -1,4 +1,4 @@
-# Flasher Studio v0.2.36 (development)
+# Flasher Studio v0.2.37 (development)
 
 WB: AN5185 Rev 15 factory high FUS mapping for smaller WB5x/3x; SFSA at physical end accepted only for documented FUS vectors, no extension beyond advertised Flash. WB30/35 reserved WRP/PCROP fields masked, OPTNV and OPTSTRT preflight, CPU1 halt and sticky reset monitored during erase/write. UI reports actual CPU1 budget and SFSA at connection and checks again before confirmation. USB DFU remains disabled for WB pending proof of safe nonsecure page-only writes and trustworthy device/region identity. Focused Builder SDK smoke in separate branch. No hardware testing, no new dependencies or wireless blobs.
 
@@ -141,3 +141,7 @@ firebase deploy --only hosting:studio --project esp-flasher-byvovk
 Use test boards first; backup important data before writing. See prior version READMEs for limitations.
 
 H72/H73 source-only firmware can use the full AXI stack range only when the connected chip's current TCM_AXI_SHARED setting permits it (320/256/192/128 KiB). The setting is read before erase and never modified.
+
+## WB CPU1 / ROM DFU development
+
+Real STM32CubeWB v1.24.0 CPU1 compiler smoke passed 9/9 (WB55RGV6, WB35CEU6A, WB15CCU6, CMSIS/HAL/LL), Builder branch develop/wb-cpu1 only. Expanded 23-template matrix is pending. Web compile eligibility remains unchanged until Builder main supports WB. ROM DFU planning is experimental and not connected to USB: AN2606 sections 84/85 exclude WB10/15; the planner requires live SFSA, option/protection snapshot, exact geometry and page-only erase range. No write path enabled, no FUS commands, no hardware test. Source: https://www.st.com/resource/en/application_note/an2606-introduction-to-system-memory-boot-mode-stmicroelectronics.pdf
