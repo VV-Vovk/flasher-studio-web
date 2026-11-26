@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.9
+
+Urboot for six ATmega328/328P clock profiles: fetch exact official MiniCore 3.0.2 HEX from pinned upstream commit, anonymously; verify known SHA-256, size and addresses; preserve USBasp signature/fuse and explicit confirmation guards. No third-party binary is mirrored. The manual candidate ZIP path remains. Browser network and hardware are not validated yet. ESP/STM candidate distribution unchanged.
+
 # Flasher Studio v0.2.8
 
 Keep the boot installation choice visible and greyed out when no compatible package and implemented installation route are available. Explain the unavailable state. Compatibility and write guards from v0.2.7 are unchanged. No new hardware support.
