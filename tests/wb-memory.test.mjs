@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {auditWbElf,wbSharedBounds,wbCheckMemoryFit} from '../public/wb-memory.js';
+import {auditWbElf,wbSharedBounds,wbCheckMemoryFit,wbConfigFromLimit} from '../public/wb-memory.js';
 const F=0x08000000,A=0x20030000,B=0x20038000;
 function fixture(){
  const bytes=new Uint8Array(512),v=new DataView(bytes.buffer),h=(o,x)=>v.setUint16(o,x,true),w=(o,x)=>v.setUint32(o,x,true);
@@ -13,3 +13,5 @@ function fixture(){
 test('WB audit independently matches ELF and HEX including NOLOAD shared table',()=>{const {bytes,hex}=fixture(),audit=auditWbElf(bytes,32,hex);assert.equal(audit.sections.length,2);assert.equal(audit.sections[1].area,'sram2a');assert.equal(audit.sections[1].name,'MAPPING_TABLE');assert.equal(audit.sections[1].loadStart,null);hex[0].data[0]^=1;assert.throws(()=>auditWbElf(bytes,32,hex),/bytes differ/);});
 test('WB rejects ELF allocations outside reviewed RAM and initialized shared RAM',()=>{let x=fixture();x.v.setUint32(84+8,0x20040000,true);assert.throws(()=>auditWbElf(x.bytes,32,x.hex),/outside CPU1/);x=fixture();x.v.setUint32(84+12,F+8,true);x.v.setUint32(84+16,4,true);assert.throws(()=>auditWbElf(x.bytes,32,x.hex),/NOLOAD/);});
 test('WB live secure RAM bounds and default mapping table required',()=>{const x=fixture(),audit=auditWbElf(x.bytes,32,x.hex),p={audit,flashKiB:32};const rv=(0x80000000|(10<<18)|(15<<25))>>>0;assert.deepEqual(wbSharedBounds(rv,0),{aEnd:A+10240,bEnd:B+15360,ipccDefault:true});assert.doesNotThrow(()=>wbCheckMemoryFit(p,65536,rv,0));assert.throws(()=>wbCheckMemoryFit(p,16384,rv,0),/budget/);assert.throws(()=>wbCheckMemoryFit(p,65536,0x80000000,0),/boundary/);assert.throws(()=>wbCheckMemoryFit(p,65536,rv,1),/IPCCDBA/);assert.throws(()=>wbCheckMemoryFit({...p,audit:{...audit,sections:audit.sections.map(y=>({...y,name:'wrong'}))}},65536,rv,0),/MAPPING_TABLE/);});
+
+test('WB config export uses live SFSA and reserves a page for factory high FUS',()=>{const p={applicationOnly:true,flash:256*1024,pageSize:4096};assert.deepEqual(wbConfigFromLimit(p,128*1024),{wbAppFlashKiB:128});assert.deepEqual(wbConfigFromLimit(p,p.flash),{wbAppFlashKiB:252});assert.throws(()=>wbConfigFromLimit(p,p.flash+4096));assert.throws(()=>wbConfigFromLimit(p,4097));});

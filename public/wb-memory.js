@@ -32,3 +32,12 @@ export function wbCheckMemoryFit(project,limit,rv,ipcc){
  if(s.some(x=>x.area.startsWith('sram2'))){const mapping=s.filter(x=>/^\.?MAPPING_TABLE$/.test(x.name));if(!b.ipccDefault||mapping.length!==1||mapping[0].area!=='sram2a'||mapping[0].start!==A)throw Error('WB shared RAM requires default IPCCDBA and MAPPING_TABLE at SRAM2a base');}
  return b;
 }
+
+export function wbConfigFromLimit(p,limit){
+ if(!p?.applicationOnly||![2048,4096].includes(p.pageSize)||!Number.isInteger(p.flash)||!Number.isInteger(limit)||limit<p.pageSize||limit>p.flash||limit%p.pageSize)throw Error('WB invalid live Flash budget');
+ // Builder requires a strictly smaller budget than physical flash. Factory
+ // parts can report SFSA at physical end, so reserve one page in that case.
+ const bytes=Math.min(limit,p.flash-p.pageSize);
+ if(bytes<p.pageSize)throw Error('WB application budget unavailable');
+ return {wbAppFlashKiB:bytes/1024};
+}
