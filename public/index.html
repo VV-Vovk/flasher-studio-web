@@ -1099,7 +1099,7 @@ $('pickTarget').onclick=function(){oldPickTarget34();if($('targetDialog').open){
 const oldKnown34=chooseKnown16;
 chooseKnown16=function(d){if(!cap34(d.target).selectable){toast('Устройство пока не поддерживается');return;}return oldKnown34(d);};
 const oldProject34=goProject12;
-goProject12=function(x){const i=data.findIndex(d=>d.name===x.family),t={fi:i,chip:x.chip,board:x.board,custom:''};if(!cap34(t).selectable){toast('Для этой платы пока нет доступной сборки или записи');return;}return oldProject34(x);};
+goProject12=function(x){const i=data.findIndex(d=>d.name===x.family),g=catalog[x.family]||{},series=Object.keys(g).find(k=>g[k].includes(x.board))||Object.keys(g).find(k=>k===x.chip||k.toLowerCase().replaceAll('-','')===String(x.chip).toLowerCase().replaceAll('-',''))||x.chip,t={fi:i,chip:series,board:x.board,custom:''};if(!cap34(t).selectable){toast('Для этой платы пока нет доступной сборки или записи');return;}return oldProject34(x);};
 function methodOK34(m){
  if(!support34)return false;
  if(fi===0&&m===BLE_OTA)return ['ESP32','ESP32-C3','ESP32-S3','ESP32-C6','ESP32-H2'].includes(chip);

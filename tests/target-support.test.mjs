@@ -25,7 +25,7 @@ test('DFP exact variants, no unrestricted family inference',()=>{
  assert.equal(stmCompile('STM32F999ZIT6',catalog),false);
 });
 test('F0 and F103 geometry extensions',()=>{
- assert.ok(Object.keys(F0_BASE_PROFILES).length>20);assert.equal(Object.keys(F1_BASE_PROFILES).length,21);
+ assert.ok(Object.keys(F0_BASE_PROFILES).length>20);assert.equal(Object.keys(F1_BASE_PROFILES).length,23);
  assert.equal(swdProfile('STM32F031F4P6').pageSize,1024);assert.equal(swdProfile('STM32F071VBT6').pageSize,2048);
  assert.equal(swdProfile('STM32F103C4T6').pid,0x412);assert.equal(swdProfile('STM32F103RET6').pid,0x414);assert.equal(swdProfile('STM32F103RET6').flash,524288);
  assert.equal(swdProfile('STM32F103ZGT6'),null);assert.equal(swdProfile('STM32F091RCT6'),null);
