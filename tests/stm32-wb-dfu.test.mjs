@@ -84,7 +84,9 @@ class FakeRadioStage extends WbDfuRadioStage{
   this.fixture.regs.set(0x58004080,244);this.fixture.regs.set(0x58004084,0x80ffd000);
   this.memory.fill(255,0xee000,0xf4000);
   this.device={controlTransferOut:async(setup,b)=>{
-   assert.equal(setup.request,1);assert.equal(setup.value,2);
+   assert.equal(setup.request,1);
+   if(setup.value===0&&b.length===1&&b[0]===0x53){this.upgrades=(this.upgrades||0)+1;if(this.disconnect)throw Error('simulated reset');return {status:'ok',bytesWritten:1};}
+   assert.equal(setup.value,2);
    assert.ok(this.addr>=0x080ee000&&this.addr+b.length<=0x080f4000);
    this.calls.push(this.addr);this.memory.set(b,this.addr-0x08000000);
    if(this.change)this.fixture.regs.set(0x58004080,243);
@@ -93,6 +95,7 @@ class FakeRadioStage extends WbDfuRadioStage{
  }
  async identify(){return 'fixture';}
  async read(a,n){
+  if(a===0xffff0054){this.queries=(this.queries||0)+1;return Uint8Array.of(this.busy?0x10:0,0);}
   const b=await this.fixture.read(a,n);
   if(this.corrupt&&this.calls.length&&a===0x080ee000)b[0]^=1;
   return b;
@@ -121,5 +124,24 @@ test('stage transport: synthetic binary, mocked catalogue digest, exact readback
   s=new FakeRadioStage();s.memory[0xf3000]=0;await assert.rejects(s.stage(name,desc(244),options,()=>true),/not blank/);assert.equal(s.calls.length,0);
   s=new FakeRadioStage();s.change=true;await assert.rejects(s.stage(name,desc(244),options,()=>true),/changed/);
   s=new FakeRadioStage();s.corrupt=true;await assert.rejects(s.stage(name,desc(244),options,()=>true),/readback mismatch/);
+ }finally{if(original)Object.defineProperty(globalThis,'crypto',original);else delete globalThis.crypto;}
+});
+
+test('blank-target FUS upgrade: separate approval, one-shot command, safe reconnect boundary',async()=>{
+ const entry=WB_RADIO_FILES['5x'].find(e=>e.name===stageFile),bytes=new Uint8Array(entry.size).fill(0xa5),options={file:stageFile,bytes,applicationEnd:0x08000000,acknowledge:true};
+ const original=Object.getOwnPropertyDescriptor(globalThis,'crypto');
+ Object.defineProperty(globalThis,'crypto',{configurable:true,value:{subtle:{async digest(alg){return alg==='SHA-1'?Uint8Array.from(entry.blob.match(/../g),x=>parseInt(x,16)).buffer:new Uint8Array(32).buffer;}}}});
+ const fresh=()=>{const s=new FakeRadioStage();s.memory.fill(255,0,0xf4000);return s;};
+ const run=(s,activate=()=>true,opts=options)=>s.stage(name,desc(244),opts,()=>true,()=>{},activate);
+ try{
+  let s=fresh(),r=await run(s);assert.equal(r.commandAccepted,true);assert.equal(r.installed,false);assert.equal(s.queries,1);assert.equal(s.upgrades,1);
+  await assert.rejects(run(s),/already used/);await assert.rejects(s.output(1,Uint8Array.of(0x53),0),/read-only/);
+  s=fresh();s.disconnect=true;r=await run(s);assert.equal(r.outcomeUnknown,true);assert.equal(r.commandAttempted,true);assert.equal(s.upgrades,1);
+  s=fresh();s.busy=true;r=await run(s);assert.equal(r.activationBlocked,true);assert.equal(s.upgrades,undefined);
+  s=fresh();r=await run(s,()=>false);assert.equal(r.activationCancelled,true);assert.equal(s.queries,undefined);
+  const resumed=fresh();resumed.memory.set(bytes,0xee000);r=await run(resumed);assert.equal(r.resumed,true);assert.equal(resumed.calls.length,0);assert.equal(resumed.upgrades,1);
+  s=fresh();s.memory[0x8000]=0;await assert.rejects(run(s),/not blank/);assert.equal(s.calls.length,0);
+  s=fresh();s.memory[0xee000]=0;await assert.rejects(run(s),/neither blank nor/);assert.equal(s.calls.length,0);
+  s=fresh();await assert.rejects(run(s,()=>true,{...options,applicationEnd:appEnd}),/blank CPU1/);assert.equal(s.calls.length,0);
  }finally{if(original)Object.defineProperty(globalThis,'crypto',original);else delete globalThis.crypto;}
 });
