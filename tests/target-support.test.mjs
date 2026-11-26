@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {targetCapability,stmCompile,stmTarget,stmPickerRows} from '../public/target-support.js';
-import {swdProfile,F0_BASE_PROFILES,F1_BASE_PROFILES} from '../public/stm32-swd.js';
+import {swdProfile,F0_BASE_PROFILES,F1_BASE_PROFILES,F3_BASE_PROFILES} from '../public/stm32-swd.js';
 const catalog=JSON.parse(readFileSync(new URL('../public/stm32-targets.json',import.meta.url)));
 test('Capabilities separate supported, compile-only, unavailable, and flash-only',()=>{
  const cap=(name,fi=5,other={})=>targetCapability({fi,name,board:name,...other},catalog);
@@ -66,4 +66,16 @@ test('Picker hides redundant Tx templates, keeps exact searches and genuinely di
  assert.equal(targetCapability({fi:5,name:pattern},catalog).selectable,false);
  const special=['STM32F334K4','STM32F334K4Tx'];
  assert.deepEqual(stmPickerRows(special,special,'',catalog),special);
+});
+
+test('F3 all 69 base catalogue devices have a page controller; unsupported package template remains unavailable',()=>{
+ const rows=catalog.filter(x=>x.family==='f3'&&/^STM32F[0-9]{3}[A-Z][468BCDE]$/.test(x.name));
+ assert.equal(rows.length,69);assert.equal(Object.keys(F3_BASE_PROFILES).length,rows.length);
+ for(const x of rows){const p=swdProfile(x.name);assert.equal(p.controller,'f3-page',x.name);assert.equal(p.core,0xc24);assert.equal(p.pageSize,2048);assert.ok(targetCapability({fi:5,name:x.name},catalog).methods.includes('ST-LINK · SWD'));}
+ assert.equal(swdProfile('STM32F303CCT6').pid,0x422);
+ assert.equal(swdProfile('STM32F302RET6').pid,0x446);
+ assert.equal(swdProfile('STM32F373VBT6').pid,0x432);
+ assert.equal(swdProfile('STM32F301K6T6').pid,0x439);
+ assert.equal(swdProfile('STM32F334C4T6').pid,0x438);
+ assert.equal(swdProfile('STM32F303CCTx'),null);
 });

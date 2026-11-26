@@ -51,12 +51,16 @@ const F1_BASES=["STM32F103C4","STM32F103C6","STM32F103C8","STM32F103CB","STM32F1
 export const F0_BASE_PROFILES=Object.freeze({...Object.fromEntries(F0_BASES.map(n=>{const p=STM32_ROM_PROFILES[n];return [n,f0Profile(p.pid,p.flash/1024,p.ram/1024,/^STM32F07[12]/.test(n)?2048:1024)];})),...expandGroups(extraF0,f0Profile)});
 const XL_PROFILES=Object.fromEntries([101,103].flatMap(line=>['R','V','Z'].flatMap(pkg=>['F','G'].map(d=>['STM32F'+line+pkg+d,Object.freeze({...f1Profile(0x430,d==='F'?768:1024,line===101?80:96,2048),controller:'f1-xl',bankBoundary:512*1024})]))));
 export const F1_BASE_PROFILES=Object.freeze({...XL_PROFILES,...Object.fromEntries(F1_BASES.map(n=>{const p=STM32_ROM_PROFILES[n];return [n,f1Profile(p.pid,p.flash/1024,p.ram/1024,p.pid===0x414?2048:1024)];})),...expandGroups(extraF1,f1Profile)});
-function basePart(n){const m=/^(STM32F(?:030|031|038|042|048|051|058|070|071|072|078|091|098|100|101|102|103|105|107)[A-Z][468BCDEFG])(?:[A-Z][0-9])?$/.exec(n);return m?.[1]||'';}
+// F3 main Flash: independent geometry from ST RM0316/RM0365/RM0366/RM0364/RM0313 and datasheets.
+ // Same page/halfword controller as F0, but Cortex-M4 and DBGMCU at 0xe0042000.
+const F3_GROUPS=[[1081,32,16,0,"STM32F301C6 STM32F301K6 STM32F301R6 STM32F302C6 STM32F302K6 STM32F302R6"],[1081,64,16,0,"STM32F301C8 STM32F301K8 STM32F301R8 STM32F302C8 STM32F302K8 STM32F302R8 STM32F318C8 STM32F318K8"],[1058,128,32,0,"STM32F302CB STM32F302RB STM32F302VB"],[1058,256,40,0,"STM32F302CC STM32F302RC STM32F302VC"],[1094,384,64,0,"STM32F302RD STM32F302VD STM32F302ZD"],[1094,512,64,0,"STM32F302RE STM32F302VE STM32F302ZE"],[1080,32,12,4,"STM32F303C6 STM32F303K6 STM32F303R6 STM32F334C6 STM32F334K6 STM32F334R6"],[1080,64,12,4,"STM32F303C8 STM32F303K8 STM32F303R8 STM32F334C8 STM32F334K8 STM32F334R8 STM32F328C8"],[1058,128,32,8,"STM32F303CB STM32F303RB STM32F303VB"],[1058,256,40,8,"STM32F303CC STM32F303RC STM32F303VC STM32F358CC STM32F358RC STM32F358VC"],[1094,384,64,16,"STM32F303RD STM32F303VD STM32F303ZD"],[1094,512,64,16,"STM32F303RE STM32F303VE STM32F303ZE STM32F398VE"],[1074,64,16,0,"STM32F373C8 STM32F373R8 STM32F373V8"],[1074,128,24,0,"STM32F373CB STM32F373RB STM32F373VB"],[1074,256,32,0,"STM32F373CC STM32F373RC STM32F373VC STM32F378CC STM32F378RC STM32F378VC"],[1080,16,12,4,"STM32F334C4 STM32F334K4"]];
+export const F3_BASE_PROFILES=Object.freeze(Object.fromEntries(F3_GROUPS.flatMap(([pid,kib,ram,ccm,names])=>names.split(' ').map(n=>[n,Object.freeze({...f0Profile(pid,kib,ram,2048),controller:'f3-page',idReg:0xe0042000,core:0xc24,ccm:ccm*1024})]))));
+function basePart(n){const m=/^(STM32F(?:030|031|038|042|048|051|058|070|071|072|078|091|098|100|101|102|103|105|107|301|302|303|318|328|334|358|373|378|398)[A-Z][468BCDEFG])(?:[A-Z][0-9])?$/.exec(n);return m?.[1]||'';}
 
 export function swdProfile(name){
  const n=String(name).toUpperCase().replace(/TR$/,'');
  const key=basePart(n);
- return STLINK_F0_PROFILES[n]||F0_BASE_PROFILES[key]||STLINK_F1_PROFILES[n]||F1_BASE_PROFILES[key]||SECTOR_PROFILES[n]||null;
+ return STLINK_F0_PROFILES[n]||F0_BASE_PROFILES[key]||STLINK_F1_PROFILES[n]||F1_BASE_PROFILES[key]||F3_BASE_PROFILES[key]||SECTOR_PROFILES[n]||null;
 }
 
 const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022014,OBR:0x4002201c,WRP:0x40022020,DHCSR:0xe000edf0,CPUID:0xe000ed00,FLASH:0x08000000});
@@ -144,10 +148,10 @@ export class Stm32SwdSession {
  }
 
  async identifyF0(){
-   if((await this.reg(this.pr.idReg)&0xfff)!==this.pr.pid)throw Error('STM32F0 device ID mismatch');
-   if(((await this.reg(F0REG.CPUID)>>>4)&0xfff)!==0xc20)throw Error('Cortex-M0 required');
+   if((await this.reg(this.pr.idReg)&0xfff)!==this.pr.pid)throw Error('STM32 page-controller device ID mismatch');
+   if(((await this.reg(F0REG.CPUID)>>>4)&0xfff)!==(this.pr.core??0xc20))throw Error('STM32 Cortex core mismatch');
    const b=await this.read(this.pr.sizeReg,2);
-   if((b[0]+256*b[1])*1024!==this.pr.flash)throw Error('STM32F0 Flash size mismatch');
+   if(b.length!==2||(b[0]+256*b[1])*1024!==this.pr.flash)throw Error('STM32F0 Flash size mismatch');
    const uid=await this.read(this.pr.uid,12);
    if(uid.length!==12||uid.every(x=>x===0)||uid.every(x=>x===255))throw Error('Invalid UID');
    return 'stm32-'+hex(uid);
@@ -174,11 +178,11 @@ export class Stm32SwdSession {
    // protected sector among the implemented 4 KiB sectors.
    if((await this.reg(F0REG.OBR)&7)!==0||((await this.reg(F0REG.WRP)&this.pr.wrpMask)>>>0)!==this.pr.wrpMask)throw Error('STM32F0 Flash protection present');
    await this.enableHsi();
-   if(await this.reg(F0REG.CR)&0x80){
-     await this.put(F0REG.KEY,0x45670123);await this.put(F0REG.KEY,0xcdef89ab);
-   }
-   if(await this.reg(F0REG.CR)&0x80)throw Error('STM32F0 Flash locked');
    try{
+     if(await this.reg(F0REG.CR)&0x80){
+       await this.put(F0REG.KEY,0x45670123);await this.put(F0REG.KEY,0xcdef89ab);
+     }
+     if(await this.reg(F0REG.CR)&0x80)throw Error('STM32 page Flash locked');
      await this.put(F0REG.SR,0x34);
      // Existing UI explicitly confirms a complete main-flash erase. Never
      // erase/alter option bytes or system memory.

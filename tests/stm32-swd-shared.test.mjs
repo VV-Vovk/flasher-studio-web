@@ -5,7 +5,7 @@ import {StLinkF1,StLinkF0,stLinkProfile} from '../public/extra-programmers.js';
 import {DapStm32,openCmsisDap,openCmsisDapHid} from '../public/cmsis-dap.js';
 const BASE=0x08000000,SR=0x4002200c,CR=0x40022010,AR=0x40022014,KEY=0x40022004;
 function memory(pr){
- const bytes=new Uint8Array(pr.flash).fill(0),uid=Uint8Array.from({length:12},(_,i)=>i+1), regs=new Map([[pr.idReg||0xe0042000,pr.pid],[0xe000ed00,pr.idReg?0x410cc200:0x410fc230],[CR,128],[SR,0],[0x4002201c,0],[0x40022020,0xffffffff],[0xe000edf0,0],[0x40021000,3]]);
+ const bytes=new Uint8Array(pr.flash).fill(0),uid=Uint8Array.from({length:12},(_,i)=>i+1), regs=new Map([[pr.idReg||0xe0042000,pr.pid],[0xe000ed00,pr.idReg?(pr.core===0xc24?0x410fc240:0x410cc200):0x410fc230],[CR,128],[SR,0],[0x4002201c,0],[0x40022020,0xffffffff],[0xe000edf0,0],[0x40021000,3]]);
  const size=new Uint8Array(4);new DataView(size.buffer).setUint16(pr.sizeReg%4,pr.flash/1024,true);const reads=new Map([[pr.sizeReg&~3,size]]);
  for(let i=0;i<12;i+=4)reads.set(pr.uid+i,uid.slice(i,i+4));
  let erased=0;
@@ -29,7 +29,7 @@ test('Both adapters share exactly one profile registry and Flash algorithm',()=>
  }
 });
 test('CMSIS-DAP exercises the actual shared F0/F1 algorithms through memory transport',async()=>{
- for(const name of ['STM32F070F6P6','STM32F031F4P6','STM32F051R8T6','STM32F071VBT6','STM32F072RBT6','STM32F103C4T6','STM32F103C8T6','STM32F103RET6','STM32F091RCT6','STM32F100RBT6','STM32F101RET6','STM32F102C8T6','STM32F105RCT6','STM32F107VCT6']){
+ for(const name of ['STM32F070F6P6','STM32F031F4P6','STM32F051R8T6','STM32F071VBT6','STM32F072RBT6','STM32F103C4T6','STM32F103C8T6','STM32F103RET6','STM32F091RCT6','STM32F100RBT6','STM32F101RET6','STM32F102C8T6','STM32F105RCT6','STM32F107VCT6','STM32F301K6T6','STM32F303CCT6','STM32F303RET6','STM32F334C4T6','STM32F373VBT6','STM32F398VET6']){
   const pr=swdProfile(name),mem=memory(pr),dap=new DapStm32(mem,pr);dap.id=await dap.identify();
   const b=new Uint8Array(13).fill(85),v=new DataView(b.buffer);v.setUint32(0,0x20000000+pr.ram,true);v.setUint32(4,BASE+9,true);
   await dap.program(b);
@@ -40,4 +40,16 @@ test('Unknown profiles fail before WebUSB/WebHID prompts',async()=>{
  const denied={requestDevice:async()=>assert.fail('must not open')};
  await assert.rejects(openCmsisDap('STM32H743ZIT6',denied),/неподдерживаемый/);
  await assert.rejects(openCmsisDapHid('STM32F103CFT6',denied),/неподдерживаемый/);
+});
+
+test('F3 rejects wrong core and protected flash before erase, accepts valid CCM stack only on CCM devices',async()=>{
+ for(const mode of ['core','wrp','rdp','ccm']){
+  const pr=swdProfile('STM32F303CCT6'),mem=memory(pr),dap=new DapStm32(mem,pr);dap.id=await dap.identify();
+  const b=new Uint8Array(13).fill(85),v=new DataView(b.buffer);v.setUint32(0,0x10000000+pr.ccm,true);v.setUint32(4,BASE+9,true);
+  if(mode==='core')mem.regs.set(0xe000ed00,0x410fc230);
+  if(mode==='wrp')mem.regs.set(0x40022020,0xfffffffe);
+  if(mode==='rdp')mem.regs.set(0x4002201c,2);
+  if(mode==='ccm'){await dap.program(b);assert.deepEqual(mem.bytes.slice(0,b.length),b);}
+  else{await assert.rejects(dap.program(b));assert.equal(mem.erased,0);}
+ }
 });

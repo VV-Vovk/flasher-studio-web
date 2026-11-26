@@ -23,7 +23,7 @@ jobs:
       - name: Install pinned dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
       - name: Build browser vendor bundle
-        run: npm run vendor && test -s public/usb-vendor.js
+        run: npm run vendor && test -s public/usb-vendor.js && test -s public/licenses/npm-THIRD-PARTY-NOTICES.txt
       - name: Fetch and verify reviewed public STM32 package
         run: python tools/prepare_public_boot.py
       - name: JavaScript tests

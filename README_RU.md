@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.23 (development)
+
+STM32F3 SWD: 69 existing base-model profiles, Cortex-M4, 2 KiB page erase, exact flash size and UID, read/write protection checks, halfword programming, main/CCM stack validation, readback and relock. Shared page-controller algorithm, no vendor binaries or copied programmer source. F334K4 base currently lacks a build profile; exact package variants may have one. No physical tests or private compiler builds. Public browser dependency inventory and upstream notices generated at bundle build, see LICENSE_POLICY.md. Embedded ESP stub provenance and other existing assets still require separate release review.
+
 # Flasher Studio v0.2.22 (development)
 
 STM32F101/F103 XL-density dual-bank SWD: PM0068 rev 2, separate bank registers and erase, protection preflight, exact flash size and UID, full readback and independent relock. All 12 XL base models from existing catalogue; F101 80 KiB SRAM, F103 96 KiB SRAM. Redundant package/temperature templates collapsed when their base part has the same catalogue profile; exact order-code search retained. Public unit tests added; no hardware testing or new private builds. The rest of the STM32 families remain incremental work.
