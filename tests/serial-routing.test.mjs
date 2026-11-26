@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {wiredRoute,requestWiredPort} from '../public/serial-routing.js';
+import {EspUsbCdcPort} from '../public/esp-usb-cdc.js';
 import {UsbUartPort,BRIDGE_FILTERS} from '../public/usb-uart.js';
 class CDC{constructor(d){this.device=d;}}
 const vendor={UsbCdcPort:CDC};
@@ -15,14 +16,14 @@ test('Android auto chooses only WebUSB even with navigator.serial present; route
   const {nav,calls}=mobile(device);
   assert.equal(wiredRoute('auto',nav,vendor),'usb-auto');
   const p=await requestWiredPort('auto',nav,vendor);
-  assert.ok(p instanceof (device===bridge?UsbUartPort:CDC));
+  assert.ok(p instanceof (device===bridge?UsbUartPort:EspUsbCdcPort));
   assert.equal(calls.length,1);assert.deepEqual(calls[0].filters,[...BRIDGE_FILTERS,{classCode:2,subclassCode:2}]);
  }
 });
 test('Android explicit modes and missing API; no Bluetooth fallback on cancellation',async()=>{
  const b=mobile(bridge),c=mobile(cdc);
  assert.ok(await requestWiredPort('bridge',b.nav,null) instanceof UsbUartPort);
- assert.ok(await requestWiredPort('cdc',c.nav,vendor) instanceof CDC);
+ assert.ok(await requestWiredPort('cdc',c.nav,vendor) instanceof EspUsbCdcPort);
  assert.equal(wiredRoute('auto',{userAgent:'Mozilla Android',serial:b.nav.serial},vendor),'');
  await assert.rejects(requestWiredPort('auto',{...b.nav,usb:{requestDevice:()=>Promise.reject(Error('cancelled'))}},vendor),/cancelled/);
  await assert.rejects(requestWiredPort('auto',mobile({vendorId:1,productId:2}).nav,vendor),/не имеет/);

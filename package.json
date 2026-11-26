@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "coverage:stm32": "node tools/stm32-coverage.mjs",
     "vendor": "node tools/vendor-licenses.mjs && esbuild vendor-entry.js --bundle --format=esm --platform=browser --legal-comments=eof --outfile=public/usb-vendor.js",
     "test": "node --test tests/*.test.mjs"
   },
@@ -14,5 +15,5 @@
   "devDependencies": {
     "esbuild": "0.25.12"
   },
-  "version": "0.2.20.2"
+  "version": "0.2.40"
 }

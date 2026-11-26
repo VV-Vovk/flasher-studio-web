@@ -1,6 +1,7 @@
 // Wired serial routing. Android Web Serial can expose Bluetooth RFCOMM only.
 // Never fall back to the Bluetooth chooser on a mobile USB connection.
 import {BRIDGE_FILTERS,UsbUartPort} from './usb-uart.js';
+import {EspUsbCdcPort,isEspUsbCdc} from './esp-usb-cdc.js';
 export function isAndroid(nav){return nav?.userAgentData?.platform==='Android'||/Android/i.test(nav?.userAgent||'');}
 const bridgeMatch=d=>BRIDGE_FILTERS.some(f=>f.vendorId===d.vendorId&&f.productId===d.productId);
 const cdcFilter={classCode:2,subclassCode:2};
@@ -30,7 +31,7 @@ export async function requestWiredPort(mode,nav,vendor){
  const filters=route==='bridge'?[...BRIDGE_FILTERS]:route==='cdc'?[cdcFilter]:[...BRIDGE_FILTERS,cdcFilter];
  const d=await nav.usb.requestDevice({filters});
  if(route!=='cdc'&&bridgeMatch(d))return new UsbUartPort(d);
- if(route!=='bridge'&&cdcLayout(d))return new vendor.UsbCdcPort(d);
+ if(route!=='bridge'&&cdcLayout(d)){if(isAndroid(nav)&&isEspUsbCdc(d))return new EspUsbCdcPort(d);return new vendor.UsbCdcPort(d);}
  throw Error('USB-устройство не имеет поддерживаемого CH340 / CP210x или однозначного CDC-интерфейса');
 }
 export function wiredLabel(mode,nav,vendor){

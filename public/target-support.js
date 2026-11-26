@@ -3,6 +3,7 @@ import {swdProfile} from './stm32-swd.js';
 import {stmUartProfile} from './stm32-rom-profiles.js';
 import {DFU_PROFILES,extendedAvrProfile} from './extra-programmers.js';
 import {avrProfile} from './programmers.js';
+import {wbCpu1CompileTarget} from './stm32-wb.js';
 const STATIC_STM_BASES=new Set(["STM32F030F4","STM32F030K6","STM32F030C6","STM32F030C8","STM32F030R8","STM32F103C8","STM32F103CB","STM32C011F4","STM32C011F6","STM32C031C6","STM32C031F6","STM32G071CB","STM32G071RB","STM32G030F6","STM32G030K8","STM32G431CB","STM32G431RB","STM32G431KB","STM32F401CC","STM32F401RC","STM32F411CE","STM32F411RE","STM32F303CB","STM32F303CC","STM32F303RC","STM32F205RG","STM32L072CB","STM32L072CZ","STM32L432KC","STM32F070F6","STM32F042F6","STM32F042C6","STM32F042K6","STM32F070C6","STM32F070CB","STM32F070RB","STM32F072RB","STM32F072CB","STM32F103R8","STM32F103RB","STM32F103V8","STM32F103VB"]);
 const ALIASES={'Blue Pill STM32F103':'STM32F103C8T6','Black Pill F411':'STM32F411CEU6'};
 export function stmTarget(name){return ALIASES[name]||String(name||'').trim().toUpperCase();}
@@ -16,8 +17,30 @@ function matchCatalog(pattern,name){
 }
 export function stmCompile(name,catalog=[]){
  const n=stmTarget(name);if(!/^STM32[A-Z0-9]{6,20}$/.test(n)||/X/.test(n))return false;
+ if(n.startsWith('STM32WB'))return wbCpu1CompileTarget(n)&&catalog.some(x=>x.family==='wb'&&x.profile===true&&matchCatalog(x.name,n));
  if([...STATIC_STM_BASES].some(k=>n===k||new RegExp('^'+k+'[A-Z][0-9](?:TR)?$').test(n)))return true;
  return catalog.some(x=>x.profile===true&&matchCatalog(x.name,n));
+}
+// Collapse redundant package/temperature templates in browsing, but preserve exact
+// order-code search and variants that have distinct catalogue build capabilities.
+export function stmPickerRows(entries,matches,query,catalog=[]){
+ const all=new Set(entries),byName=new Map(catalog.map(x=>[x.name,x]));
+ let q=String(query||'').trim().toUpperCase().replace(/\s+/g,'');
+ if(q&&!q.startsWith('STM32'))q='STM32'+q;
+ return [...new Set(matches.map(name=>{
+   if(!/^[A-Z0-9]+[A-Z]x$/.test(name))return name;
+   const base=name.slice(0,-2),a=byName.get(name),b=byName.get(base);
+   if(!all.has(base)||!a||!b||a.profile!==b.profile)return name;
+   if(q.length===name.length&&!q.includes('X')&&matchCatalog(name,q))return name;
+   return base;
+ }))];
+}
+// Probe only the software policy; a template is not an actual order code.
+export function stmTemplateCapability(pattern,catalog=[]){
+ if(typeof pattern!=='string'||!/^STM32[A-Z0-9]+x[A-Z0-9]*$/.test(pattern))return null;
+ const example=pattern.replace('x','6');
+ const c=targetCapability({fi:5,name:example},catalog);
+ return c.selectable?c:null;
 }
 const ESP=new Set(['ESP32','ESP32-C3','ESP32-S3','ESP32-C6','ESP32-S2','ESP32-H2']);
 const E8266=new Set(['NodeMCU','Wemos D1 Mini','Generic ESP8266']);

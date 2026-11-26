@@ -9,3 +9,24 @@
 - Do not select a license for the owner's own source without their explicit instruction. The public repo does not by itself grant permission to reuse original code.
 - Before a live release, review the final artifact including binary provenance, inherited notices and user content; if evidence is missing, keep release unpublished. This checklist is not a guarantee of legal compliance.
 
+- G0x1/G431/G441 register algorithm: references RM0444 rev 6 and RM0440 rev 9 ch. 5 (https://www.st.com/resource/en/reference_manual/dm00371828-stm32g0x0-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf and https://www.st.com/resource/en/reference_manual/dm00355726-stm32g4-series-advanced-arm-based-32-bit-mcus-stmicroelectronics.pdf). Only factual register values/geometry and original code; no new dependencies, SDK code, or loader binaries in Web.
+
+- G0x0 and G0B1/C1: ST RM0454 rev 5 and RM0444 rev 6 reference manuals, independent register-level implementation. No loader binaries or SDK code redistributed.
+
+- G0B0 and G4 category 3/4: factual register and memory geometry from RM0454 and RM0440 rev 9 chapters 3–4; no vendor source or loader binaries added.
+
+- F2/F4 single-bank profile expansion references ST RM0033, RM0368, RM0383, RM0090, RM0401, RM0402, RM0390 and DS6329. No vendor implementation copied.
+
+- F4/F7 expansion: factual register layouts and memory geometry from RM0430, RM0090, RM0386, RM0431, RM0385, RM0410; independently implemented, no firmware blobs or new dependencies.
+
+- C0/L4/L4+ independent doubleword Flash controller from factual registers in RM0490, RM0394, RM0351, RM0432. No vendor implementation, loaders, or dependencies added.
+
+- H72x/H73x: independent register-level implementation based on factual register values and Flash geometry from ST RM0468; no vendor source or loader binaries redistributed.
+
+- H7A/B RM0455 and ST CMSIS register definitions used as factual reference; original JS driver, no vendor implementation or Flash loader binaries added. Existing license review restrictions remain.
+
+- WB CPU1 application driver: original register-level implementation using factual RM0434/AN5451 descriptions. No ST FUS or wireless binary redistribution, no option modifications. Restricted wireless middleware stays excluded.
+
+- WB1x RM0473/AN5811 and WB55 640 KiB geometry from factual DFP metadata; no third-party Flash implementation or FUS/wireless binaries included.
+
+- WB factory high FUS mapping and flash checks based on factual AN5185 Rev 15 and RM0434 register definitions; no FUS implementation or binaries added.
