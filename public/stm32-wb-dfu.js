@@ -5,6 +5,7 @@
 import {wbProfile,wbFlashLayout} from './stm32-wb.js';
 import {validateStmVector} from './programmers.js';
 import {readWbRadioInfo} from './wb-radio.js';
+import {radioUpdateRequirements,radioOptions,planRadioUpdate} from './wb-radio-plan.js';
 import {dfuGeometry,StmDfu} from './extra-programmers.js';
 const BASE=0x08000000;
 function uint32(n){return Number.isInteger(n)&&n>=0&&n<=0xffffffff;}
@@ -71,7 +72,7 @@ async function withWbDfu(name,usb,fn,mode='diagnostic'){
   if(c.length!==1)throw Error('WB DFU ambiguous internal Flash');
   const {i,a}=c[0],pages=dfuGeometry(a.interfaceName);
   await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);
-  const S=mode==='application'?WbDfuApplication:mode==='radio-start'?WbDfuRadioStart:WbDfuReadOnly;return await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);
+  const S=mode==='application'?WbDfuApplication:mode==='radio-start'?WbDfuRadioStart:mode==='radio-stage'?WbDfuRadioStage:WbDfuReadOnly;return await fn(new S(d,i.interfaceNumber,wbProfile(name),pages),a.interfaceName);
  }finally{if(d.opened)await d.close();}
 }
 
@@ -153,4 +154,80 @@ export class WbDfuRadioStart extends WbDfuReadOnly{
 }
 export function startWbWireless(name,approve,usb=navigator.usb){
  return withWbDfu(name,usb,(s,d)=>s.startInstalled(name,d,approve),'radio-start');
+}
+
+// First experimental radio/FUS staging path. No erase, FUS upgrade command,
+// reset, stack deletion or option-byte changes. Only a blank, reviewed range
+// can be written. Stage/readback is NOT an installed firmware result.
+export function wbRadioStagingPlan(name,file,applicationEnd,snapshot,descriptor,radio,acknowledge){
+ const p=wbProfile(name);
+ if(!wbRomDfuCandidate(name)||p.flash!==1048576||!/^STM32WB55/i.test(name))throw Error('WB radio staging: only reviewed 1 MiB WB55 USB targets');
+ if(!radio?.fus||radio.lastFusState!==0||radio.lastWirelessState!==0||radio.wireless!==null||radio.stackType!==0)throw Error('WB radio staging requires idle FUS and no installed wireless stack');
+ const currentFus=[radio.fus.major,radio.fus.minor,radio.fus.patch].join('.');
+ const plan=radioUpdateRequirements({target:name,currentFus,name:file,applicationEnd,acknowledge});
+ const option=radioOptions(name).find(e=>e.name===file);
+ const start=Number(plan.installAddress),end=Number(plan.stagingEnd);
+ if(!snapshot||!['sfr','optr','srrvr'].every(k=>uint32(snapshot[k]))||
+ !Array.isArray(snapshot.wrp)||snapshot.wrp.length!==2||!snapshot.wrp.every(uint32)||
+ !Array.isArray(snapshot.pcrop)||snapshot.pcrop.length!==2||!snapshot.pcrop.every(x=>Array.isArray(x)&&x.length===2&&x.every(uint32)))throw Error('WB staging requires complete live security state');
+ const {limit}=wbFlashLayout(p,snapshot.sfr,snapshot.optr,snapshot.srrvr);
+ if(start<BASE||start>=end||end>BASE+limit||start%p.pageSize||end%p.pageSize)throw Error('WB staging crosses live SFSA');
+ const overlaps=(a,z,unit)=>a<=z&&BASE+a*unit<end&&BASE+(z+1)*unit>start;
+ for(const v of snapshot.wrp)if(overlaps(v&p.wrpMask,(v>>>16)&p.wrpMask,p.pageSize))throw Error('WB staging WRP overlap');
+ for(const [a,z] of snapshot.pcrop)if(overlaps(a&p.pcropMask,z&p.pcropMask,p.pageSize/2))throw Error('WB staging PCROP overlap');
+ const pages=dfuGeometry(descriptor),total=pages.reduce((n,x)=>n+x.size,0);
+ if(![limit,p.flash].includes(total)||pages.some((x,i)=>x.size!==p.pageSize||x.address!==BASE+i*p.pageSize))throw Error('WB staging descriptor mismatch');
+ return Object.freeze({...plan,start,end,size:option.size,limit,pageSize:p.pageSize});
+}
+export class WbDfuRadioStage extends WbDfuReadOnly{
+ #allowed=null;#used=false;
+ async output(req,b=new Uint8Array(),value=0){
+  if(this.#allowed&&req===1&&value===2&&equal(b,this.#allowed))return StmDfu.prototype.output.call(this,req,b,value);
+  return super.output(req,b,value);
+ }
+ async #write(data){
+  if(this.#allowed)throw Error('WB staging concurrent write');
+  this.#allowed=data.slice();
+  try{await this.download(2,this.#allowed);}finally{this.#allowed=null;}
+ }
+ async stage(name,descriptor,{file,bytes,applicationEnd,acknowledge},approve,progress=()=>{}){
+  if(this.#used)throw Error('WB staging session already used');
+  this.#used=true;
+  if(!wbRomDfuCandidate(name)||this.pr!==wbProfile(name)||!(bytes instanceof Uint8Array)||typeof approve!=='function')throw Error('WB staging target / confirmation');
+  const data=bytes.slice(),id=await this.identify(),snapshot=await wbDfuSnapshot(this),radio=await readWbRadioInfo(this);
+  const plan=wbRadioStagingPlan(name,file,applicationEnd,snapshot,descriptor,radio,acknowledge);
+  const verified=await planRadioUpdate({target:name,currentFus:plan.fromFus,name:file,bytes:data,applicationEnd,acknowledge});
+  if(data.length!==plan.size||data.length%4||verified.installAddress!==plan.installAddress)throw Error('WB staging file / plan mismatch');
+  const check=async()=>{
+   if(await this.identify()!==id||JSON.stringify(await wbDfuSnapshot(this))!==JSON.stringify(snapshot)||JSON.stringify(await readWbRadioInfo(this))!==JSON.stringify(radio))throw Error('WB staging identity/security/radio changed');
+   const reg=async a=>{const b=await this.read(a,4);if(b.length!==4)throw Error('WB staging short status');return new DataView(b.buffer,b.byteOffset,b.byteLength).getUint32(0,true);};
+   if((await reg(0x58004010))&0x000de3fa||(await reg(0x58004060))&0x000d0000||(await reg(0x58004064))&0x00050007)throw Error('WB staging flash busy/error');
+  };
+  const blank=async(a,n)=>{const b=await this.read(a,n);if(b.length!==n||b.some(v=>v!==255))throw Error('WB staging range is not blank; no erase or retry');};
+  if(await approve({target:name,file,version:plan.version,start:plan.start,end:plan.end,sha256:verified.sha256,stageOnly:true})!==true)return {cancelled:true};
+  await check();
+  const span=plan.end-plan.start;
+  // Scan all affected pages before any write, then recheck each page just
+  // before its first write. Do not silently erase user data or a prior stage.
+  for(let i=0;i<span;i+=256){await blank(plan.start+i,256);progress(.2*(i+256)/span);}
+  for(let page=0;page<span;page+=plan.pageSize){
+   await check();
+   for(let j=0;j<plan.pageSize;j+=256)await blank(plan.start+page+j,256);
+   for(let j=0;j<plan.pageSize&&page+j<data.length;j+=256){
+    const i=page+j,raw=data.slice(i,i+256),pad=new Uint8Array(Math.ceil(raw.length/8)*8).fill(255);pad.set(raw);
+    if(pad.some(x=>x!==255)){await this.pointer(plan.start+i);await this.#write(pad);}
+    progress(.2+.6*(i+raw.length)/data.length);
+   }
+  }
+  for(let i=0;i<span;i+=256){
+   const expected=new Uint8Array(256).fill(255);expected.set(data.slice(i,i+256));
+   if(!equal(expected,await this.read(plan.start+i,256)))throw Error('WB staging readback mismatch');
+   progress(.8+.2*(i+256)/span);
+  }
+  await check();
+  return {staged:true,verified:true,installed:false,activationAllowed:false,target:name,file,start:plan.start,end:plan.end,sha256:verified.sha256};
+ }
+}
+export function stageWbRadio(name,options,approve,progress,usb=navigator.usb){
+ return withWbDfu(name,usb,(s,d)=>s.stage(name,d,options,approve,progress),'radio-stage');
 }

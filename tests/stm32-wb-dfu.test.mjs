@@ -59,3 +59,67 @@ class FakeRadioStart extends WbDfuRadioStart{
 }
 test('Radio start uses one explicit FUS state query and one start; no install or auto retry',async()=>{let s=new FakeRadioStart();assert.deepEqual(await s.startInstalled(name,desc(240),()=>true),{commandAccepted:true,runningVerified:false});assert.deepEqual(s.calls,[['query'],[1,0,0x5a]]);await assert.rejects(s.startInstalled(name,desc(240),()=>true),/already used/);await assert.rejects(s.output(1,Uint8Array.of(0x53),0),/read-only/);s=new FakeRadioStart();s.busy=true;await assert.rejects(s.startInstalled(name,desc(240),()=>true),/not idle/);assert.deepEqual(s.calls,[['query']]);s=new FakeRadioStart();assert.equal((await s.startInstalled(name,desc(240),()=>false)).cancelled,true);assert.deepEqual(s.calls,[]);});
 test('DFU diagnostic cannot access virtual FUS command address',async()=>{const s=new WbDfuReadOnly({},0,{},[]);await assert.rejects(s.pointer(0xffff0054),/virtual/);await assert.rejects(s.output(1,Uint8Array.of(0x21,0x54,0,0xff,0xff),0),/read-only/);});
+
+import {wbRadioStagingPlan,WbDfuRadioStage} from '../public/stm32-wb-dfu.js';
+import {WB_RADIO_FILES} from '../public/wb-radio-catalog.js';
+const stageSnap={...snap,sfr:244,srrvr:0x80ffd000};
+const stageRadio={fus:{major:2,minor:1,patch:0},lastFusState:0,lastWirelessState:0,wireless:null,stackType:0};
+const stageFile='stm32wb5x_FUS_fw.bin';
+const appEnd=0x08008000;
+test('radio staging uses live SFSA and checks protection of the actual high Flash range',()=>{
+ const make=(s=stageSnap,r=stageRadio,d=desc(244),end=appEnd)=>wbRadioStagingPlan(name,stageFile,end,s,d,r,true);
+ const p=make();assert.equal(p.start,0x080ee000);assert.equal(p.end,0x080f4000);assert.equal(p.size,24468);assert.equal(p.installationAllowed,false);
+ assert.throws(()=>make({...stageSnap,sfr:243}),/SFSA/);
+ assert.throws(()=>make({...stageSnap,wrp:[0x00ee00ee,0xff]}),/WRP/);
+ assert.throws(()=>make({...stageSnap,pcrop:[[476,476],[0x1ff,0]]}),/PCROP/);
+ assert.throws(()=>make(stageSnap,{...stageRadio,wireless:{major:1}}),/no installed/);
+ assert.throws(()=>make(stageSnap,{...stageRadio,lastFusState:2}),/idle/);
+ assert.throws(()=>make(stageSnap,stageRadio,desc(243)),/descriptor/);
+ assert.throws(()=>make(stageSnap,stageRadio,desc(244),0x080ef000),/пересекает/);
+});
+class FakeRadioStage extends WbDfuRadioStage{
+ constructor(){
+  super({},0,wbProfile(name),[]);
+  this.fixture=new FakeWbDfu();this.memory=this.fixture.memory;this.calls=[];
+  this.fixture.regs.set(0x58004080,244);this.fixture.regs.set(0x58004084,0x80ffd000);
+  this.memory.fill(255,0xee000,0xf4000);
+  this.device={controlTransferOut:async(setup,b)=>{
+   assert.equal(setup.request,1);assert.equal(setup.value,2);
+   assert.ok(this.addr>=0x080ee000&&this.addr+b.length<=0x080f4000);
+   this.calls.push(this.addr);this.memory.set(b,this.addr-0x08000000);
+   if(this.change)this.fixture.regs.set(0x58004080,243);
+   return {status:'ok',bytesWritten:b.length};
+  }};
+ }
+ async identify(){return 'fixture';}
+ async read(a,n){
+  const b=await this.fixture.read(a,n);
+  if(this.corrupt&&this.calls.length&&a===0x080ee000)b[0]^=1;
+  return b;
+ }
+ async idle(){}
+ async pointer(a){this.addr=a;}
+ async download(block,data){await this.output(1,data,block);}
+}
+test('stage transport: synthetic binary, mocked catalogue digest, exact readback and no erase or activation',async()=>{
+ const entry=WB_RADIO_FILES['5x'].find(e=>e.name===stageFile),bytes=new Uint8Array(entry.size).fill(0xa5);
+ // Test transport only: explicitly simulate successful catalogue identity;
+ // real catalogue verification is exercised by separate rejection tests.
+ const original=Object.getOwnPropertyDescriptor(globalThis,'crypto');
+ Object.defineProperty(globalThis,'crypto',{configurable:true,value:{subtle:{async digest(alg){return alg==='SHA-1'?Uint8Array.from(entry.blob.match(/../g),x=>parseInt(x,16)).buffer:new Uint8Array(32).buffer;}}}});
+ const options={file:stageFile,bytes,applicationEnd:appEnd,acknowledge:true};
+ try{
+  let s=new FakeRadioStage(),r=await s.stage(name,desc(244),options,()=>true);
+  assert.equal(r.staged,true);assert.equal(r.installed,false);assert.equal(r.activationAllowed,false);
+  assert.deepEqual(s.memory.slice(0xee000,0xee000+bytes.length),bytes);
+  assert.ok(s.memory.slice(0,0xee000).every(x=>x===0x5a));
+  assert.ok(s.memory.slice(0xf4000).every(x=>x===0x5a));
+  await assert.rejects(s.output(1,Uint8Array.of(0x53),0),/read-only/);
+  await assert.rejects(s.output(1,Uint8Array.of(0x41,0,0,0,8),0),/read-only/);
+  await assert.rejects(s.stage(name,desc(244),options,()=>true),/already used/);
+  s=new FakeRadioStage();r=await s.stage(name,desc(244),options,()=>false);assert.equal(r.cancelled,true);assert.equal(s.calls.length,0);
+  s=new FakeRadioStage();s.memory[0xf3000]=0;await assert.rejects(s.stage(name,desc(244),options,()=>true),/not blank/);assert.equal(s.calls.length,0);
+  s=new FakeRadioStage();s.change=true;await assert.rejects(s.stage(name,desc(244),options,()=>true),/changed/);
+  s=new FakeRadioStage();s.corrupt=true;await assert.rejects(s.stage(name,desc(244),options,()=>true),/readback mismatch/);
+ }finally{if(original)Object.defineProperty(globalThis,'crypto',original);else delete globalThis.crypto;}
+});
