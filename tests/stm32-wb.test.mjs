@@ -18,9 +18,9 @@ class Fake extends Stm32SwdSession{
  async writeDoubleword(a,b){assert.equal(a%8,0);assert.equal(b.length,8);assert.ok(a>=B&&a+8<=B+(this.regs.get(SFR)&255)*this.pr.pageSize);assert.ok(this.regs.get(CR)&1);this.written.push(a);this.mem.set(b,a-B);this.regs.set(SR,1);}
 }
 function image(p,n=4097){const b=new Uint8Array(n).fill(255),v=new DataView(b.buffer);v.setUint32(0,0x20000000+p.ram,true);v.setUint32(4,B+9,true);b[8]=42;b[n-1]=7;return b;}
-test('WB exact catalogue profiles and flash-only policy',()=>{
+test('WB exact catalogue profiles and verified CPU1 build policy',()=>{
  assert.equal(Object.keys(WB_PROFILES).length,23);
- for(const n of Object.keys(WB_PROFILES)){const name=n.replace('x','6'),p=swdProfile(name);assert.equal(p.pid,p.flash===320*1024?0x494:0x495);assert.equal(p.pageSize,p.flash===320*1024?2048:4096);assert.equal(targetCapability({fi:5,name},cat).state,'flash');assert.equal(swdProfile(n),null);}
+ for(const n of Object.keys(WB_PROFILES)){const name=n.replace('x','6'),p=swdProfile(name);assert.equal(p.pid,p.flash===320*1024?0x494:0x495);assert.equal(p.pageSize,p.flash===320*1024?2048:4096);assert.equal(targetCapability({fi:5,name},cat).state,'both');assert.equal(swdProfile(n),null);}
  assert.equal(swdProfile('STM32WB15CCU6').flash,320*1024);assert.equal(swdProfile('STM32WB55VYY6').flash,640*1024);assert.equal(swdProfile('STM32WB55RGX6'),null);
 });
 test('WB application pages only; preserves remaining nonsecure and secure Flash',async()=>{
