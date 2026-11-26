@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.15
+
+ST-LINK/V2 and V2-1 SWD: explicit 14 STM32F0 and 6 STM32F103 medium-density order-code profiles. RM0360/RM0091 F0 1/2 KiB page erase, full-flash readback, 4 KiB protection sectors; 32-bit WRP masks checked unsigned. F1 medium-density uses existing F103 driver. ID and size checks do not distinguish every package with shared silicon. No blanket family support, no options/OTP modifications, no hardware verification. Other STM32 families remain unsupported by ST-LINK. Sources: ST RM0360, RM0091, PM0075, STM32F030/F042/F070/F072/F103 datasheets.
+
 # Flasher Studio v0.2.14
 
 STM32F070F6P6 (TR ordering suffix accepted) via ST-LINK/V2 or V2-1: RM0360 Flash controller, 32 KiB / 6 KiB RAM, 1 KiB page erase, halfword writes, ID 0x445 at 0x40015800, CPUID Cortex-M0, flash-size and UID verification, reject read/write protection and option-byte errors, verify entire main flash including erased tail, relock. No option bytes changed, no recovery bootloader required. Full erase confirmation remains. After programming power-cycle with BOOT0 low. Same device ID/geometry may be shared by other silicon; exact board selection required. Builder profile v0.2.9. Physical ST-LINK/Android tests pending. F103 paths unchanged.

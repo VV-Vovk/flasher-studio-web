@@ -62,17 +62,43 @@ export class StLinkF1{
 }
 // RM0360 rev 5: F070x6, 32 KiB main flash, 1 KiB pages, halfword programming.
 // Device ID and size identify compatible silicon geometry, not exact package/order code.
+// Explicit order-code allowlist, based on RM0360/RM0091 and ST datasheets.
+// No inference from family name, and no dynamic selection by ID alone.
+function f0Profile(pid,kib,ramKiB,pageSize){
+ return Object.freeze({pid,flash:kib*1024,ram:ramKiB*1024,uid:0x1ffff7ac,sizeReg:0x1ffff7cc,idReg:0x40015800,pageSize,wrpMask:Math.min(0xffffffff,2**(kib/4)-1)});
+}
 export const STLINK_F0_PROFILES=Object.freeze({
- STM32F070F6P6:Object.freeze({pid:0x445,flash:32768,ram:6144,uid:0x1ffff7ac,sizeReg:0x1ffff7cc,idReg:0x40015800,pageSize:1024,wrpMask:0xff})
+ STM32F030F4P6:f0Profile(0x444,16,4,1024),
+ STM32F030K6T6:f0Profile(0x444,32,4,1024),
+ STM32F030C6T6:f0Profile(0x444,32,4,1024),
+ STM32F030C8T6:f0Profile(0x440,64,8,1024),
+ STM32F030R8T6:f0Profile(0x440,64,8,1024),
+ STM32F042F6P6:f0Profile(0x445,32,6,1024),
+ STM32F042C6T6:f0Profile(0x445,32,6,1024),
+ STM32F042K6T6:f0Profile(0x445,32,6,1024),
+ STM32F070F6P6:f0Profile(0x445,32,6,1024),
+ STM32F070C6T6:f0Profile(0x445,32,6,1024),
+ STM32F070CBT6:f0Profile(0x448,128,16,2048),
+ STM32F070RBT6:f0Profile(0x448,128,16,2048),
+ STM32F072RBT6:f0Profile(0x448,128,16,2048),
+ STM32F072CBT6:f0Profile(0x448,128,16,2048)
+});
+export const STLINK_F1_PROFILES=Object.freeze({
+ STM32F103C8T6:Object.freeze({pid:0x410,flash:64*1024,ram:20*1024,uid:0x1ffff7e8,sizeReg:0x1ffff7e0}),
+ STM32F103CBT6:Object.freeze({pid:0x410,flash:128*1024,ram:20*1024,uid:0x1ffff7e8,sizeReg:0x1ffff7e0}),
+ STM32F103R8T6:Object.freeze({pid:0x410,flash:64*1024,ram:20*1024,uid:0x1ffff7e8,sizeReg:0x1ffff7e0}),
+ STM32F103RBT6:Object.freeze({pid:0x410,flash:128*1024,ram:20*1024,uid:0x1ffff7e8,sizeReg:0x1ffff7e0}),
+ STM32F103V8T6:Object.freeze({pid:0x410,flash:64*1024,ram:20*1024,uid:0x1ffff7e8,sizeReg:0x1ffff7e0}),
+ STM32F103VBT6:Object.freeze({pid:0x410,flash:128*1024,ram:20*1024,uid:0x1ffff7e8,sizeReg:0x1ffff7e0})
 });
 export function stLinkProfile(name){
- const n=String(name).toUpperCase().replace(/^STM32F070F6P6TR$/,'STM32F070F6P6');
- return Object.hasOwn(STLINK_F0_PROFILES,n)?STLINK_F0_PROFILES[n]:/^STM32F103C[8B]T6$/.test(n)?STM32_UART[n]:null;
+ const n=String(name).toUpperCase().replace(/TR$/,'');
+ return Object.hasOwn(STLINK_F0_PROFILES,n)?STLINK_F0_PROFILES[n]:Object.hasOwn(STLINK_F1_PROFILES,n)?STLINK_F1_PROFILES[n]:null;
 }
 const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022014,OBR:0x4002201c,WRP:0x40022020,DHCSR:0xe000edf0,CPUID:0xe000ed00,FLASH:0x08000000});
 export class StLinkF0 extends StLinkF1{
  async identify(){
-   if((await this.reg(this.pr.idReg)&0xfff)!==this.pr.pid)throw Error('STM32F070x6 device ID mismatch');
+   if((await this.reg(this.pr.idReg)&0xfff)!==this.pr.pid)throw Error('STM32F0 device ID mismatch');
    if(((await this.reg(F0REG.CPUID)>>>4)&0xfff)!==0xc20)throw Error('Cortex-M0 required');
    const b=await this.read(this.pr.sizeReg,2);
    if((b[0]+256*b[1])*1024!==this.pr.flash)throw Error('STM32F0 Flash size mismatch');
@@ -99,8 +125,8 @@ export class StLinkF0 extends StLinkF1{
    if(!(await this.reg(F0REG.DHCSR)&(1<<17)))throw Error('Core not halted');
    await this.idleF0();
    // Reject all read-protection levels except 0, any option-byte error, and any
-   // protected sector among the eight implemented 4 KiB sectors.
-   if((await this.reg(F0REG.OBR)&7)!==0||(await this.reg(F0REG.WRP)&this.pr.wrpMask)!==this.pr.wrpMask)throw Error('STM32F0 Flash protection present');
+   // protected sector among the implemented 4 KiB sectors.
+   if((await this.reg(F0REG.OBR)&7)!==0||((await this.reg(F0REG.WRP)&this.pr.wrpMask)>>>0)!==this.pr.wrpMask)throw Error('STM32F0 Flash protection present');
    if(await this.reg(F0REG.CR)&0x80){
      await this.put(F0REG.KEY,0x45670123);await this.put(F0REG.KEY,0xcdef89ab);
    }
