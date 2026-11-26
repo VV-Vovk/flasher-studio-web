@@ -46,10 +46,11 @@ test('H72 protection, cache, identity and boot checks precede any erase',async()
  }
  const s=new Fake('STM32H723VGT6'),b=image(s.pr);new DataView(b.buffer).setUint32(0,0x24050000,true);await assert.rejects(s.program(b));assert.deepEqual(s.erased,[]);
 });
-test('H72 failure cases relock; partial write buffer discarded, no forced programming',async()=>{
- for(const flag of ['failUnlock','failErase','failWrite','partial','corrupt','ecc']){
+test('H72 failure cases relock when safe; incomplete rows require reset',async()=>{
+ for(const flag of ['failUnlock','failErase','failWrite','corrupt','ecc']){
   const s=new Fake('STM32H730VBT6');s[flag]=true;await assert.rejects(s.program(image(s.pr)));assert.ok(s.regs.get(CR)&1,flag);
  }
+ const s=new Fake('STM32H730VBT6');s.partial=true;await assert.rejects(s.program(image(s.pr)),/power-cycle/);assert.equal(s.regs.get(CR),2);assert.equal(s.regs.get(SR),2);
 });
 test('32-byte transport sends exactly eight words on DAP and a 32-byte ST-LINK memory write',async()=>{
  const b=Uint8Array.from({length:32},(_,i)=>i),calls=[],d=new DapStm32({device:{},writeWord:async(...a)=>calls.push(a)},{});

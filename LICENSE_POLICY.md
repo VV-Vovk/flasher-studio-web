@@ -22,3 +22,5 @@
 - C0/L4/L4+ independent doubleword Flash controller from factual registers in RM0490, RM0394, RM0351, RM0432. No vendor implementation, loaders, or dependencies added.
 
 - H72x/H73x: independent register-level implementation based on factual register values and Flash geometry from ST RM0468; no vendor source or loader binaries redistributed.
+
+- H7A/B RM0455 and ST CMSIS register definitions used as factual reference; original JS driver, no vendor implementation or Flash loader binaries added. Existing license review restrictions remain.

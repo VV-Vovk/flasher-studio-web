@@ -25,6 +25,7 @@ export class DapStm32 extends Stm32SwdSession{
  async reg(a){return this.link.readWord(a);}
  async put(a,v){return this.link.writeWord(a,v);}
  async writeHalfword(a,b){await this.link.writeHalf(a,b[0]|b[1]<<8);}
+ async writeFlashWord16(a,b){if(a%16||b.length!==16)throw Error('SWD flash-word alignment');const v=new DataView(b.buffer,b.byteOffset,16);for(let i=0;i<16;i+=4)await this.link.writeWord(a+i,v.getUint32(i,true));}
  async writeFlashWord32(a,b){if(a%32||b.length!==32)throw Error('SWD flash-word alignment');const v=new DataView(b.buffer,b.byteOffset,32);for(let i=0;i<32;i+=4)await this.link.writeWord(a+i,v.getUint32(i,true));}
  async writeDoubleword(a,b){if(a%8||b.length!==8)throw Error('SWD doubleword alignment');const v=new DataView(b.buffer,b.byteOffset,8);await this.link.writeWord(a,v.getUint32(0,true));await this.link.writeWord(a+4,v.getUint32(4,true));}
  async writeByte(a,v){await this.link.writeByte(a,v);}

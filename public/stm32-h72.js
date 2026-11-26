@@ -1,10 +1,11 @@
 // Original single-bank STM32H72x/73x driver, RM0468 chapter 4.
 // No vendor source, compiled loader, or third-party implementation.
+import {validateStmVector} from './programmers.js';
 const F=0x52002000,BASE=0x08000000,ID=0x5c001000,CPUID=0xe000ed00,DHCSR=0xe000edf0,CCR=0xe000ed14;
 const KEY=F+4,CR=F+12,SR=F+16,CLEAR=F+20,OPTCR=F+24,OPTSR=F+28,PRAR=F+40,SCAR=F+48,WPSN=F+56,BOOT=F+64;
 const LOCK=1,PG=2,SER=4,START=128,EOP=0x10000,ERR=0x17ee0000,SECTOR=128*1024;
 const patterns=["STM32H723VGHx","STM32H723VGTx","STM32H723ZGIx","STM32H723ZGTx","STM32H723VETx","STM32H723VEHx","STM32H723ZETx","STM32H723ZEIx","STM32H733VGHx","STM32H733VGTx","STM32H733ZGIx","STM32H733ZGTx","STM32H725VGHx","STM32H725IGKx","STM32H725IGTx","STM32H725AGIx","STM32H725RGVx","STM32H725ZGTx","STM32H725VGTx","STM32H725VGYx","STM32H725REVx","STM32H725VETx","STM32H725VEHx","STM32H725ZETx","STM32H725AEIx","STM32H725IETx","STM32H725IEKx","STM32H735VGHx","STM32H735ZGTx","STM32H735VGTx","STM32H735VGYx","STM32H735AGIx","STM32H735IGKx","STM32H735IGTx","STM32H735RGVx","STM32H730VBHx","STM32H730VBTx","STM32H730IBTxQ","STM32H730IBKxQ","STM32H730ZBTx","STM32H730ZBIx","STM32H730ABIxQ"],sizes={B:128,E:512,G:1024};
-export const H72_PROFILES=Object.freeze(Object.fromEntries(patterns.map(n=>[n,Object.freeze({controller:'h72-sector',pid:0x483,core:0xc27,idReg:ID,uid:0x1ff1e800,sizeReg:0x1ff1e880,flash:sizes[n[10]]*1024,ram:128*1024,sectorSize:SECTOR,wordSize:32})])));
+export const H72_PROFILES=Object.freeze(Object.fromEntries(patterns.map(n=>[n,Object.freeze({controller:'h72-sector',pid:0x483,core:0xc27,idReg:ID,uid:0x1ff1e800,sizeReg:0x1ff1e880,flash:sizes[n[10]]*1024,ram:128*1024,stackRegions:Object.freeze([Object.freeze([0x20000000,0x20020000]),Object.freeze([0x24000000,0x24020000])]),stackAlign:8,sectorSize:SECTOR,wordSize:32})])));
 export function h72Profile(name){
  const n=String(name).trim().toUpperCase().replace(/TR$/,'');
  for(const [pattern,p] of Object.entries(H72_PROFILES))if(n===pattern.slice(0,11)||new RegExp('^'+pattern.replace('x','[0-9]')+'$').test(n))return p;
@@ -20,14 +21,7 @@ export async function identifyH72(s){
  if(uid.length!==12||uid.every(x=>x===0)||uid.every(x=>x===255))throw Error('Invalid H7 UID');
  return 'stm32-'+Array.from(uid,x=>x.toString(16).padStart(2,'0')).join('');
 }
-function validateImage(b,p){
- if(!(b instanceof Uint8Array)||b.length<8||b.length>p.flash)throw Error('STM32H72/H73 Flash range');
- const v=new DataView(b.buffer,b.byteOffset,b.byteLength),sp=v.getUint32(0,true),pc=v.getUint32(4,true);
- // Only DTCM and the guaranteed first 128 KiB of AXI SRAM. Additional
- // shared ITCM/AXI SRAM depends on option configuration, not assumed.
- const stack=sp>0x20000000&&sp<=0x20020000||sp>0x24000000&&sp<=0x24020000;
- if(!stack||sp%8||!(pc&1)||(pc&~1)<BASE||(pc&~1)>=BASE+b.length)throw Error('STM32H72/H73 vector table mismatch');
-}
+function validateImage(b,p){if(!(b instanceof Uint8Array)||b.length>p.flash)throw Error('STM32H72/H73 Flash range');validateStmVector(b,p);}
 async function idle(s){
  const deadline=Date.now()+60000;
  do{const st=await s.reg(SR);if(!(st&15))return st;await new Promise(r=>setTimeout(r,3));}while(Date.now()<deadline);
@@ -88,12 +82,13 @@ export async function programH72(s,b,progress=()=>{}){
    progress(.8+.2*(i+n)/p.flash);
   }
  }finally{
-  // Flush any incomplete row by clearing PG only after pending operations
-  // finish; WBNE can otherwise keep idle waiting forever after link failure.
+  // Never force or clear PG with an incomplete buffered ECC row. A target
+  // power cycle is required if WBNE remains after transport failure.
   const deadline=Date.now()+60000;
   let st;
   do{st=await s.reg(SR);if(!(st&13))break;await new Promise(r=>setTimeout(r,3));}while(Date.now()<deadline);
   if(st&13)throw Error('STM32H72/H73 relock blocked by active Flash operation');
+  if(st&2)throw Error('STM32H72/H73 incomplete Flash row: power-cycle target before retry');
   if(!(await s.reg(CR)&LOCK)){await s.put(CR,0);await s.put(CR,LOCK);}
   if(!(await s.reg(CR)&LOCK))throw Error('STM32H72/H73 relock failed');
  }

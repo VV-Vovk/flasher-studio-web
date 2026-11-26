@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.33 (development)
+
+H7A3/H7B3 2 MiB and H7B0 128 KiB: 21 new SWD base groups (36 package patterns), currently flash-only until Builder support is verified. RM0455: 8 KiB sectors, 128-bit rows, per-bank WRP group checks and PCROP/secure-only/ECC checks. Both banks unlocked before erase; bank swap rejected. H7A3 1 MiB remains disabled due to contradictory address mapping in RM0455 and reported CubeProgrammer behavior. H7AXI stack validation now shared by the browser and driver, L0 sparse HEX gaps use erased zero, UID recheck uses the session identity method (including split UID on L0). H72 incomplete row no longer cleared on USB failure: power-cycle required. No new dependencies or SDK binaries. Mock tests only, hardware validation pending.
+
 # Flasher Studio v0.2.32 (development)
 
 STM32H723/725/730/733/735: 25 catalogue base groups, 42 package templates. RM0468: 128 KiB sectors, complete 256-bit rows, 128/512/1024 KiB main Flash, status/ECC checks, protection and boot address guards, option bytes untouched. DTCM and guaranteed AXI SRAM vector validation; reset/halt with core caches disabled required. H742/743/750/753 and dual-core H7 not enabled yet because shared device IDs and discontinuous flash maps need separate validation. H5/L5/U5 need separate security-aware drivers and Builder profiles. Mock tests only, no hardware or SDK builds. L0 driver from v0.2.31 documented in separate module. No new dependencies.
