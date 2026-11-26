@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.32 (development)
+
+STM32H723/725/730/733/735: 25 catalogue base groups, 42 package templates. RM0468: 128 KiB sectors, complete 256-bit rows, 128/512/1024 KiB main Flash, status/ECC checks, protection and boot address guards, option bytes untouched. DTCM and guaranteed AXI SRAM vector validation; reset/halt with core caches disabled required. H742/743/750/753 and dual-core H7 not enabled yet because shared device IDs and discontinuous flash maps need separate validation. H5/L5/U5 need separate security-aware drivers and Builder profiles. Mock tests only, no hardware or SDK builds. L0 driver from v0.2.31 documented in separate module. No new dependencies.
+
 # Flasher Studio v0.2.30 (development)
 
 C0 and L4/L4+ independent doubleword Flash driver: 54 C0 and 139 L4 catalogue base groups. Exact ID/size/UID, separate C0 status/PCROP/security registers (no ECC register), L4 firewall/swap and ECC preflight, locked options, full main Flash erase/verify. L4 256/512 KiB legacy dual-bank sparse layouts rejected before erase; L4+ low-density reserved DBANK rejected. No hardware/real SDK builds, no new dependencies. References RM0490, RM0394, RM0351, RM0432. Two C0 package groups still lack a Builder profile. L0 not yet enabled.
