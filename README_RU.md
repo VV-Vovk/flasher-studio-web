@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.24 (development)
+
+Single-bank G0x1 (G031/G041/G051/G061/G071/G081) and G4 category 2 (G431/G441): 75 base geometries, 128 catalogue package templates. RM0444 rev 6 and RM0440 rev 9 chapter 5. Separate doubleword transport for CMSIS-DAP and ST-LINK, 2 KiB page erase, RDP/WRP/PCROP/securable area preflight, option lock preserved, status/ECC checks, readback and relock. Cache disabled until reset. Exact package search works; some base names still require a package for Builder. No dual-bank, G0 value-line, or G4 other categories enabled yet. No physical tests, private builds or new third-party dependencies. Existing license inventory gate retained.
+
 # Flasher Studio v0.2.23 (development)
 
 STM32F3 SWD: 69 existing base-model profiles, Cortex-M4, 2 KiB page erase, exact flash size and UID, read/write protection checks, halfword programming, main/CCM stack validation, readback and relock. Shared page-controller algorithm, no vendor binaries or copied programmer source. F334K4 base currently lacks a build profile; exact package variants may have one. No physical tests or private compiler builds. Public browser dependency inventory and upstream notices generated at bundle build, see LICENSE_POLICY.md. Embedded ESP stub provenance and other existing assets still require separate release review.
