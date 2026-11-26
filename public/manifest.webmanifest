@@ -1,7 +1,7 @@
 {
   "id": "/",
   "name": "Flasher Studio",
-  "short_name": "Flasher",
+  "short_name": "Flasher Studio",
   "description": "Flasher Studio — universal microcontroller flasher",
   "lang": "ru",
   "start_url": "/",
