@@ -55,6 +55,7 @@ export class StLinkF1 extends Stm32SwdSession{
  async put(a,val){await this.ok([0xf2,0x35,...le32(a),...le32(val)]);}
  async init(){let v=await this.cmd([0xf1],6);if(v[0]>>>4!==2)throw Error('Требуется ST-LINK/V2');let mode=await this.cmd([0xf5],2);if(mode[0]===0)throw Error('ST-LINK в DFU');if(mode[0]!==2)await this.ok([0xf2,0x30,0xa3]);let id=await this.identify();return id;}
  async writeHalfword(a,p){await this.cmd([0xf2,0x48,...le32(a),2,0],0,p);await this.rwStatus();}
+ async writeByte(a,v){if(!Number.isInteger(v)||v<0||v>255)throw Error('Invalid SWD byte');await this.cmd([0xf2,0x0d,...le32(a),1,0],0,u([v]));await this.rwStatus();}
  async close(){// target remains halted after write: user resets the board manually
  await this.device.close();}
 }

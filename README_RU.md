@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.19
+
+Seven additional exact single-bank F2/F4 SWD profiles using the shared ST-LINK and CMSIS-DAP transports. RM0033 / RM0368 / RM0383 / RM0090. Sector erase, conservative x8 programming (slow), RDP/WRP/PCROP guards, cache invalidation, full main Flash verification, relock. No Option Bytes changes. F407 vector validation currently accepts main SRAM only (128 KiB, not CCM). No dual-bank support; no hardware tests. No UI controls added. F205/F401/F411 have explicit Builder profiles; F207/F407 use existing catalog resolver and are not newly compiled in this update. Public CI only.
+
 # Flasher Studio v0.2.18
 
 Local Monitor tab: serial terminal with TX/RX, baud rate, 7/8 data bits, parity, stop bits, CR/LF, optional timestamps and echo, pause, autoscroll, text log export. Numeric plotter parses complete lines, 1–8 numeric channels, named `temp:25.4 voltage:3.3`, bounded 10,000 samples, selectable visible window, toggle series and CSV export. Uses existing Web Serial, WebUSB CDC, CH340/CP210x; monitor holds exclusive hardware lock, releases port on navigation. No network requests from monitor, no tokens, no private Actions minutes. Hardware browser tests pending.

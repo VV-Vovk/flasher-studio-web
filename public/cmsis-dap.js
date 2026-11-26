@@ -13,6 +13,7 @@ export class DapLink {
  async setSize(n){await this.ap(0,((this.csw&~0x37)|n)>>>0);}
  async readWord(addr){if(addr%4)throw Error('MEM-AP word alignment');await this.setSize(2);await this.ap(4,addr);return this.ap(12);}
  async writeWord(addr,value){if(addr%4)throw Error('MEM-AP word alignment');await this.setSize(2);await this.ap(4,addr);await this.ap(12,value);await this.dp(12);}
+ async writeByte(addr,value){if(!Number.isInteger(value)||value<0||value>255)throw Error('Invalid SWD byte');await this.setSize(0);await this.ap(4,addr);await this.ap(12,(value<<((addr&3)*8))>>>0);await this.dp(12);}
  async writeHalf(addr,value){if(addr%2)throw Error('MEM-AP halfword alignment');await this.setSize(1);await this.ap(4,addr);await this.ap(12,(value<<((addr&2)*8))>>>0);await this.dp(12);}
  async close(){try{await this.ok([3]);}finally{await this.device.close();}}
 }
@@ -24,6 +25,7 @@ export class DapStm32 extends Stm32SwdSession{
  async reg(a){return this.link.readWord(a);}
  async put(a,v){return this.link.writeWord(a,v);}
  async writeHalfword(a,b){await this.link.writeHalf(a,b[0]|b[1]<<8);}
+ async writeByte(a,v){await this.link.writeByte(a,v);}
  async close(){await this.link.close();}
 }
 export class DapF1 extends DapStm32{}

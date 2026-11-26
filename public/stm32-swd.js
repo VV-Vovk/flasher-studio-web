@@ -2,6 +2,8 @@
 // No USB/HID dependencies: adapter supplies read, reg, put, writeHalfword.
 // The exact order code is user selected; device ID/size are geometry checks, not package detection.
 import {validateStmVector} from './programmers.js';
+import {SECTOR_PROFILES,identifySector,programSector} from './stm32-sector.js';
+export {SECTOR_PROFILES};
 const u=a=>Uint8Array.from(a),eq=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]),hex=a=>Array.from(a,x=>x.toString(16).padStart(2,'0')).join(''),wait=ms=>new Promise(r=>setTimeout(r,ms));
 // RM0360 rev 5: F070x6, 32 KiB main flash, 1 KiB pages, halfword programming.
 // Device ID and size identify compatible silicon geometry, not exact package/order code.
@@ -36,15 +38,15 @@ export const STLINK_F1_PROFILES=Object.freeze({
 });
 export function swdProfile(name){
  const n=String(name).toUpperCase().replace(/TR$/,'');
- return Object.hasOwn(STLINK_F0_PROFILES,n)?STLINK_F0_PROFILES[n]:Object.hasOwn(STLINK_F1_PROFILES,n)?STLINK_F1_PROFILES[n]:null;
+ return Object.hasOwn(STLINK_F0_PROFILES,n)?STLINK_F0_PROFILES[n]:Object.hasOwn(STLINK_F1_PROFILES,n)?STLINK_F1_PROFILES[n]:Object.hasOwn(SECTOR_PROFILES,n)?SECTOR_PROFILES[n]:null;
 }
 
 const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022014,OBR:0x4002201c,WRP:0x40022020,DHCSR:0xe000edf0,CPUID:0xe000ed00,FLASH:0x08000000});
 
 export class Stm32SwdSession {
  constructor(pr){this.pr=pr;}
- async identify(){return this.pr.idReg?this.identifyF0():this.identifyF1();}
- async program(b,progress=()=>{}){return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
+ async identify(){if(this.pr.controller==='f2f4-sector')return identifySector(this);return this.pr.idReg?this.identifyF0():this.identifyF1();}
+ async program(b,progress=()=>{}){if(this.pr.controller==='f2f4-sector')return programSector(this,b,progress);return this.pr.idReg?this.programF0(b,progress):this.programF1(b,progress);}
  async identifyF1(){if((await this.reg(0xe0042000)&0xfff)!==0x410)throw Error('STM32F103 medium-density ID required');let b=await this.read(this.pr.sizeReg,2);if((b[0]+256*b[1])*1024!==this.pr.flash)throw Error('Flash size mismatch');let uid=await this.read(this.pr.uid,12);if(uid.every(x=>!x)||uid.every(x=>x===255))throw Error('Invalid UID');return 'stm32-'+hex(uid);}
 
  async ready(){let end=Date.now()+20000;while(Date.now()<end){let s=await this.reg(0x4002200c);if(!(s&1)){if(s&0x14)throw Error('STM32 Flash status '+s.toString(16));return;}await wait(3);}throw Error('Flash busy timeout');}
