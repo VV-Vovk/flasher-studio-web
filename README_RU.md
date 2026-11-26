@@ -1,3 +1,7 @@
+# Flasher Studio v0.2.7
+
+Boot installation controls are shown only for an explicitly selected compatible target with a matching CI package and implemented installation route. No generic install placeholder for ROM-only or unsupported targets. Only the implemented package source and wired routes are offered; existing package/backup/confirmation checks remain unchanged. Candidate packages are not hardware validated. The bundled boot catalog is metadata, not binaries. Ordinary flashing and compilation are unchanged.
+
 # Flasher Studio v0.2.6
 
 UI 20; Bootloaders v0.2.1 unchanged. Builder v0.2.7 required for new STM32 FS10 layout only; ordinary build API unchanged.
@@ -6,7 +10,7 @@ UI 20; Bootloaders v0.2.1 unchanged. Builder v0.2.7 required for new STM32 FS10 
 - CMSIS-DAP v1 HID on desktop Chromium using WebHID (64-byte reports), in addition to v2 WebUSB. STM32F103C8/CB only. Unsupported HID descriptors rejected. No hardware validation. CMSIS-DAP v2 can also install FS10 Recovery for F103C8 via the existing backup/confirmation flow.
 - No demo operations. No new standalone utilities for the unfinished direct UPDI, Urboot, Nordic DFU, ST-LINK/V3, J-Link. Those remain the previous local-tool paths. All physical programming and browser/network behavior still require testing.
 
-Tests: `npm test` (61 JavaScript tests), `python -m unittest discover -s tests -p '*_test.py'` (5 tests). Mobile UI checked via local injected resources, not live HTTPS. Actual SDK compilation, vendor npm installation and hardware not validated here.
+Tests: `npm test` (66 JavaScript tests including five boot availability checks), `python -m unittest discover -s tests -p '*_test.py'` (5 tests). Mobile UI checked via local injected resources, not live HTTPS. Actual SDK compilation, vendor npm installation and hardware not validated here.
 
 Deploy only to the studio target after the new Builder check:
 ```
