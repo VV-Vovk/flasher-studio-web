@@ -56,3 +56,8 @@ test('USB overrides live inside the connection panel; manual picker requires exp
  assert.ok(html.includes("targetStage75!==null&&targetStage75!=='ready'"));
  assert.ok(html.includes("body.scrollTo({top,behavior:"));
 });
+
+test('Device panels have no legacy extra top spacing',()=>{
+ assert.doesNotMatch(html,/\.device-info12\s*\{\s*margin-top\s*:/);
+ assert.ok(html.includes('#device>.layout>.panel{margin-bottom:0;margin-top:0;min-width:0}'));
+});

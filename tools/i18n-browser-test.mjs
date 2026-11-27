@@ -91,11 +91,23 @@ let browser;try{
    const usb=document.getElementById('usbAdvanced75'),connect=document.getElementById('connect'),info=document.getElementById('deviceInfo12'),layout=document.querySelector('#device>.layout');
    const native=document.getElementById('nativePanel75');native.open=true;
    const a=native.querySelector('a.btn'),r=a.getBoundingClientRect(),prev=a.previousElementSibling.getBoundingClientRect(),next=a.nextElementSibling.getBoundingClientRect();
-   const geometry={nested:usb.parentElement===connect.parentElement,collapsed:!usb.open,gap:getComputedStyle(layout).rowGap,margin:getComputedStyle(connect.parentElement).marginBottom,infoMargin:getComputedStyle(info).marginBottom,linkWidth:r.width,available:native.clientWidth,above:r.top-prev.bottom,below:next.top-r.bottom,decoration:getComputedStyle(a).textDecorationLine};
+   const geometry={nested:usb.parentElement===connect.parentElement,collapsed:!usb.open,gap:getComputedStyle(layout).rowGap,margin:getComputedStyle(connect.parentElement).marginBottom,infoMargin:getComputedStyle(info).marginBottom,infoTopMargin:getComputedStyle(info).marginTop,linkWidth:r.width,available:native.clientWidth,above:r.top-prev.bottom,below:next.top-r.bottom,decoration:getComputedStyle(a).textDecorationLine};
    native.open=false;return geometry;
   });
   assert.ok(result.nested&&result.collapsed);
-  assert.equal(result.gap,'14px');assert.equal(result.margin,'0px');assert.equal(result.infoMargin,'0px');
+  assert.equal(result.gap,'14px');assert.equal(result.margin,'0px');assert.equal(result.infoMargin,'0px');assert.equal(result.infoTopMargin,'0px');
+  if(width<=430){
+   for(const expanded of [false,true]){
+    const gaps=await page.evaluate(expanded=>{
+     const info=document.getElementById('deviceInfo12'),connection=document.getElementById('connect').parentElement,flash=document.getElementById('flash').closest('.panel'),fold=document.getElementById('infoFold17');
+     fold.open=expanded;
+     const a=connection.getBoundingClientRect(),b=info.getBoundingClientRect(),c=flash.getBoundingClientRect();
+     return [b.top-a.bottom,c.top-b.bottom];
+    },expanded);
+    for(const gap of gaps)assert.ok(Math.abs(gap-14)<1,'actual mobile panel gap '+gap+' at '+width+' expanded='+expanded);
+   }
+   await page.evaluate(()=>document.getElementById('infoFold17').open=false);
+  }
   assert.ok(result.above>=0&&result.below>=0,'native download overlaps adjacent text at '+width);
   assert.ok(result.linkWidth<=result.available);assert.equal(result.decoration,'none');
  }

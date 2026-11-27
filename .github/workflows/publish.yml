@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '6b6a5d99ca8a81125508f5a31368267c6a2816c6' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.75 compact device layout and guided target picker'))
+       (github.event_name == 'push' && github.event.before == '6f8ff8fce919cf9dcb5107af745018b2e7ba0ed5' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.76 uniform device panel spacing'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
