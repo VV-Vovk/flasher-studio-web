@@ -255,3 +255,8 @@ Nine classic ATtiny (13/25/45/85/24/44/84/2313/4313), 18 clock profiles and Digi
 ## v0.2.56 — Digispark / Digispark Pro USB preview
 
 Exact Digistump AVR 1.7.5 profiles (private Builder develop/tiny-isp), separate from destructive ISP target. Experimental Micronucleus 2.x WebUSB (16d0:0753) with live signature/page/usable length, RJMP/JMP reset patch, bounded application erase/write only, no automatic retry/start. Protocol has no readback; UI reports transfer only, never verified. Legacy v1.x lacks signature and is refused. No USB bootloader installation, hardware or real SDK smoke builds; MH-Tiny88, Trinket, Gemma and legacy v1 pending. References: micronucleus v2.6 library and firmware, ArminJo DigistumpArduino v1.7.5 boards.txt.
+
+
+## v0.2.57 — каталог по семействам
+
+Группировка проектов, загрузчиков и физических устройств по семейству и чипу из существующих метаданных. Пустые семейства скрыты, один чип не требует дополнительного раскрытия, поиск открывает совпавшие группы; общий список доступен одним переключателем. Многоплатный проект разбивается только в представлении; идентификаторы, бинарные файлы и связи сохраняются. Устройства ведут к точным сохранённым версиям прошивки и загрузчика. Настройки раскрытия/режима локальные; неопределённые цели не угадываются. No hardware/build/deployment changes.
