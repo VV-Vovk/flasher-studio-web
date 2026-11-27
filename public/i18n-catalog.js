@@ -7003,5 +7003,1217 @@ const FS_I18N_MESSAGES = {
   "STM32WB relock failed": {
     "en": "STM32WB relock failed",
     "de": "STM32WB: Erneutes Sperren fehlgeschlagen"
+  },
+  "Signature status": {
+    "en": "Signature status",
+    "de": "Signaturstatus fehlerhaft"
+  },
+  "Mega signature": {
+    "en": "Mega signature",
+    "de": "Mega: falsche Signatur"
+  },
+  "Mega: readback": {
+    "en": "Mega: readback",
+    "de": "Mega: Rücklesen fehlgeschlagen"
+  },
+  "AVR109 block mode": {
+    "en": "AVR109 block mode",
+    "de": "AVR109: Blockmodus nicht verfügbar"
+  },
+  "Caterina signature": {
+    "en": "Caterina signature",
+    "de": "Caterina: falsche Signatur"
+  },
+  "Caterina: readback": {
+    "en": "Caterina: readback",
+    "de": "Caterina: Rücklesen fehlgeschlagen"
+  },
+  "USBasp request": {
+    "en": "USBasp request",
+    "de": "USBasp-Anfrage"
+  },
+  "SCK": {
+    "en": "SCK",
+    "de": "SCK-Konfigurationsfehler"
+  },
+  "AVR busy timeout": {
+    "en": "AVR busy timeout",
+    "de": "AVR: Zeitüberschreitung bei beschäftigt"
+  },
+  "USBasp page": {
+    "en": "USBasp page",
+    "de": "USBasp: Seitenfehler"
+  },
+  "USBasp write": {
+    "en": "USBasp write",
+    "de": "USBasp: Schreibfehler"
+  },
+  "USBasp readback": {
+    "en": "USBasp readback",
+    "de": "USBasp: Rücklesen fehlgeschlagen"
+  },
+  "AVR Flash size": {
+    "en": "AVR Flash size",
+    "de": "AVR: ungültige Flash-Größe"
+  },
+  "AVR signature": {
+    "en": "AVR signature",
+    "de": "AVR: falsche Signatur"
+  },
+  "AVR erase verify": {
+    "en": "AVR erase verify",
+    "de": "AVR: Löschprüfung fehlgeschlagen"
+  },
+  "ATtiny image bounds / empty reset vector": {
+    "en": "ATtiny image bounds / empty reset vector",
+    "de": "ATtiny: Abbild außerhalb der Grenzen oder leerer Resetvektor"
+  },
+  "ATtiny signature": {
+    "en": "ATtiny signature",
+    "de": "ATtiny: falsche Signatur"
+  },
+  "ATtiny locked; automatic unlock refused": {
+    "en": "ATtiny locked; automatic unlock refused",
+    "de": "ATtiny gesperrt; automatisches Entsperren verweigert"
+  },
+  "ATtiny signature changed": {
+    "en": "ATtiny signature changed",
+    "de": "ATtiny: Signatur geändert"
+  },
+  "ATtiny erase verification": {
+    "en": "ATtiny erase verification",
+    "de": "ATtiny: Löschprüfung fehlgeschlagen"
+  },
+  "ATtiny final readback": {
+    "en": "ATtiny final readback",
+    "de": "ATtiny: abschließendes Rücklesen fehlgeschlagen"
+  },
+  "ATtiny identity/fuse changed": {
+    "en": "ATtiny identity/fuse changed",
+    "de": "ATtiny: Identität/Fuse-Bits geändert"
+  },
+  "ATtiny bootloader/fuse installation not supported": {
+    "en": "ATtiny bootloader/fuse installation not supported",
+    "de": "ATtiny: Bootloader-/Fuse-Installation nicht unterstützt"
+  },
+  "Wrong AVR": {
+    "en": "Wrong AVR",
+    "de": "Falscher AVR"
+  },
+  "Fuse profile not supported": {
+    "en": "Fuse profile not supported",
+    "de": "Fuse-Profil nicht unterstützt"
+  },
+  "Fuse readback": {
+    "en": "Fuse readback",
+    "de": "Fuse-Rücklesen fehlgeschlagen"
+  },
+  "Lock readback": {
+    "en": "Lock readback",
+    "de": "Lock-Bit-Rücklesen fehlgeschlagen"
+  },
+  "SWD flash-word alignment": {
+    "en": "SWD flash-word alignment",
+    "de": "SWD: Flash-Word-Ausrichtung ungültig"
+  },
+  "SWD doubleword alignment": {
+    "en": "SWD doubleword alignment",
+    "de": "SWD: Doubleword-Ausrichtung ungültig"
+  },
+  "Invalid SWD byte": {
+    "en": "Invalid SWD byte",
+    "de": "Ungültiges SWD-Byte"
+  },
+  "Boot package SHA-256": {
+    "en": "Boot package SHA-256",
+    "de": "Bootloader-Paket: SHA-256-Prüfung fehlgeschlagen"
+  },
+  "USBasp boot profile unsupported": {
+    "en": "USBasp boot profile unsupported",
+    "de": "USBasp-Bootloader-Profil nicht unterstützt"
+  },
+  "Bootloader writes application area": {
+    "en": "Bootloader writes application area",
+    "de": "Bootloader würde Anwendungsbereich überschreiben"
+  },
+  "MiniCore HTTP": {
+    "en": "MiniCore HTTP",
+    "de": "MiniCore: HTTP-Fehler"
+  },
+  "DFU geometry": {
+    "en": "DFU geometry",
+    "de": "DFU: ungültige Speichergeometrie"
+  },
+  "DFU idle": {
+    "en": "DFU idle",
+    "de": "DFU: Ruhezustand nicht erreicht"
+  },
+  "UF2 size/family": {
+    "en": "UF2 size/family",
+    "de": "UF2: ungültige Größe oder Familie"
+  },
+  "UF2 block / target": {
+    "en": "UF2 block / target",
+    "de": "UF2: ungültiger Block oder Ziel"
+  },
+  "UF2 overlap": {
+    "en": "UF2 overlap",
+    "de": "UF2: überlappende Blöcke"
+  },
+  "ESP Recovery profile unsupported": {
+    "en": "ESP Recovery profile unsupported",
+    "de": "ESP-Recovery-Profil nicht unterstützt"
+  },
+  "Partition CSV SHA-256": {
+    "en": "Partition CSV SHA-256",
+    "de": "Partitionen-CSV: SHA-256 stimmt nicht überein"
+  },
+  "ESP Recovery offsets": {
+    "en": "ESP Recovery offsets",
+    "de": "ESP-Recovery-Offsets ungültig"
+  },
+  "ESP header chip": {
+    "en": "ESP header chip",
+    "de": "ESP: Chip im Header stimmt nicht überein"
+  },
+  "Recovery too large": {
+    "en": "Recovery too large",
+    "de": "Recovery zu groß"
+  },
+  "ESP Recovery incomplete": {
+    "en": "ESP Recovery incomplete",
+    "de": "ESP Recovery unvollständig"
+  },
+  "ESP overlap": {
+    "en": "ESP overlap",
+    "de": "ESP: überlappende Bereiche"
+  },
+  "ESP model / Flash mismatch": {
+    "en": "ESP model / Flash mismatch",
+    "de": "ESP: Modell oder Flash-Größe stimmt nicht überein"
+  },
+  "ESP security state unavailable": {
+    "en": "ESP security state unavailable",
+    "de": "ESP: Sicherheitszustand nicht verfügbar"
+  },
+  "ESP Recovery readback mismatch": {
+    "en": "ESP Recovery readback mismatch",
+    "de": "ESP-Recovery-Rücklesedaten stimmen nicht überein"
+  },
+  "ST-LINK word alignment": {
+    "en": "ST-LINK word alignment",
+    "de": "ST-LINK: Word-Ausrichtung ungültig"
+  },
+  "ST-LINK word arguments": {
+    "en": "ST-LINK word arguments",
+    "de": "ST-LINK: ungültige Word-Argumente"
+  },
+  "ATtiny ISP target/WebUSB unavailable": {
+    "en": "ATtiny ISP target/WebUSB unavailable",
+    "de": "ATtiny: ISP-Ziel oder WebUSB nicht verfügbar"
+  },
+  "USBasp VID/PID": {
+    "en": "USBasp VID/PID",
+    "de": "USBasp: VID/PID stimmt nicht überein"
+  },
+  "ATtiny signature mismatch": {
+    "en": "ATtiny signature mismatch",
+    "de": "ATtiny: Signatur stimmt nicht überein"
+  },
+  "ATtiny ISP target unsupported": {
+    "en": "ATtiny ISP target unsupported",
+    "de": "ATtiny-ISP-Ziel nicht unterstützt"
+  },
+  "ArduinoISP session invalid; reconnect": {
+    "en": "ArduinoISP session invalid; reconnect",
+    "de": "ArduinoISP: ungültige Sitzung; erneut verbinden"
+  },
+  "ArduinoISP response": {
+    "en": "ArduinoISP response",
+    "de": "ArduinoISP: ungültige Antwort"
+  },
+  "ArduinoISP already active": {
+    "en": "ArduinoISP already active",
+    "de": "ArduinoISP bereits aktiv"
+  },
+  "Require ArduinoISP sketch, not Arduino bootloader": {
+    "en": "Require ArduinoISP sketch, not Arduino bootloader",
+    "de": "ArduinoISP-Sketch erforderlich, nicht Arduino-Bootloader"
+  },
+  "ArduinoISP connection lost; release target RESET manually before reconnecting": {
+    "en": "ArduinoISP connection lost; release target RESET manually before reconnecting",
+    "de": "ArduinoISP-Verbindung verloren; Ziel-RESET vor erneutem Verbinden manuell freigeben"
+  },
+  "ArduinoISP not in programming mode": {
+    "en": "ArduinoISP not in programming mode",
+    "de": "ArduinoISP nicht im Programmiermodus"
+  },
+  "ArduinoISP universal": {
+    "en": "ArduinoISP universal",
+    "de": "ArduinoISP: Universalbefehl fehlgeschlagen"
+  },
+  "ArduinoISP address": {
+    "en": "ArduinoISP address",
+    "de": "ArduinoISP: ungültige Adresse"
+  },
+  "ArduinoISP read bounds": {
+    "en": "ArduinoISP read bounds",
+    "de": "ArduinoISP: Lesegrenzen überschritten"
+  },
+  "ArduinoISP page bounds": {
+    "en": "ArduinoISP page bounds",
+    "de": "ArduinoISP: Seitengrenzen überschritten"
+  },
+  "ArduinoISP page readback": {
+    "en": "ArduinoISP page readback",
+    "de": "ArduinoISP: Seitenrücklesen fehlgeschlagen"
+  },
+  "STM32:": {
+    "en": "STM32:",
+    "de": "STM32:"
+  },
+  "STM32 alignment": {
+    "en": "STM32 alignment",
+    "de": "STM32: ungültige Adressausrichtung"
+  },
+  "STM32F1 XL Flash range": {
+    "en": "STM32F1 XL Flash range",
+    "de": "STM32F1 XL: ungültiger Flash-Bereich"
+  },
+  "STM32F1 XL bank busy timeout": {
+    "en": "STM32F1 XL bank busy timeout",
+    "de": "STM32F1 XL: Zeitüberschreitung bei beschäftigter Bank"
+  },
+  "STM32F1 XL Flash status": {
+    "en": "STM32F1 XL Flash status",
+    "de": "STM32F1 XL: Flash-Status"
+  },
+  "STM32F1 XL missing EOP": {
+    "en": "STM32F1 XL missing EOP",
+    "de": "STM32F1 XL: EOP fehlt"
+  },
+  "STM32F1 XL Flash protection present": {
+    "en": "STM32F1 XL Flash protection present",
+    "de": "STM32F1 XL: Flash-Schutz vorhanden"
+  },
+  "STM32F1 XL bank locked": {
+    "en": "STM32F1 XL bank locked",
+    "de": "STM32F1 XL: Speicherbank gesperrt"
+  },
+  "STM32F1 XL SWD readback mismatch @0x": {
+    "en": "STM32F1 XL SWD readback mismatch @0x",
+    "de": "STM32F1 XL: SWD-Rücklesedaten stimmen nicht überein bei 0x"
+  },
+  "STM32F1 XL bank relock failed": {
+    "en": "STM32F1 XL bank relock failed",
+    "de": "STM32F1 XL: erneutes Sperren der Speicherbank fehlgeschlagen"
+  },
+  "STM32 sector Flash busy timeout": {
+    "en": "STM32 sector Flash busy timeout",
+    "de": "STM32: Zeitüberschreitung bei beschäftigtem Sektor-Flash"
+  },
+  "STM32 sector Flash status 0x": {
+    "en": "STM32 sector Flash status 0x",
+    "de": "STM32: Sektor-Flash-Status 0x"
+  },
+  "STM32 sector Flash missing EOP": {
+    "en": "STM32 sector Flash missing EOP",
+    "de": "STM32: Sektor-Flash-EOP fehlt"
+  },
+  "STM32 sector Flash protection present": {
+    "en": "STM32 sector Flash protection present",
+    "de": "STM32: Sektor-Flash-Schutz vorhanden"
+  },
+  "STM32 sector Flash range or transport": {
+    "en": "STM32 sector Flash range or transport",
+    "de": "STM32: Sektor-Flash-Bereich oder Transport nicht unterstützt"
+  },
+  "STM32 sector Flash locked": {
+    "en": "STM32 sector Flash locked",
+    "de": "STM32: Sektor-Flash gesperrt"
+  },
+  "STM32 sector Flash readback mismatch @0x": {
+    "en": "STM32 sector Flash readback mismatch @0x",
+    "de": "STM32: Sektor-Flash-Rücklesedaten stimmen nicht überein bei 0x"
+  },
+  "STM32 sector Flash readback status": {
+    "en": "STM32 sector Flash readback status",
+    "de": "STM32: Sektor-Flash-Rücklesestatus fehlerhaft"
+  },
+  "STM32 sector Flash relock failed": {
+    "en": "STM32 sector Flash relock failed",
+    "de": "STM32: erneutes Sperren des Sektor-Flash fehlgeschlagen"
+  },
+  "ESP USB transfer failed": {
+    "en": "ESP USB transfer failed",
+    "de": "ESP-USB-Übertragung fehlgeschlagen"
+  },
+  "Not ESP USB Serial/JTAG": {
+    "en": "Not ESP USB Serial/JTAG",
+    "de": "Kein ESP USB Serial/JTAG"
+  },
+  "ESP USB incomplete control transfer": {
+    "en": "ESP USB incomplete control transfer",
+    "de": "ESP-USB: unvollständige Control-Übertragung"
+  },
+  "ESP USB already open": {
+    "en": "ESP USB already open",
+    "de": "ESP-USB bereits geöffnet"
+  },
+  "ESP USB serial options": {
+    "en": "ESP USB serial options",
+    "de": "ESP-USB: ungültige serielle Einstellungen"
+  },
+  "ESP USB ambiguous CDC interfaces": {
+    "en": "ESP USB ambiguous CDC interfaces",
+    "de": "ESP-USB: mehrdeutige CDC-Schnittstellen"
+  },
+  "ESP USB ambiguous bulk endpoints": {
+    "en": "ESP USB ambiguous bulk endpoints",
+    "de": "ESP-USB: mehrdeutige Bulk-Endpunkte"
+  },
+  "ESP USB closed": {
+    "en": "ESP USB closed",
+    "de": "ESP-USB geschlossen"
+  },
+  "ESP USB invalid bytes": {
+    "en": "ESP USB invalid bytes",
+    "de": "ESP-USB: ungültige Bytes"
+  },
+  "ESP USB incomplete write": {
+    "en": "ESP USB incomplete write",
+    "de": "ESP-USB: unvollständige Schreibübertragung"
+  },
+  "ESP USB still open": {
+    "en": "ESP USB still open",
+    "de": "ESP-USB noch geöffnet"
+  },
+  "DAP packet length": {
+    "en": "DAP packet length",
+    "de": "DAP: ungültige Paketlänge"
+  },
+  "DAP USB OUT": {
+    "en": "DAP USB OUT",
+    "de": "DAP-USB-OUT-Übertragung fehlgeschlagen"
+  },
+  "DAP USB IN": {
+    "en": "DAP USB IN",
+    "de": "DAP-USB-IN-Übertragung fehlgeschlagen"
+  },
+  "DAP command mismatch": {
+    "en": "DAP command mismatch",
+    "de": "DAP: Befehl stimmt nicht überein"
+  },
+  "DAP status": {
+    "en": "DAP status",
+    "de": "DAP-Status"
+  },
+  "DAP address": {
+    "en": "DAP address",
+    "de": "DAP: ungültige Adresse"
+  },
+  "DAP transfer ACK/count": {
+    "en": "DAP transfer ACK/count",
+    "de": "DAP: fehlerhaftes Transfer-ACK oder Anzahl"
+  },
+  "DAP read truncated": {
+    "en": "DAP read truncated",
+    "de": "DAP: unvollständige Lesedaten"
+  },
+  "DAP SWD unsupported": {
+    "en": "DAP SWD unsupported",
+    "de": "DAP-SWD nicht unterstützt"
+  },
+  "DAP packet size unavailable": {
+    "en": "DAP packet size unavailable",
+    "de": "DAP-Paketgröße nicht verfügbar"
+  },
+  "DAP packet size unsupported": {
+    "en": "DAP packet size unsupported",
+    "de": "DAP-Paketgröße nicht unterstützt"
+  },
+  "DAP SWD connect": {
+    "en": "DAP SWD connect",
+    "de": "DAP-SWD-Verbindung fehlgeschlagen"
+  },
+  "SWD DPIDR invalid": {
+    "en": "SWD DPIDR invalid",
+    "de": "SWD: ungültiges DPIDR"
+  },
+  "SWD power timeout": {
+    "en": "SWD power timeout",
+    "de": "SWD: Zeitüberschreitung beim Aktivieren der Versorgung"
+  },
+  "AP0 is not MEM-AP": {
+    "en": "AP0 is not MEM-AP",
+    "de": "AP0 ist kein MEM-AP"
+  },
+  "MEM-AP disabled": {
+    "en": "MEM-AP disabled",
+    "de": "MEM-AP deaktiviert"
+  },
+  "MEM-AP word alignment": {
+    "en": "MEM-AP word alignment",
+    "de": "MEM-AP: Word-Ausrichtung ungültig"
+  },
+  "MEM-AP halfword alignment": {
+    "en": "MEM-AP halfword alignment",
+    "de": "MEM-AP: Halfword-Ausrichtung ungültig"
+  },
+  "DAP HID session invalid or busy": {
+    "en": "DAP HID session invalid or busy",
+    "de": "DAP-HID-Sitzung ungültig oder beschäftigt"
+  },
+  "CMSIS-DAP HID packet size unsupported": {
+    "en": "CMSIS-DAP HID packet size unsupported",
+    "de": "CMSIS-DAP-HID-Paketgröße nicht unterstützt"
+  },
+  "CMSIS-DAP WebUSB unavailable": {
+    "en": "CMSIS-DAP WebUSB unavailable",
+    "de": "CMSIS-DAP-WebUSB nicht verfügbar"
+  },
+  "CMSIS-DAP v2 requires one bulk interface": {
+    "en": "CMSIS-DAP v2 requires one bulk interface",
+    "de": "CMSIS-DAP v2 erfordert genau eine Bulk-Schnittstelle"
+  },
+  "CMSIS-DAP WebHID unavailable": {
+    "en": "CMSIS-DAP WebHID unavailable",
+    "de": "CMSIS-DAP-WebHID nicht verfügbar"
+  },
+  "Select one CMSIS-DAP v1": {
+    "en": "Select one CMSIS-DAP v1",
+    "de": "Ein CMSIS-DAP-v1-Gerät auswählen"
+  },
+  "DAP HID packet size unsupported": {
+    "en": "DAP HID packet size unsupported",
+    "de": "DAP-HID-Paketgröße nicht unterstützt"
+  },
+  "Recovery HTTP": {
+    "en": "Recovery HTTP",
+    "de": "Recovery: HTTP-Fehler"
+  },
+  "Trinket USB response": {
+    "en": "Trinket USB response",
+    "de": "Trinket: ungültige USB-Antwort"
+  },
+  "Trinket SPI response": {
+    "en": "Trinket SPI response",
+    "de": "Trinket: ungültige SPI-Antwort"
+  },
+  "Trinket signature mismatch": {
+    "en": "Trinket signature mismatch",
+    "de": "Trinket: Signatur stimmt nicht überein"
+  },
+  "Trinket read bounds": {
+    "en": "Trinket read bounds",
+    "de": "Trinket: Lesegrenzen überschritten"
+  },
+  "Trinket image bounds / RJMP reset vector": {
+    "en": "Trinket image bounds / RJMP reset vector",
+    "de": "Trinket: ungültige Abbildgrenzen oder RJMP-Resetvektor"
+  },
+  "Trinket reset target outside application": {
+    "en": "Trinket reset target outside application",
+    "de": "Trinket: Resetziel außerhalb der Anwendung"
+  },
+  "Trinket page transfer": {
+    "en": "Trinket page transfer",
+    "de": "Trinket: Seitenübertragung fehlgeschlagen"
+  },
+  "Trinket bootloader readback mismatch": {
+    "en": "Trinket bootloader readback mismatch",
+    "de": "Trinket: Bootloader-Rücklesedaten stimmen nicht überein"
+  },
+  "Trinket WebUSB unavailable": {
+    "en": "Trinket WebUSB unavailable",
+    "de": "Trinket-WebUSB nicht verfügbar"
+  },
+  "Only original Adafruit Trinket/Gemma bootloader 1.05 supported": {
+    "en": "Only original Adafruit Trinket/Gemma bootloader 1.05 supported",
+    "de": "Nur originaler Adafruit-Trinket/Gemma-Bootloader 1.05 unterstützt"
+  },
+  "Micronucleus info length": {
+    "en": "Micronucleus info length",
+    "de": "Micronucleus: ungültige Informationslänge"
+  },
+  "Micronucleus geometry/signature unsupported": {
+    "en": "Micronucleus geometry/signature unsupported",
+    "de": "Micronucleus: Geometrie oder Signatur nicht unterstützt"
+  },
+  "Micronucleus 1.x: only 6012-byte Digispark geometry supported": {
+    "en": "Micronucleus 1.x: only 6012-byte Digispark geometry supported",
+    "de": "Micronucleus 1.x: nur Digispark-Geometrie mit 6012 Bytes unterstützt"
+  },
+  "Micronucleus application size": {
+    "en": "Micronucleus application size",
+    "de": "Micronucleus: ungültige Anwendungsgröße"
+  },
+  "Micronucleus reset vector must be RJMP/JMP": {
+    "en": "Micronucleus reset vector must be RJMP/JMP",
+    "de": "Micronucleus: Resetvektor muss RJMP/JMP sein"
+  },
+  "Micronucleus reset destination outside application": {
+    "en": "Micronucleus reset destination outside application",
+    "de": "Micronucleus: Resetziel außerhalb der Anwendung"
+  },
+  "Micronucleus 1.3+ / 2.x required": {
+    "en": "Micronucleus 1.3+ / 2.x required",
+    "de": "Micronucleus 1.3+ / 2.x erforderlich"
+  },
+  "Micronucleus info unavailable": {
+    "en": "Micronucleus info unavailable",
+    "de": "Micronucleus-Informationen nicht verfügbar"
+  },
+  "Micronucleus transfer failed; reconnect manually": {
+    "en": "Micronucleus transfer failed; reconnect manually",
+    "de": "Micronucleus: Übertragung fehlgeschlagen; manuell erneut verbinden"
+  },
+  "Micronucleus geometry changed": {
+    "en": "Micronucleus geometry changed",
+    "de": "Micronucleus: Geometrie geändert"
+  },
+  "Micronucleus session already used": {
+    "en": "Micronucleus session already used",
+    "de": "Micronucleus-Sitzung bereits verwendet"
+  },
+  "Micronucleus changed after erase": {
+    "en": "Micronucleus changed after erase",
+    "de": "Micronucleus: nach Löschen geändert"
+  },
+  "Micronucleus legacy page transfer": {
+    "en": "Micronucleus legacy page transfer",
+    "de": "Micronucleus: alte Seitenübertragung fehlgeschlagen"
+  },
+  "Micronucleus WebUSB unavailable": {
+    "en": "Micronucleus WebUSB unavailable",
+    "de": "Micronucleus-WebUSB nicht verfügbar"
+  },
+  "Micronucleus USB VID/PID": {
+    "en": "Micronucleus USB VID/PID",
+    "de": "Micronucleus: USB-VID/PID stimmt nicht überein"
+  },
+  "nRF: FICR/core/geometry mismatch": {
+    "en": "nRF: FICR/core/geometry mismatch",
+    "de": "nRF: FICR, CPU-Kern oder Geometrie stimmt nicht überein"
+  },
+  "nRF: invalid DEVICEID": {
+    "en": "nRF: invalid DEVICEID",
+    "de": "nRF: ungültige DEVICEID"
+  },
+  "nRF application region must be page aligned and within Flash": {
+    "en": "nRF application region must be page aligned and within Flash",
+    "de": "nRF: Anwendungsbereich muss seitenausgerichtet sein und innerhalb Flash liegen"
+  },
+  "nRF: image must begin at selected application address": {
+    "en": "nRF: image must begin at selected application address",
+    "de": "nRF: Abbild muss an gewählter Anwendungsadresse beginnen"
+  },
+  "nRF: overlapping or out-of-application HEX (UICR forbidden)": {
+    "en": "nRF: overlapping or out-of-application HEX (UICR forbidden)",
+    "de": "nRF: überlappende HEX-Daten oder Daten außerhalb der Anwendung (UICR verboten)"
+  },
+  "nRF: vector table missing": {
+    "en": "nRF: vector table missing",
+    "de": "nRF: Vektortabelle fehlt"
+  },
+  "nRF: invalid application vectors": {
+    "en": "nRF: invalid application vectors",
+    "de": "nRF: ungültige Anwendungsvektoren"
+  },
+  "nRF NVMC timeout": {
+    "en": "nRF NVMC timeout",
+    "de": "nRF: NVMC-Zeitüberschreitung"
+  },
+  "nRF core not halted or reset detected": {
+    "en": "nRF core not halted or reset detected",
+    "de": "nRF: CPU-Kern nicht angehalten oder Reset erkannt"
+  },
+  "nRF identity changed": {
+    "en": "nRF identity changed",
+    "de": "nRF: Identität geändert"
+  },
+  "nRF BPROT active": {
+    "en": "nRF BPROT active",
+    "de": "nRF: BPROT aktiv"
+  },
+  "nRF ACL configured": {
+    "en": "nRF ACL configured",
+    "de": "nRF: ACL konfiguriert"
+  },
+  "nRF invalid MBR/UICR reserved pointer": {
+    "en": "nRF invalid MBR/UICR reserved pointer",
+    "de": "nRF: ungültiger reservierter MBR/UICR-Zeiger"
+  },
+  "nRF conflicting MBR/UICR pointers": {
+    "en": "nRF conflicting MBR/UICR pointers",
+    "de": "nRF: widersprüchliche MBR/UICR-Zeiger"
+  },
+  "nRF application region overlaps bootloader/MBR parameter page": {
+    "en": "nRF application region overlaps bootloader/MBR parameter page",
+    "de": "nRF: Anwendungsbereich überschneidet Bootloader-/MBR-Parameterseite"
+  },
+  "nRF existing MBR/loader vectors not plausible": {
+    "en": "nRF existing MBR/loader vectors not plausible",
+    "de": "nRF: vorhandene MBR-/Bootloader-Vektoren nicht plausibel"
+  },
+  "nRF session already used": {
+    "en": "nRF session already used",
+    "de": "nRF: Sitzung bereits verwendet"
+  },
+  "nRF NVMC is not read-only": {
+    "en": "nRF NVMC is not read-only",
+    "de": "nRF: NVMC nicht im Nur-Lese-Modus"
+  },
+  "nRF backup changed": {
+    "en": "nRF backup changed",
+    "de": "nRF: Sicherung geändert"
+  },
+  "nRF programming session already used": {
+    "en": "nRF programming session already used",
+    "de": "nRF: Programmiersitzung bereits verwendet"
+  },
+  "nRF offset application requires verified backup mode": {
+    "en": "nRF offset application requires verified backup mode",
+    "de": "nRF: Anwendung mit Offset erfordert verifizierten Sicherungsmodus"
+  },
+  "nRF exact backup of affected pages and separate erase approval required": {
+    "en": "nRF exact backup of affected pages and separate erase approval required",
+    "de": "nRF: exakte Sicherung betroffener Seiten und separate Löschfreigabe erforderlich"
+  },
+  "nRF backup differs from target": {
+    "en": "nRF backup differs from target",
+    "de": "nRF: Sicherung weicht vom Ziel ab"
+  },
+  "nRF page is not blank; no erase performed": {
+    "en": "nRF page is not blank; no erase performed",
+    "de": "nRF: Seite nicht leer; kein Löschen durchgeführt"
+  },
+  "nRF backup differs before page write": {
+    "en": "nRF backup differs before page write",
+    "de": "nRF: Sicherung weicht vor Seitenschreiben ab"
+  },
+  "nRF page changed": {
+    "en": "nRF page changed",
+    "de": "nRF: Seite geändert"
+  },
+  "nRF erase mode refused": {
+    "en": "nRF erase mode refused",
+    "de": "nRF: Löschmodus verweigert"
+  },
+  "nRF NVMC relock failed": {
+    "en": "nRF NVMC relock failed",
+    "de": "nRF: erneutes Sperren von NVMC fehlgeschlagen"
+  },
+  "nRF page erase verification failed": {
+    "en": "nRF page erase verification failed",
+    "de": "nRF: Seitenlöschprüfung fehlgeschlagen"
+  },
+  "nRF write mode refused": {
+    "en": "nRF write mode refused",
+    "de": "nRF: Schreibmodus verweigert"
+  },
+  "nRF page readback mismatch": {
+    "en": "nRF page readback mismatch",
+    "de": "nRF: Seitenrücklesedaten stimmen nicht überein"
+  },
+  "nRF final readback mismatch": {
+    "en": "nRF final readback mismatch",
+    "de": "nRF: abschließende Rücklesedaten stimmen nicht überein"
+  },
+  "nRF untouched gap page changed": {
+    "en": "nRF untouched gap page changed",
+    "de": "nRF: unberührte Seite in Adresslücke geändert"
+  },
+  "nRF identity changed; cannot safely restore NVMC": {
+    "en": "nRF identity changed; cannot safely restore NVMC",
+    "de": "nRF: Identität geändert; NVMC kann nicht sicher wiederhergestellt werden"
+  },
+  "nRF NVMC read-only restoration failed": {
+    "en": "nRF NVMC read-only restoration failed",
+    "de": "nRF: Wiederherstellen des NVMC-Nur-Lese-Modus fehlgeschlagen"
+  },
+  "nRF SWD target unsupported": {
+    "en": "nRF SWD target unsupported",
+    "de": "nRF-SWD-Ziel nicht unterstützt"
+  },
+  "nRF catalogue target mismatch": {
+    "en": "nRF catalogue target mismatch",
+    "de": "nRF: Katalogziel stimmt nicht überein"
+  },
+  "nRF build engine/target not reviewed": {
+    "en": "nRF build engine/target not reviewed",
+    "de": "nRF: Build-System/Ziel nicht geprüft"
+  },
+  "nRF requires one unambiguous application HEX": {
+    "en": "nRF requires one unambiguous application HEX",
+    "de": "nRF: genau eine eindeutige Anwendungs-HEX erforderlich"
+  },
+  "nRF missing HEX": {
+    "en": "nRF missing HEX",
+    "de": "nRF: HEX-Datei fehlt"
+  },
+  "WB OTA geometry not reviewed": {
+    "en": "WB OTA geometry not reviewed",
+    "de": "WB-OTA: Geometrie nicht geprüft"
+  },
+  "WB OTA requires page-aligned CPU1 Flash budget": {
+    "en": "WB OTA requires page-aligned CPU1 Flash budget",
+    "de": "WB-OTA: seitenausgerichteter CPU1-Flash-Bereich erforderlich"
+  },
+  "WB OTA image too short": {
+    "en": "WB OTA image too short",
+    "de": "WB-OTA: Abbild zu kurz"
+  },
+  "WB OTA vector or tag pointer invalid": {
+    "en": "WB OTA vector or tag pointer invalid",
+    "de": "WB-OTA: Vektor oder Tag-Zeiger ungültig"
+  },
+  "WB OTA end marker invalid": {
+    "en": "WB OTA end marker invalid",
+    "de": "WB-OTA: Endmarkierung ungültig"
+  },
+  "WB OTA exceeds application budget": {
+    "en": "WB OTA exceeds application budget",
+    "de": "WB-OTA: Abbild überschreitet Anwendungsbereich"
+  },
+  "Web Bluetooth unavailable": {
+    "en": "Web Bluetooth unavailable",
+    "de": "Web Bluetooth nicht verfügbar"
+  },
+  "WB OTA service properties mismatch": {
+    "en": "WB OTA service properties mismatch",
+    "de": "WB-OTA: Diensteigenschaften stimmen nicht überein"
+  },
+  "WB OTA requires explicit approval": {
+    "en": "WB OTA requires explicit approval",
+    "de": "WB-OTA: ausdrückliche Freigabe erforderlich"
+  },
+  "WB OTA disconnected; state unknown": {
+    "en": "WB OTA disconnected; state unknown",
+    "de": "WB-OTA: Verbindung getrennt; Zustand unbekannt"
+  },
+  "WB OTA no reboot confirmation; device state unknown, do not automatically retry": {
+    "en": "WB OTA no reboot confirmation; device state unknown, do not automatically retry",
+    "de": "WB-OTA: keine Neustartbestätigung; Gerätezustand unbekannt, nicht automatisch wiederholen"
+  },
+  "WB ROM DFU target not reviewed": {
+    "en": "WB ROM DFU target not reviewed",
+    "de": "WB-ROM-DFU: Ziel nicht geprüft"
+  },
+  "WB DFU requires live SFSA and option state": {
+    "en": "WB DFU requires live SFSA and option state",
+    "de": "WB-DFU: aktuelle SFSA und Optionszustand erforderlich"
+  },
+  "WB DFU requires live write/read protection state": {
+    "en": "WB DFU requires live write/read protection state",
+    "de": "WB-DFU: aktueller Schreib-/Leseschutzstatus erforderlich"
+  },
+  "WB DFU image crosses SFSA": {
+    "en": "WB DFU image crosses SFSA",
+    "de": "WB-DFU: Abbild überschreitet SFSA"
+  },
+  "WB DFU WRP intersects application": {
+    "en": "WB DFU WRP intersects application",
+    "de": "WB-DFU: WRP überschneidet Anwendung"
+  },
+  "WB DFU PCROP intersects application": {
+    "en": "WB DFU PCROP intersects application",
+    "de": "WB-DFU: PCROP überschneidet Anwendung"
+  },
+  "WB DFU descriptor geometry mismatch": {
+    "en": "WB DFU descriptor geometry mismatch",
+    "de": "WB-DFU: Deskriptorgeometrie stimmt nicht überein"
+  },
+  "WB DFU erase plan exceeds application": {
+    "en": "WB DFU erase plan exceeds application",
+    "de": "WB-DFU: Löschplan überschreitet Anwendungsbereich"
+  },
+  "WB DFU virtual FUS addresses not allowed in diagnostic": {
+    "en": "WB DFU virtual FUS addresses not allowed in diagnostic",
+    "de": "WB-DFU: virtuelle FUS-Adressen in Diagnose nicht erlaubt"
+  },
+  "WB DFU diagnostic is read-only": {
+    "en": "WB DFU diagnostic is read-only",
+    "de": "WB-DFU: Diagnose ist schreibgeschützt"
+  },
+  "WB DFU writing not enabled": {
+    "en": "WB DFU writing not enabled",
+    "de": "WB-DFU: Schreiben nicht aktiviert"
+  },
+  "WB DFU short register read": {
+    "en": "WB DFU short register read",
+    "de": "WB-DFU: unvollständiges Registerlesen"
+  },
+  "WB DFU target not reviewed": {
+    "en": "WB DFU target not reviewed",
+    "de": "WB-DFU: Ziel nicht geprüft"
+  },
+  "WB DFU device changed": {
+    "en": "WB DFU device changed",
+    "de": "WB-DFU: Gerät geändert"
+  },
+  "WB DFU unavailable": {
+    "en": "WB DFU unavailable",
+    "de": "WB-DFU nicht verfügbar"
+  },
+  "WB DFU ambiguous internal Flash": {
+    "en": "WB DFU ambiguous internal Flash",
+    "de": "WB-DFU: mehrdeutiger interner Flash"
+  },
+  "WB DFU concurrent write": {
+    "en": "WB DFU concurrent write",
+    "de": "WB-DFU: gleichzeitiger Schreibvorgang"
+  },
+  "WB DFU target / confirmation": {
+    "en": "WB DFU target / confirmation",
+    "de": "WB-DFU: ungültiges Ziel oder fehlende Bestätigung"
+  },
+  "WB DFU identity/security changed": {
+    "en": "WB DFU identity/security changed",
+    "de": "WB-DFU: Identität oder Sicherheitsstatus geändert"
+  },
+  "WB short status": {
+    "en": "WB short status",
+    "de": "WB: unvollständiger Status"
+  },
+  "WB DFU flash busy/error": {
+    "en": "WB DFU flash busy/error",
+    "de": "WB-DFU: Flash beschäftigt oder fehlerhaft"
+  },
+  "WB DFU FUS not reported idle; use SWD instead": {
+    "en": "WB DFU FUS not reported idle; use SWD instead",
+    "de": "WB-DFU: FUS nicht als idle gemeldet; stattdessen SWD verwenden"
+  },
+  "WB DFU readback mismatch": {
+    "en": "WB DFU readback mismatch",
+    "de": "WB-DFU: Rücklesedaten stimmen nicht überein"
+  },
+  "WB start session already used; reconnect and inspect": {
+    "en": "WB start session already used; reconnect and inspect",
+    "de": "WB: Startsitzung bereits verwendet; erneut verbinden und prüfen"
+  },
+  "WB start requires approval": {
+    "en": "WB start requires approval",
+    "de": "WB: Start erfordert Freigabe"
+  },
+  "WB installed wireless stack and FUS idle not confirmed": {
+    "en": "WB installed wireless stack and FUS idle not confirmed",
+    "de": "WB: installierter Funkstack und FUS-Zustand idle nicht bestätigt"
+  },
+  "WB different device or stack before start": {
+    "en": "WB different device or stack before start",
+    "de": "WB: anderes Gerät oder anderer Stack vor Start"
+  },
+  "WB identity or radio state changed": {
+    "en": "WB identity or radio state changed",
+    "de": "WB: Identität oder Funkzustand geändert"
+  },
+  "WB FUS not idle / error; start blocked": {
+    "en": "WB FUS not idle / error; start blocked",
+    "de": "WB: FUS nicht idle oder fehlerhaft; Start gesperrt"
+  },
+  "WB start verification record": {
+    "en": "WB start verification record",
+    "de": "WB: ungültiger Start-Verifizierungsdatensatz"
+  },
+  "WB different device after stack start": {
+    "en": "WB different device after stack start",
+    "de": "WB: anderes Gerät nach Stack-Start"
+  },
+  "WB state changed during start verification": {
+    "en": "WB state changed during start verification",
+    "de": "WB: Zustand während Startprüfung geändert"
+  },
+  "WB radio staging: only reviewed WB35/WB55 USB targets": {
+    "en": "WB radio staging: only reviewed WB35/WB55 USB targets",
+    "de": "WB: Funkstack-Vorbereitung nur für geprüfte WB35/WB55-USB-Ziele"
+  },
+  "WB radio staging requires idle FUS and no installed wireless stack (unless direct update)": {
+    "en": "WB radio staging requires idle FUS and no installed wireless stack (unless direct update)",
+    "de": "WB: Funkstack-Vorbereitung erfordert FUS idle und keinen installierten Funkstack (außer bei direktem Update)"
+  },
+  "WB staging requires complete live security state": {
+    "en": "WB staging requires complete live security state",
+    "de": "WB: Vorbereitung erfordert vollständigen aktuellen Sicherheitszustand"
+  },
+  "WB direct upgrade requires FUS 2.2.0 and installed wireless stack": {
+    "en": "WB direct upgrade requires FUS 2.2.0 and installed wireless stack",
+    "de": "WB: direktes Update erfordert FUS 2.2.0 und installierten Funkstack"
+  },
+  "WB direct upgrade requires strictly newer version; same-version or downgrade use separate deletion": {
+    "en": "WB direct upgrade requires strictly newer version; same-version or downgrade use separate deletion",
+    "de": "WB: direktes Update erfordert eine neuere Version; gleiche oder ältere Version erfordert separates Löschen"
+  },
+  "WB direct upgrade requires new-format FUSv2 stack": {
+    "en": "WB direct upgrade requires new-format FUSv2 stack",
+    "de": "WB: direktes Update erfordert FUSv2-Stack im neuen Format"
+  },
+  "WB direct upgrade overlaps CPU1": {
+    "en": "WB direct upgrade overlaps CPU1",
+    "de": "WB: direktes Update überschneidet CPU1"
+  },
+  "WB staging crosses live SFSA": {
+    "en": "WB staging crosses live SFSA",
+    "de": "WB: vorbereiteter Bereich überschreitet aktuelle SFSA"
+  },
+  "WB staging WRP overlap": {
+    "en": "WB staging WRP overlap",
+    "de": "WB: Vorbereitung überschneidet WRP"
+  },
+  "WB staging PCROP overlap": {
+    "en": "WB staging PCROP overlap",
+    "de": "WB: Vorbereitung überschneidet PCROP"
+  },
+  "WB staging descriptor mismatch": {
+    "en": "WB staging descriptor mismatch",
+    "de": "WB: Vorbereitungsdeskriptor stimmt nicht überein"
+  },
+  "WB staging concurrent write": {
+    "en": "WB staging concurrent write",
+    "de": "WB: gleichzeitiges Schreiben während Vorbereitung"
+  },
+  "WB staging session already used": {
+    "en": "WB staging session already used",
+    "de": "WB: Vorbereitungssitzung bereits verwendet"
+  },
+  "WB upgrade requires a blank CPU1 area or an exact CPU1 backup and separate activation approval": {
+    "en": "WB upgrade requires a blank CPU1 area or an exact CPU1 backup and separate activation approval",
+    "de": "WB: Update erfordert leeren CPU1-Bereich oder exakte CPU1-Sicherung und separate Aktivierungsfreigabe"
+  },
+  "WB direct upgrade requires separate activation": {
+    "en": "WB direct upgrade requires separate activation",
+    "de": "WB: direktes Update erfordert separate Aktivierung"
+  },
+  "WB staging target / confirmation": {
+    "en": "WB staging target / confirmation",
+    "de": "WB: ungültiges Vorbereitungsziel oder fehlende Bestätigung"
+  },
+  "WB staging file / plan mismatch": {
+    "en": "WB staging file / plan mismatch",
+    "de": "WB: Vorbereitungsdatei oder Plan stimmt nicht überein"
+  },
+  "WB staging identity/security/radio changed": {
+    "en": "WB staging identity/security/radio changed",
+    "de": "WB: Identität, Sicherheits- oder Funkzustand während Vorbereitung geändert"
+  },
+  "WB staging short status": {
+    "en": "WB staging short status",
+    "de": "WB: unvollständiger Vorbereitungsstatus"
+  },
+  "WB staging flash busy/error": {
+    "en": "WB staging flash busy/error",
+    "de": "WB: Flash während Vorbereitung beschäftigt oder fehlerhaft"
+  },
+  "WB staging range is not blank; no erase or retry": {
+    "en": "WB staging range is not blank; no erase or retry",
+    "de": "WB: Vorbereitungsbereich nicht leer; kein Löschen oder Wiederholen"
+  },
+  "WB activation scan intersects PCROP": {
+    "en": "WB activation scan intersects PCROP",
+    "de": "WB: Aktivierungsprüfung überschneidet PCROP"
+  },
+  "WB CPU1 backup contains a possible FUS image marker; use official procedure": {
+    "en": "WB CPU1 backup contains a possible FUS image marker; use official procedure",
+    "de": "WB: CPU1-Sicherung enthält mögliche FUS-Abbildmarkierung; offizielles Verfahren verwenden"
+  },
+  "WB CPU1 backup differs from target": {
+    "en": "WB CPU1 backup differs from target",
+    "de": "WB: CPU1-Sicherung weicht vom Ziel ab"
+  },
+  "WB staging range is neither blank nor an exact verified prior stage": {
+    "en": "WB staging range is neither blank nor an exact verified prior stage",
+    "de": "WB: Vorbereitungsbereich weder leer noch exakt wie zuvor verifiziert"
+  },
+  "WB staging readback mismatch": {
+    "en": "WB staging readback mismatch",
+    "de": "WB: Vorbereitungs-Rücklesedaten stimmen nicht überein"
+  },
+  "WB staged image changed before activation": {
+    "en": "WB staged image changed before activation",
+    "de": "WB: vorbereitetes Abbild vor Aktivierung geändert"
+  },
+  "WB FUS not idle / error; upgrade blocked": {
+    "en": "WB FUS not idle / error; upgrade blocked",
+    "de": "WB: FUS nicht idle oder fehlerhaft; Update gesperrt"
+  },
+  "WB upgrade requires separate activation approval": {
+    "en": "WB upgrade requires separate activation approval",
+    "de": "WB: Update erfordert separate Aktivierungsfreigabe"
+  },
+  "WB previous upgrade request required": {
+    "en": "WB previous upgrade request required",
+    "de": "WB: vorherige Update-Anfrage erforderlich"
+  },
+  "WB upgrade expectation mismatch": {
+    "en": "WB upgrade expectation mismatch",
+    "de": "WB: Update entspricht nicht dem erwarteten Zustand"
+  },
+  "WB different device after upgrade": {
+    "en": "WB different device after upgrade",
+    "de": "WB: anderes Gerät nach Update"
+  },
+  "WB radio info unavailable after upgrade": {
+    "en": "WB radio info unavailable after upgrade",
+    "de": "WB: Funkinformationen nach Update nicht verfügbar"
+  },
+  "WB state changed during verification": {
+    "en": "WB state changed during verification",
+    "de": "WB: Zustand während Verifizierung geändert"
+  },
+  "WB FUS response length": {
+    "en": "WB FUS response length",
+    "de": "WB: ungültige FUS-Antwortlänge"
+  },
+  "WB deletion verification input": {
+    "en": "WB deletion verification input",
+    "de": "WB: ungültige Eingabe für Löschprüfung"
+  },
+  "WB deletion target unsupported": {
+    "en": "WB deletion target unsupported",
+    "de": "WB: Löschziel nicht unterstützt"
+  },
+  "WB deletion identity/security/radio unavailable": {
+    "en": "WB deletion identity/security/radio unavailable",
+    "de": "WB: Identität, Sicherheits- oder Funkzustand für Löschung nicht verfügbar"
+  },
+  "WB deletion session already used": {
+    "en": "WB deletion session already used",
+    "de": "WB: Löschsitzung bereits verwendet"
+  },
+  "WB deletion needs verified replacement and approval": {
+    "en": "WB deletion needs verified replacement and approval",
+    "de": "WB: Löschen erfordert verifizierten Ersatz und Freigabe"
+  },
+  "WB installed stack with idle FUS required; use CubeProgrammer to switch to FUS first": {
+    "en": "WB installed stack with idle FUS required; use CubeProgrammer to switch to FUS first",
+    "de": "WB: installierter Stack mit FUS idle erforderlich; zuerst mit CubeProgrammer zu FUS wechseln"
+  },
+  "WB delete requires a verified wireless replacement or next FUS BIN": {
+    "en": "WB delete requires a verified wireless replacement or next FUS BIN",
+    "de": "WB: Löschen erfordert verifizierten Funkstack-Ersatz oder nächste FUS-BIN"
+  },
+  "WB deletion verification session already used": {
+    "en": "WB deletion verification session already used",
+    "de": "WB: Sitzung zur Löschprüfung bereits verwendet"
+  },
+  "WB previous deletion required": {
+    "en": "WB previous deletion required",
+    "de": "WB: vorherige Löschung erforderlich"
+  },
+  "WB different device after deletion": {
+    "en": "WB different device after deletion",
+    "de": "WB: anderes Gerät nach Löschung"
+  },
+  "WB different device after deletion query": {
+    "en": "WB different device after deletion query",
+    "de": "WB: anderes Gerät nach Löschabfrage"
+  },
+  "WB wireless footer length": {
+    "en": "WB wireless footer length",
+    "de": "WB: ungültige Länge des Funkstack-Footers"
+  },
+  "WB ST signature footer not found": {
+    "en": "WB ST signature footer not found",
+    "de": "WB: ST-Signatur-Footer nicht gefunden"
+  },
+  "WB ST signature footer invalid": {
+    "en": "WB ST signature footer invalid",
+    "de": "WB: ungültiger ST-Signatur-Footer"
+  },
+  "WB wireless footer type/version mismatch": {
+    "en": "WB wireless footer type/version mismatch",
+    "de": "WB: Typ oder Version des Funkstack-Footers stimmt nicht überein"
+  },
+  "WB NVM size unavailable": {
+    "en": "WB NVM size unavailable",
+    "de": "WB: NVM-Größe nicht verfügbar"
+  },
+  "WB direct placement parameters": {
+    "en": "WB direct placement parameters",
+    "de": "WB: ungültige Parameter der direkten Platzierung"
+  },
+  "WB direct placement has insufficient free Flash": {
+    "en": "WB direct placement has insufficient free Flash",
+    "de": "WB: nicht genügend freier Flash für direkte Platzierung"
+  },
+  "WB backup range": {
+    "en": "WB backup range",
+    "de": "WB: ungültiger Sicherungsbereich"
+  },
+  "WB backup short read": {
+    "en": "WB backup short read",
+    "de": "WB: unvollständige Sicherungslesedaten"
+  },
+  "WB backup exceeds live SFSA or page alignment": {
+    "en": "WB backup exceeds live SFSA or page alignment",
+    "de": "WB: Sicherung überschreitet aktuelle SFSA oder ist nicht seitenausgerichtet"
+  },
+  "WB backup intersects PCROP": {
+    "en": "WB backup intersects PCROP",
+    "de": "WB: Sicherung überschneidet PCROP"
+  },
+  "WB backup changed while reading": {
+    "en": "WB backup changed while reading",
+    "de": "WB: Sicherung während Auslesen geändert"
+  },
+  "WB upgrade requires activation approval": {
+    "en": "WB upgrade requires activation approval",
+    "de": "WB: Update erfordert Aktivierungsfreigabe"
+  },
+  "WB FUS entry session used": {
+    "en": "WB FUS entry session used",
+    "de": "WB: Sitzung zum FUS-Wechsel bereits verwendet"
+  },
+  "WB FUS entry approval required": {
+    "en": "WB FUS entry approval required",
+    "de": "WB: FUS-Wechsel erfordert Freigabe"
+  },
+  "WB FUS busy or state unknown": {
+    "en": "WB FUS busy or state unknown",
+    "de": "WB: FUS beschäftigt oder Zustand unbekannt"
+  },
+  "WB FUS entry device mismatch": {
+    "en": "WB FUS entry device mismatch",
+    "de": "WB: Gerät beim FUS-Wechsel stimmt nicht überein"
+  },
+  "WB device info length": {
+    "en": "WB device info length",
+    "de": "WB: ungültige Geräteinformationslänge"
+  },
+  "WB FUS table not valid (bootloader/FUS may not be running)": {
+    "en": "WB FUS table not valid (bootloader/FUS may not be running)",
+    "de": "WB: ungültige FUS-Tabelle (Bootloader/FUS läuft möglicherweise nicht)"
+  },
+  "WB FUS table state/version invalid": {
+    "en": "WB FUS table state/version invalid",
+    "de": "WB: Zustand oder Version der FUS-Tabelle ungültig"
+  },
+  "WB inconsistent wireless stack table": {
+    "en": "WB inconsistent wireless stack table",
+    "de": "WB: widersprüchliche Funkstack-Tabelle"
+  },
+  "WB table memory fields invalid": {
+    "en": "WB table memory fields invalid",
+    "de": "WB: ungültige Speicherfelder der Tabelle"
+  },
+  "WB FUS SRAM layout not reviewed": {
+    "en": "WB FUS SRAM layout not reviewed",
+    "de": "WB: FUS-SRAM-Aufteilung nicht geprüft"
+  },
+  "WB short register": {
+    "en": "WB short register",
+    "de": "WB: unvollständige Registerdaten"
+  },
+  "WB FUS table location unavailable": {
+    "en": "WB FUS table location unavailable",
+    "de": "WB: Position der FUS-Tabelle nicht verfügbar"
+  },
+  "WB FUS table pointer outside public SRAM2a": {
+    "en": "WB FUS table pointer outside public SRAM2a",
+    "de": "WB: FUS-Tabellenzeiger außerhalb öffentlichen SRAM2a"
+  },
+  "WB FUS table changed while reading": {
+    "en": "WB FUS table changed while reading",
+    "de": "WB: FUS-Tabelle während Auslesen geändert"
   }
 };
