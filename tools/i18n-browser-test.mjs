@@ -92,6 +92,22 @@ let browser;try{
  assert.equal(await page.locator('#detFramework').textContent(),'Arduino');
  assert.equal(await page.locator('#detSystem').textContent(),'Arduino CLI');
  assert.match(await page.locator('#configRows').textContent(),/Выбрать микроконтроллер/);
+ // Mock a real STK500 session with expired bootloader; no physical USB involved.
+ await page.evaluate(()=>{
+  fi=2;chip='ATmega328P';board='Arduino Nano';custom='';targetState='manual';methodSelected='USB-UART';renderFamily();methodSelected='USB-UART';
+  const pr=driver.avrProfile(board);const io={buffer:[],closed:false,error:null,port:{async setSignals(v){window.testAvrSignals.push(v.dataTerminalReady);}},async send(a){this.buffer.push(0x14,...(a[0]===0x75?[0x1e,0x95,0x0f]:[]),0x10);},async read(n){return Uint8Array.from(this.buffer.splice(0,n));},async close(){this.closed=true;}};
+  window.testAvrSignals=[];
+  hw={kind:'avr',io,avr:new driver.Stk500(io),pr,desc:'ATmega328P · 1e950f',key:targetKey12(target12())+'|'+methodSelected};
+  go('device');renderDevice();
+ });
+ assert.equal(await page.locator('#infoSummary17').textContent(),'ATmega328P · 1e950f');
+ await page.locator('#infoFold17').evaluate(el=>el.open=true);
+ await page.locator('#readDevice12').click();
+ await page.waitForFunction(()=>!hwBusy);
+ assert.deepEqual(await page.evaluate(()=>window.testAvrSignals),[false,true]);
+ assert.equal(await page.locator('#infoSummary17').textContent(),'ATmega328P · 1e950f');
+ assert.ok(await page.evaluate(()=>!!hw));
+ await page.evaluate(()=>{hw=null;renderDevice();});
  assert.deepEqual(errors,[]);
  console.log('RU/EN/DE browser localization smoke passed');
  const origin='http://127.0.0.1:'+server.address().port;

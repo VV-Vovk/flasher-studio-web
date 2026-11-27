@@ -33,6 +33,25 @@ export class Stk500{
  constructor(io){this.io=io;}
  async cmd(a,n=0){await this.io.send([...a,0x20]);let b=await this.io.read(n+2,3000);if(b[0]!==0x14||b.at(-1)!==0x10)throw Error('STK500: неверный ответ');return b.slice(1,-1);}
  async init(){await this.cmd([0x30]);return hex(await this.cmd([0x75],3));}
+ // Optiboot exits to the sketch while the USB port remains open.
+ // Re-enter only before a new operation, never during page programming.
+ async reenter(expectedSignature,wait=delay){
+  if(this.io.error)throw this.io.error;
+  if(this.io.closed)throw Error('USB отключён');
+  const port=this.io.port;
+  if(typeof port?.setSignals!=='function')throw Error('STK500: DTR/RTS unavailable');
+  this.io.buffer.length=0;
+  await port.setSignals({dataTerminalReady:false,requestToSend:false});
+  await wait(80);
+  await port.setSignals({dataTerminalReady:true,requestToSend:true});
+  await wait(250);
+  if(this.io.error)throw this.io.error;
+  if(this.io.closed)throw Error('USB отключён');
+  this.io.buffer.length=0;
+  const signature=await this.init();
+  if(signature!==expectedSignature)throw Error('Сигнатура изменилась');
+  return signature;
+ }
  async address(i){const w=i/2;await this.cmd([0x55,w&255,w>>8]);}
  async program(image,progress=()=>{}){await this.cmd([0x50]);try{for(let i=0;i<image.length;i+=128){let p=new Uint8Array(128).fill(255);p.set(image.slice(i,i+128));await this.address(i);await this.cmd([0x64,0,128,0x46,...p]);await this.address(i);let got=await this.cmd([0x74,0,128,0x46],128);if(!eq(p,got))throw Error('AVR: проверка Flash не прошла');progress(Math.min(1,(i+128)/image.length));}}finally{await this.cmd([0x51]);}}
 }

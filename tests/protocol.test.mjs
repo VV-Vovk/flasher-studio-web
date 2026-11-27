@@ -10,3 +10,38 @@ test('STM vector range and thumb bit',()=>{let b=new Uint8Array(32),v=new DataVi
 
 test('BLE recovery accepts only app-only image and checks acknowledged length',async()=>{const {validateRecoveryApp,updateRecovery}=await import('../public/programmers.js');const b=new Uint8Array(64),v=new DataView(b.buffer);b[0]=0xe9;b[1]=1;v.setUint16(12,5,true);v.setUint32(28,16,true);v.setUint32(32,0xabcd5432,true); // segment ends at 48, checksum padding to 64
 validateRecoveryApp(b,'esp32c3',1000);assert.throws(()=>validateRecoveryApp(b,'esp32',1000));assert.throws(()=>validateRecoveryApp(new Uint8Array(64),'esp32c3',1000));let packets=[];let s={chip:'esp32c3',maxBytes:1000,send:async b=>packets.push([...b]),info:async()=>({received:64,busy:1})};await updateRecovery(s,b);assert.deepEqual(packets[0],[2,64,0,0,0]);assert.deepEqual(packets.at(-1),[5]);assert.equal(packets.filter(p=>p[0]===4).length,5);s.info=async()=>({received:63,busy:1});await assert.rejects(updateRecovery(s,b));assert.deepEqual(packets.at(-1),[6]);});
+
+test('STK500 re-enters expired bootloader and discards stale sketch output before each operation',async()=>{
+ const signals=[],tx=[],waits=[];let active=false,signature=[0x1e,0x95,0x0f],page=null,io={
+  buffer:[0x42,0x43],closed:false,error:null,
+  port:{async setSignals(s){signals.push([s.dataTerminalReady,s.requestToSend]);active=s.dataTerminalReady;}},
+  async send(a){assert.ok(active,'bootloader expired');assert.equal(a.at(-1),0x20);tx.push(a[0]);
+   let reply=[];if(a[0]===0x75)reply=signature;
+   if(a[0]===0x64)page=a.slice(4,-1);
+   if(a[0]===0x74)reply=page;
+   this.buffer.push(0x14,...reply,0x10);
+  },
+  async read(n){assert.ok(this.buffer.length>=n);return Uint8Array.from(this.buffer.splice(0,n));}
+ };
+ const avr=new Stk500(io),wait=async ms=>{waits.push(ms);if(ms===250)io.buffer.push(0x99);};
+ assert.equal(await avr.reenter('1e950f',wait),'1e950f');
+ active=false;io.buffer.push(0x41);
+ assert.equal(await avr.reenter('1e950f',wait),'1e950f');
+ await avr.program(Uint8Array.of(1,2,3));
+ assert.deepEqual(tx,[0x30,0x75,0x30,0x75,0x50,0x55,0x64,0x55,0x74,0x51]);
+ assert.deepEqual(signals,[[false,false],[true,true],[false,false],[true,true]]);
+ assert.deepEqual(waits,[80,250,80,250]);
+ assert.deepEqual(page.slice(0,4),[1,2,3,255]);
+});
+test('STK500 re-entry refuses wrong signature, disconnected port and signal failures before write',async()=>{
+ let commands=[],io={buffer:[],closed:false,error:null,port:{async setSignals(){}},
+  async send(a){commands.push(a[0]);this.buffer.push(0x14,...(a[0]===0x75?[0x1e,0x95,0x14]:[]),0x10);},
+  async read(n){return Uint8Array.from(this.buffer.splice(0,n));}};
+ const avr=new Stk500(io),wait=async()=>{};
+ await assert.rejects(async()=>{await avr.reenter('1e950f',wait);await avr.program(Uint8Array.of(1));},/Сигнатура/);
+ assert.deepEqual(commands,[0x30,0x75]);
+ io.error=Error('USB lost');await assert.rejects(avr.reenter('1e950f',wait),/USB lost/);
+ io.error=null;io.closed=true;await assert.rejects(avr.reenter('1e950f',wait),/USB отключён/);
+ io.closed=false;io.port.setSignals=async()=>{throw Error('signal failure');};await assert.rejects(avr.reenter('1e950f',wait),/signal failure/);
+ assert.deepEqual(commands,[0x30,0x75]);
+});
