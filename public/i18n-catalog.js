@@ -4931,5 +4931,9 @@ const FS_I18N_MESSAGES = {
   "Требуется полный merged BIN со стандартным приложением 0x10000": {
     "en": "Full merged BIN with standard application at 0x10000 required",
     "de": "Vollständige zusammengeführte BIN mit Standardanwendung bei 0x10000 erforderlich"
+  },
+  "Плата сборки:": {
+    "en": "Build board:",
+    "de": "Build-Platine:"
   }
 };

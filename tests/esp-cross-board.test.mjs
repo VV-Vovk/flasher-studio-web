@@ -39,3 +39,14 @@ test('UI validates checksum and image before cross-board confirmation and any fl
  const pre=line.indexOf('validateEspMergedImage'),confirm=line.indexOf('crossBoard&&!fsLocale.confirm'),mutate=line.indexOf('d.app=null'),write=line.indexOf('driver.espProgram');
  assert.ok(pre>=0&&pre<confirm&&confirm<mutate&&mutate<write);
 });
+
+test('Case and outer whitespace do not turn an identical ESP32 profile into another board',()=>{
+ assert.equal(catalogBoardOverride({...meta,board:'  esp32-c3 super mini '},target,session,'ESP32-C3'),false);
+ assert.equal(catalogBoardOverride({...meta,board:'ESP32-C3 SuperMini'},target,session,'ESP32-C3'),true);
+ assert.throws(()=>catalogBoardOverride({...meta,board:'  esp32-c3 super mini ',chip:'ESP32-S3'},target,session,'ESP32-S3'),/Профиль прошивки/);
+});
+test('Selected firmware shows the original build board and current target, without modifying metadata',()=>{
+ const h=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
+ const s=h.slice(h.indexOf('function updateFirmware17()'),h.indexOf('function chooseFirmware17('));
+ assert.match(s,/Плата сборки: /);assert.match(s,/x\.board/);assert.match(s,/board12\(target12\(\)\)/);assert.match(s,/x\.fqbn/);assert.doesNotMatch(s,/x\.board\s*=(?!=)/);
+});

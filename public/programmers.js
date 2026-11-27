@@ -48,8 +48,15 @@ export const validateEsp8266Image=validateEsp8266Arduino;
 // chip detected over USB. Board names describe build profiles, not silicon.
 const catalogEspChip=value=>String(value??'').trim().toLowerCase().replace(/[-_]/g,'');
 export function catalogBoardOverride(meta,target,session,sourceChip){
+ const name=v=>String(v??'').trim().toLowerCase();
  const same=meta.board===target.board||meta.board===target.alternateBoard;
  if(same)return false;
+ // Match the catalogue's case/outer-whitespace comparison for ESP32 only.
+ // Never silently equate different board aliases or special layouts.
+ if(session.kind==='esp'&&meta.family==='ESP32'&&target.family==='ESP32'&&!meta.recoveryLayout&&!meta.wbOtaLayout&&
+    name(meta.board)&&name(meta.board)===name(target.board)&&
+    catalogEspChip(sourceChip)===catalogEspChip(target.chip)&&session.chip===catalogEspChip(target.chip)&&
+    (!meta.chip||catalogEspChip(meta.chip)===session.chip))return false;
  const chip=catalogEspChip(target.chip),allowed=['esp32','esp32c3','esp32s2','esp32s3','esp32c6','esp32h2'];
  if(session.kind!=='esp'||meta.family!=='ESP32'||target.family!=='ESP32'||meta.recoveryLayout||meta.wbOtaLayout||
     !allowed.includes(chip)||session.chip!==chip||catalogEspChip(sourceChip)!==chip||
