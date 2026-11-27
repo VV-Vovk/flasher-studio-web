@@ -44,7 +44,38 @@ export function stmFirmwareImage(ranges,profile){const image=denseImage(ranges,0
 export async function stmSessionIdentity(rom,profile){if(typeof rom.identify==='function')return rom.identify();const uid=await rom.read(profile.uid,12);if(uid.length!==12||uid.every(x=>x===0)||uid.every(x=>x===255))throw Error('UID не прочитан');return 'stm32-'+Array.from(uid,x=>x.toString(16).padStart(2,'0')).join('');}
 export async function espConnect(port,vendor,log){let transport=new vendor.Transport(port,false),loader=new vendor.ESPLoader({transport,baudrate:115200,terminal:{clean(){},writeLine:log,write:log},debugLogging:false});espLifecycle.record('connect-start',{transport});try{let desc=await loader.main(),chip=chipFromDescription(desc)||chipFromDescription(loader.chip?.CHIP_NAME);if(!chip)throw Error('Неизвестный ESP');let flash=flashBytesFromDescription(await loader.detectFlashSize());if(!flash)throw Error('Не определён объём Flash');let mac=await loader.chip.readMac(loader);let id=/^(?:[a-f0-9]{2}:){5}[a-f0-9]{2}$/i.test(mac)?'esp-'+mac.toLowerCase():null;if(!id)throw Error('Не прочитан MAC');const session={loader,transport,chip,flash,id,desc};espLifecycle.record('connected',session);return session;}catch(e){espLifecycle.record('connect-error',{transport});if(!await espLifecycle.close({transport}))throw Error(ESP_CLOSE_WARNING);throw e;}}
 export const validateEsp8266Image=validateEsp8266Arduino;
-export async function espProgram(session,bytes,vendor,progress){if(bytes.length>session.flash)throw Error('BIN не помещается в Flash');if(session.chip==='esp8266'){validateEsp8266Arduino(bytes,session.flash);if(typeof session.loader.readFlash!=='function'||session.loader.IS_STUB===false)throw Error('ESP8266: требуется загрузчик stub с чтением Flash');await session.loader.writeFlash({fileArray:[{data:bytes,address:0}],flashMode:'keep',flashFreq:'keep',flashSize:'keep',eraseAll:false,compress:true,calculateMD5Hash:vendor.md5,reportProgress:(_idx,done,total)=>progress(done/total)});return;}let start=['esp32','esp32s2'].includes(session.chip)?0x1000:0;let head=checkImageHeader(bytes.subarray(start),session.chip);if(head.kind!=='esp-image')throw Error('Не соответствует заголовок ESP');if(bytes.length<0x10018||checkImageHeader(bytes.subarray(0x10000),session.chip).kind!=='esp-image')throw Error('Требуется полный merged BIN со стандартным приложением 0x10000');await session.loader.writeFlash({fileArray:[{data:bytes,address:0}],flashMode:'keep',flashFreq:'keep',flashSize:'keep',eraseAll:false,compress:true,calculateMD5Hash:vendor.md5,reportProgress:(_idx,done,total)=>progress(done/total)});}
+// Cross-board catalog programming is intentionally limited to the exact ESP32
+// chip detected over USB. Board names describe build profiles, not silicon.
+const catalogEspChip=value=>String(value??'').trim().toLowerCase().replace(/[-_]/g,'');
+export function catalogBoardOverride(meta,target,session,sourceChip){
+ const same=meta.board===target.board||meta.board===target.alternateBoard;
+ if(same)return false;
+ const chip=catalogEspChip(target.chip),allowed=['esp32','esp32c3','esp32s2','esp32s3','esp32c6','esp32h2'];
+ if(session.kind!=='esp'||meta.family!=='ESP32'||target.family!=='ESP32'||meta.recoveryLayout||meta.wbOtaLayout||
+    !allowed.includes(chip)||session.chip!==chip||catalogEspChip(sourceChip)!==chip||
+    (meta.chip&&catalogEspChip(meta.chip)!==chip))
+  throw Error('Профиль прошивки не совпадает с выбранной платой');
+ return true;
+}
+export function validateEspMergedImage(session,bytes,{crossBoard=false}={}){
+ if(!(bytes instanceof Uint8Array)||!Number.isSafeInteger(session.flash)||session.flash<1||bytes.length>session.flash)throw Error('BIN не помещается в Flash');
+ if(session.chip==='esp8266'){validateEsp8266Arduino(bytes,session.flash);return;}
+ const start=['esp32','esp32s2'].includes(session.chip)?0x1000:0;
+ const head=checkImageHeader(bytes.subarray(start),session.chip);
+ if(head.kind!=='esp-image')throw Error('Не соответствует заголовок ESP');
+ if(bytes.length<0x10018||checkImageHeader(bytes.subarray(0x10000),session.chip).kind!=='esp-image')throw Error('Требуется полный merged BIN со стандартным приложением 0x10000');
+ if(crossBoard){
+  // ESP32 bootloader header byte 3 encodes configured flash capacity.
+  // Never allow an image configured for more flash than the connected chip.
+  const code=bytes[start+3]>>>4,capacity=code<=7?1048576*2**code:0;
+  if(!capacity||capacity>session.flash)throw Error('Размер Flash в заголовке прошивки несовместим с подключённой платой');
+ }
+}
+export async function espProgram(session,bytes,vendor,progress){
+ validateEspMergedImage(session,bytes);
+ if(session.chip==='esp8266'&&(typeof session.loader.readFlash!=='function'||session.loader.IS_STUB===false))throw Error('ESP8266: требуется загрузчик stub с чтением Flash');
+ await session.loader.writeFlash({fileArray:[{data:bytes,address:0}],flashMode:'keep',flashFreq:'keep',flashSize:'keep',eraseAll:false,compress:true,calculateMD5Hash:vendor.md5,reportProgress:(_idx,done,total)=>progress(done/total)});
+}
 
 const RECOVERY_SERVICE='6d960001-b5a3-4b80-a6d8-983a7ad72f11',RECOVERY_CMD='6d960002-b5a3-4b80-a6d8-983a7ad72f11',RECOVERY_STATUS='6d960003-b5a3-4b80-a6d8-983a7ad72f11';
 const ESP_IDS={esp32:0,esp32s2:2,esp32c3:5,esp32s3:9,esp32c6:13,esp32h2:16};

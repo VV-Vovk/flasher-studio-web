@@ -4899,5 +4899,37 @@ const FS_I18N_MESSAGES = {
   "Flasher Studio · v0.2.65. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
     "en": "Flasher Studio · v0.2.65. Universal cloud builds, USB/UART programming (first hardware release).",
     "de": "Flasher Studio · v0.2.65. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Flasher Studio · v0.2.66. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.66. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.66. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Прошивка собрана для другой платы:": {
+    "en": "Firmware was built for a different board:",
+    "de": "Firmware wurde für eine andere Platine erstellt:"
+  },
+  "Выбранная плата:": {
+    "en": "Selected board:",
+    "de": "Ausgewählte Platine:"
+  },
+  "Чип и размер образа проверены. Убедись, что разметка Flash, настройки памяти и назначение GPIO подходят твоей плате. Продолжить?": {
+    "en": "Chip and image size checked. Make sure the Flash layout, memory settings and GPIO assignments match your board. Continue?",
+    "de": "Chip und Abbildgröße geprüft. Stelle sicher, dass Flash-Aufteilung, Speichereinstellungen und GPIO-Belegung zu deiner Platine passen. Fortfahren?"
+  },
+  "Размер Flash в заголовке прошивки несовместим с подключённой платой": {
+    "en": "Flash capacity in firmware header is incompatible with the connected board",
+    "de": "Flash-Größe im Firmware-Header ist mit der angeschlossenen Platine nicht kompatibel"
+  },
+  "BIN не помещается в Flash": {
+    "en": "BIN does not fit in Flash",
+    "de": "BIN-Datei passt nicht in Flash"
+  },
+  "Не соответствует заголовок ESP": {
+    "en": "ESP image header mismatch",
+    "de": "ESP-Image-Header stimmt nicht überein"
+  },
+  "Требуется полный merged BIN со стандартным приложением 0x10000": {
+    "en": "Full merged BIN with standard application at 0x10000 required",
+    "de": "Vollständige zusammengeführte BIN mit Standardanwendung bei 0x10000 erforderlich"
   }
 };
