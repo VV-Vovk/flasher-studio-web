@@ -65,6 +65,10 @@ let browser;try{
  }
  await page.evaluate(()=>{hw=null;renderDevice();});
  assert.equal(await page.locator('#connect').textContent(),'Подключить устройство');
+ await page.evaluate(async()=>{await choose(new File(['void setup(){} void loop(){}'],'Blink.ino'));});
+ assert.equal(await page.locator('#detFramework').textContent(),'Arduino');
+ assert.equal(await page.locator('#detSystem').textContent(),'Arduino CLI');
+ assert.match(await page.locator('#configRows').textContent(),/Выбрать микроконтроллер/);
  assert.deepEqual(errors,[]);
  console.log('RU/EN/DE browser localization smoke passed');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}
