@@ -108,6 +108,7 @@ const fsLocale = (() => {
     language=supported(value);document.documentElement.lang=language;
     for(const r of nodes){if(!r.node.isConnected||r.node.data!==r.last){nodes.delete(r);continue;}renderNode(r.node,r.source);}
     for(const r of attributes){if(!r.element.isConnected||r.element.getAttribute(r.name)!==r.last){attributes.delete(r);continue;}renderAttr(r.element,r.name,r.source);}
+    document.dispatchEvent(new Event('fs-language-change'));
   }
   function capture(){scan(document.body,true);}
   function start(storage){

@@ -4,7 +4,8 @@ import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
 const js=readFileSync(new URL('../public/i18n.js',import.meta.url),'utf8');
 const html=readFileSync(new URL('../public/index.html',import.meta.url),'utf8');
-const locale=runInNewContext(js+'\nfsLocale;');
+const catalog=readFileSync(new URL('../public/i18n-catalog.js',import.meta.url),'utf8');
+const locale=runInNewContext(catalog+'\n'+js+'\nfsLocale;');
 test('Russian default, English and German translation, unknown text is untouched',()=>{
  assert.equal(locale.load({getItem:()=>null}),'ru');
  assert.equal(locale.load({getItem:()=> 'xx'}),'ru');
@@ -31,4 +32,18 @@ test('All original static Russian text and attributes have both translations',()
  assert.match(html,/<select id="fsLanguage">/);
  assert.ok(html.includes('fsLocale.capture()'));
  assert.ok(html.includes('fsLocale.start(fsLocaleStorage)'));
+});
+
+test('Dynamic inventory translated and user data stays verbatim',()=>{
+ const source=JSON.parse(readFileSync(new URL('../tools/i18n-source-ru.json',import.meta.url),'utf8'));
+ const dictionary=runInNewContext(catalog+'\nFS_I18N_MESSAGES;');
+ for(const k of source)for(const lang of ['en','de'])assert.ok(typeof dictionary[k]?.[lang]==='string'&&dictionary[k][lang].length,k+' '+lang);
+ const user='Проект';
+ const marked=locale.mark('Записать ')+user;
+ assert.equal(locale.decode(marked,'ru'),'Записать '+user);
+ assert.ok(locale.decode(marked,'de').endsWith(user));
+ assert.notEqual(locale.decode(marked,'de'),locale.decode(marked,'ru'));
+ const html=locale.htmlStatic('<button data-method="Запись приложения" title="Подключить устройство">Подключить устройство</button>');
+ assert.match(locale.decode(html,'en'),/data-method="Запись приложения" title="Connect device">Connect device/);
+ assert.equal(locale.decode('Проект','de'),'Проект');
 });
