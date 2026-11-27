@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '57a73ff50227593508263aadc46cfeadcec7cd23' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.67 localization audit'))
+       (github.event_name == 'push' && github.event.before == '0165aefca554fe3172f06e136798b5367eea092d' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.68 project analyzer'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

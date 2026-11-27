@@ -813,7 +813,7 @@ const FS_I18N_MESSAGES = {
     "de": "ZIP nicht erkannt"
   },
   "ZIP повреждён": {
-    "en": "ZIP corrupted",
+    "en": "ZIP damaged",
     "de": "ZIP beschädigt"
   },
   "Анализ проекта…": {
@@ -2101,7 +2101,7 @@ const FS_I18N_MESSAGES = {
     "de": "API wird geladen…"
   },
   "Размер исходников не должен превышать 15 МиБ.": {
-    "en": "Source size must not exceed 15 MiB.",
+    "en": "Source files must not exceed 15 MiB.",
     "de": "Quelldateien dürfen 15 MiB nicht überschreiten."
   },
   "Нужен проект INO, ZIP, C, CPP или IOC.": {
@@ -8271,5 +8271,21 @@ const FS_I18N_MESSAGES = {
   "сигнатура": {
     "en": "signature",
     "de": "Signatur"
+  },
+  "Bare Metal": {
+    "en": "Bare metal",
+    "de": "Bare Metal"
+  },
+  "STM32 HAL / LL": {
+    "en": "STM32 HAL / LL",
+    "de": "STM32 HAL / LL"
+  },
+  "Flasher Studio · v0.2.68. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.68. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.68. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Clang": {
+    "en": "Clang",
+    "de": "Clang"
   }
 };
