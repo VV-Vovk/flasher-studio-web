@@ -97,8 +97,8 @@ const fsLocale = (() => {
   function setProperty(el,name,value){el[name]=value;scan(el);return value;}
   function option(label,...rest){const canonical=decode(label,'ru');const o=new Option(canonical,...(rest.length?rest:[canonical]));setText(o,label);return o;}
   function createText(value){const n=document.createTextNode(String(value));scan(n);return n;}
-  const diagnosticPrefixes=new Set(['Образ должен начинаться с','STM32 Recovery: размер','Публичный пакет HTTP','ST-LINK status','DFU status','DFU unexpected state','Другой STM32 PID 0x','Подключён другой ESP:','Другая сигнатура AVR:']);
-  const errorFragments=keys.filter(k=>diagnosticPrefixes.has(k)||(k.length>=6&&(k.endsWith(':')||k.endsWith('(')||k.startsWith(').')||k.startsWith(', но ')))).sort((a,b)=>b.length-a.length);
+  const diagnosticPrefixes=new Set(['Образ должен начинаться с','STM32 Recovery: размер','Публичный пакет HTTP','ST-LINK status','DFU status','DFU unexpected state','Другой STM32 PID 0x','Подключён другой ESP:','Другая сигнатура AVR:','USBasp request','Fuse readback','Boot package SHA-256','MiniCore HTTP','DAP status','DAP transfer ACK/count','Recovery HTTP','GitHub Releases HTTP','GitHub asset HTTP','ZIP: HTTP','STM32F1 XL Flash status','STM32 Flash status']);
+  const errorFragments=keys.filter(k=>diagnosticPrefixes.has(k)||(k.length>=6&&(k.endsWith(':')||k.endsWith('(')||k.endsWith('0x')||k.startsWith(').')||k.startsWith(', но ')))).sort((a,b)=>b.length-a.length);
   function errorMessage(value){
     if(typeof value!=='string')return value;if(/Failed to execute ['\"]requestDevice['\"] on ['\"]USB['\"]: No device selected\.?/i.test(value))return mark('Выбор USB-устройства отменён или устройство недоступно.');const exact=mark(value);if(exact!==value||hasMarker(value))return exact;
     for(const k of errorFragments){if(value.startsWith(k))return mark(k)+value.slice(k.length);if(value.endsWith(k))return value.slice(0,-k.length)+mark(k);}

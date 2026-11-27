@@ -7034,7 +7034,7 @@ const FS_I18N_MESSAGES = {
   },
   "SCK": {
     "en": "SCK",
-    "de": "SCK-Konfigurationsfehler"
+    "de": "SCK"
   },
   "AVR busy timeout": {
     "en": "AVR busy timeout",
@@ -8215,5 +8215,61 @@ const FS_I18N_MESSAGES = {
   "WB FUS table changed while reading": {
     "en": "WB FUS table changed while reading",
     "de": "WB: FUS-Tabelle während Auslesen geändert"
+  },
+  "SHA-256": {
+    "en": "SHA-256",
+    "de": "SHA-256"
+  },
+  "Wrong result branch": {
+    "en": "Wrong result branch",
+    "de": "Falscher Ergebnis-Branch"
+  },
+  "Result branch changed": {
+    "en": "Result branch changed",
+    "de": "Ergebnis-Branch geändert"
+  },
+  "USB not released": {
+    "en": "USB not released",
+    "de": "USB nicht freigegeben"
+  },
+  "ZIP input": {
+    "en": "Invalid ZIP input",
+    "de": "Ungültige ZIP-Eingabe"
+  },
+  "FQBN option": {
+    "en": "Invalid FQBN option",
+    "de": "Ungültige FQBN-Option"
+  },
+  "Recovery slots": {
+    "en": "Invalid Recovery slots",
+    "de": "Ungültige Recovery-Slots"
+  },
+  "ESP-IDF target mismatch": {
+    "en": "ESP-IDF target mismatch",
+    "de": "ESP-IDF-Ziel stimmt nicht überein"
+  },
+  "GitHub Releases HTTP": {
+    "en": "GitHub Releases HTTP error",
+    "de": "GitHub-Releases-HTTP-Fehler"
+  },
+  "GitHub asset HTTP": {
+    "en": "GitHub asset HTTP error",
+    "de": "GitHub-Asset-HTTP-Fehler"
+  },
+  "STM32 Recovery: NACK": {
+    "en": "STM32 Recovery: NACK",
+    "de": "STM32-Recovery: NACK"
+  },
+  "Recovery CSV SHA-256": {
+    "en": "Recovery CSV SHA-256 mismatch",
+    "de": "Recovery-CSV-SHA-256 stimmt nicht überein"
+  },
+  "Recovery engine unsupported": {
+    "en": "Recovery engine unsupported",
+    "de": "Recovery-Build-System nicht unterstützt"
+  },
+  "сигнатура": {
+    "en": "signature",
+    "de": "Signatur"
   }
 };
