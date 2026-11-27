@@ -53,3 +53,7 @@ test('ArduinoISP sign-on, target parameters, erase, full readback and release RE
  const f=new FakeArduino('ATtiny85'),a=new TinyArduinoIsp(f,'ATtiny85');f.badSignon=true;await assert.rejects(a.program(Uint8Array.of(1,2)),/Require ArduinoISP/);assert.ok(!f.calls.some(x=>x[0]===0x50||x[0]===0x56));
  const g=new FakeArduino('ATtiny85');g.wrong=true;await assert.rejects(new TinyArduinoIsp(g,'ATtiny85').program(Uint8Array.of(1,2)),/signature/);assert.equal(g.active,false);assert.ok(!g.calls.some(x=>x[0]===0x56&&x[1]===0xac));
 });
+
+test('ArduinoISP refuses oversized HEX-derived image before serial traffic',async()=>{
+ const f=new FakeArduino('ATtiny13');await assert.rejects(new TinyArduinoIsp(f,'ATtiny13').program(new Uint8Array(1025)),/bounds/);assert.deepEqual(f.calls,[]);
+});

@@ -168,6 +168,6 @@ export class TinyArduinoIsp extends UsbAsp {
   }else{await this.address(a);await this.cmd([0x64,p>>8,p&255,0x46,...b]);}
   await wait(15);if(!eq(b,await this.read(a,p)))throw Error('ArduinoISP page readback');
  }
- async program(b,progress=()=>{}){try{await this.enter();return await this.programTiny(b,progress);}finally{await this.leave();}}
+ async program(b,progress=()=>{}){if(!(b instanceof Uint8Array)||b.length<2||b.length>this.tiny.limit||b[0]===255&&b[1]===255)throw Error('ATtiny image bounds / empty reset vector');try{await this.enter();return await this.programTiny(b,progress);}finally{await this.leave();}}
  async close(){try{await this.leave();}finally{await this.io.close();}}
 }
