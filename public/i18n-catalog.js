@@ -4983,5 +4983,1089 @@ const FS_I18N_MESSAGES = {
   "· локальный файл": {
     "en": "· local file",
     "de": "· lokale Datei"
+  },
+  "STK500v2: заголовок": {
+    "en": "STK500v2: invalid header",
+    "de": "STK500v2: ungültiger Header"
+  },
+  "STK500v2: ответ / checksum": {
+    "en": "STK500v2: response or checksum error",
+    "de": "STK500v2: Antwort- oder Prüfsummenfehler"
+  },
+  "Не штатный AVRISP_2": {
+    "en": "Not a standard AVRISP_2",
+    "de": "Kein standardmäßiger AVRISP_2"
+  },
+  "Mega: граница приложения": {
+    "en": "Mega: application size limit",
+    "de": "Mega: Anwendungsgrößenlimit"
+  },
+  "AVR109: нет CR": {
+    "en": "AVR109: missing CR",
+    "de": "AVR109: CR fehlt"
+  },
+  "Требуется штатный Caterina": {
+    "en": "Standard Caterina required",
+    "de": "Standard-Caterina erforderlich"
+  },
+  "Caterina: граница приложения": {
+    "en": "Caterina: application size limit",
+    "de": "Caterina: Anwendungsgrößenlimit"
+  },
+  "USBasp: ISP enable; проверь питание, RESET, slow SCK": {
+    "en": "USBasp: ISP enable failed; check power, RESET and slow SCK",
+    "de": "USBasp: ISP-Aktivierung fehlgeschlagen; Versorgung, RESET und langsamen SCK prüfen"
+  },
+  "USBasp: границы": {
+    "en": "USBasp: address bounds",
+    "de": "USBasp: Adressgrenzen"
+  },
+  "WebUSB недоступен": {
+    "en": "WebUSB unavailable",
+    "de": "WebUSB nicht verfügbar"
+  },
+  "Неверная сигнатура AVR": {
+    "en": "Incorrect AVR signature",
+    "de": "Falsche AVR-Signatur"
+  },
+  "ZIP не совпадает с CI-каталогом": {
+    "en": "ZIP does not match CI catalog",
+    "de": "ZIP stimmt nicht mit CI-Katalog überein"
+  },
+  "Нет проверенного официального профиля Urboot": {
+    "en": "No verified official Urboot profile",
+    "de": "Kein verifiziertes offizielles Urboot-Profil"
+  },
+  "Официальный HEX не совпадает с каталогом": {
+    "en": "Official HEX does not match catalog",
+    "de": "Offizielle HEX-Datei stimmt nicht mit Katalog überein"
+  },
+  "SHA-256 официального HEX не совпадает": {
+    "en": "Official HEX SHA-256 mismatch",
+    "de": "SHA-256 der offiziellen HEX-Datei stimmt nicht überein"
+  },
+  "DFU: нет дескриптора внутренней Flash": {
+    "en": "DFU: internal Flash descriptor missing",
+    "de": "DFU: Deskriptor des internen Flash fehlt"
+  },
+  "DFU: не полностью доступная Flash": {
+    "en": "DFU: Flash not fully accessible",
+    "de": "DFU: Flash nicht vollständig zugänglich"
+  },
+  "DFU: неоднозначный alternate setting": {
+    "en": "DFU: ambiguous alternate setting",
+    "de": "DFU: mehrdeutiges Alternate Setting"
+  },
+  "ESP: не подтверждено отсутствие защиты. Запись запрещена.": {
+    "en": "ESP: absence of security protection not confirmed. Programming blocked.",
+    "de": "ESP: fehlender Schutz nicht bestätigt. Programmierung gesperrt."
+  },
+  "Сначала резервная копия": {
+    "en": "Create a backup first",
+    "de": "Zuerst eine Sicherung erstellen"
+  },
+  "Некорректный Intel HEX": {
+    "en": "Invalid Intel HEX",
+    "de": "Ungültiges Intel HEX"
+  },
+  "Контрольная сумма HEX": {
+    "en": "HEX checksum error",
+    "de": "HEX-Prüfsummenfehler"
+  },
+  "Пересечение или переполнение HEX": {
+    "en": "HEX overlap or overflow",
+    "de": "HEX-Überlappung oder Überlauf"
+  },
+  "HEX слишком большой": {
+    "en": "HEX too large",
+    "de": "HEX-Datei zu groß"
+  },
+  "Неподдерживаемая запись HEX": {
+    "en": "Unsupported HEX record",
+    "de": "Nicht unterstützter HEX-Datensatz"
+  },
+  "HEX без EOF или данных": {
+    "en": "HEX missing EOF or data",
+    "de": "HEX ohne EOF oder Daten"
+  },
+  "Образ должен начинаться с": {
+    "en": "Image must start at",
+    "de": "Abbild muss beginnen bei"
+  },
+  "Образ вне допустимой памяти": {
+    "en": "Image outside permitted memory",
+    "de": "Abbild außerhalb des zulässigen Speicherbereichs"
+  },
+  "Переполнение буфера": {
+    "en": "Buffer overflow",
+    "de": "Pufferüberlauf"
+  },
+  "USB отключён": {
+    "en": "USB disconnected",
+    "de": "USB getrennt"
+  },
+  "Нет ответа микроконтроллера": {
+    "en": "No response from microcontroller",
+    "de": "Keine Antwort vom Mikrocontroller"
+  },
+  "неверный ACK": {
+    "en": "invalid ACK",
+    "de": "ungültiges ACK"
+  },
+  "Неизвестный формат ID STM32": {
+    "en": "Unknown STM32 ID format",
+    "de": "Unbekanntes STM32-ID-Format"
+  },
+  "Read Memory недоступен": {
+    "en": "Read Memory unavailable",
+    "de": "Read Memory nicht verfügbar"
+  },
+  "Erase недоступен": {
+    "en": "Erase unavailable",
+    "de": "Erase nicht verfügbar"
+  },
+  "Нет записи/чтения для проверки": {
+    "en": "Programming or readback unavailable",
+    "de": "Programmierung oder Rücklesen nicht verfügbar"
+  },
+  "STM32: проверка Flash не прошла": {
+    "en": "STM32: Flash verification failed",
+    "de": "STM32: Flash-Verifizierung fehlgeschlagen"
+  },
+  "STK500: неверный ответ": {
+    "en": "STK500: invalid response",
+    "de": "STK500: ungültige Antwort"
+  },
+  "AVR: проверка Flash не прошла": {
+    "en": "AVR: Flash verification failed",
+    "de": "AVR: Flash-Verifizierung fehlgeschlagen"
+  },
+  "Нет таблицы векторов": {
+    "en": "Vector table missing",
+    "de": "Vektortabelle fehlt"
+  },
+  "Таблица векторов не соответствует обычной STM32 Flash": {
+    "en": "Vector table does not match standard STM32 Flash",
+    "de": "Vektortabelle entspricht nicht dem normalen STM32-Flash"
+  },
+  "Неизвестный ESP": {
+    "en": "Unknown ESP chip",
+    "de": "Unbekannter ESP-Chip"
+  },
+  "Не определён объём Flash": {
+    "en": "Flash size not detected",
+    "de": "Flash-Größe nicht erkannt"
+  },
+  "Не прочитан MAC": {
+    "en": "MAC address not read",
+    "de": "MAC-Adresse nicht ausgelesen"
+  },
+  "ESP8266: требуется загрузчик stub с чтением Flash": {
+    "en": "ESP8266: stub with Flash readback required",
+    "de": "ESP8266: Stub mit Flash-Rücklesen erforderlich"
+  },
+  "Требуется ESP app-only BIN подходящего размера": {
+    "en": "ESP app-only BIN of suitable size required",
+    "de": "ESP-Anwendungs-BIN passender Größe erforderlich"
+  },
+  "ESP chip ID не совпадает": {
+    "en": "ESP chip ID mismatch",
+    "de": "ESP-Chip-ID stimmt nicht überein"
+  },
+  "Не найден ESP app descriptor. Merged BIN и bootloader недопустимы": {
+    "en": "ESP app descriptor not found. Merged BIN and bootloader are not allowed.",
+    "de": "ESP-App-Deskriptor fehlt. Zusammengeführte BIN und Bootloader sind nicht zulässig."
+  },
+  "Некорректные сегменты ESP": {
+    "en": "Invalid ESP segments",
+    "de": "Ungültige ESP-Segmente"
+  },
+  "Повреждён сегмент": {
+    "en": "Corrupted segment",
+    "de": "Beschädigtes Segment"
+  },
+  "Сегмент вне образа": {
+    "en": "Segment outside image",
+    "de": "Segment außerhalb des Abbilds"
+  },
+  "Размер app-only образа не соответствует сегментам; merged/подписанные образы запрещены": {
+    "en": "Application image size does not match segments; merged or signed images are prohibited",
+    "de": "Größe des Anwendungsabbilds stimmt nicht mit Segmenten überein; zusammengeführte oder signierte Abbilder sind gesperrt"
+  },
+  "Токен Recovery: 32 шестнадцатеричных символа": {
+    "en": "Recovery token: 32 hexadecimal characters",
+    "de": "Recovery-Token: 32 Hex-Zeichen"
+  },
+  "Web Bluetooth недоступен": {
+    "en": "Web Bluetooth unavailable",
+    "de": "Web Bluetooth nicht verfügbar"
+  },
+  "Несовместимый или занятый Recovery": {
+    "en": "Incompatible or busy Recovery",
+    "de": "Inkompatibles oder beschäftigtes Recovery"
+  },
+  "Recovery подтвердил неполный образ": {
+    "en": "Recovery acknowledged an incomplete image",
+    "de": "Recovery hat ein unvollständiges Abbild bestätigt"
+  },
+  "CH34x: скорость вне поддерживаемого диапазона": {
+    "en": "CH34x: baud rate outside supported range",
+    "de": "CH34x: Baudrate außerhalb des unterstützten Bereichs"
+  },
+  "CH34x: невозможно точно настроить скорость": {
+    "en": "CH34x: cannot configure exact baud rate",
+    "de": "CH34x: genaue Baudrate nicht einstellbar"
+  },
+  "Неподдерживаемая конфигурация USB-UART": {
+    "en": "Unsupported USB-UART configuration",
+    "de": "Nicht unterstützte USB-UART-Konfiguration"
+  },
+  "Неизвестный USB-UART адаптер": {
+    "en": "Unknown USB-UART adapter",
+    "de": "Unbekannter USB-UART-Adapter"
+  },
+  "USB control: неполная запись": {
+    "en": "USB control: incomplete write",
+    "de": "USB-Control: unvollständige Übertragung"
+  },
+  "USB control: неполный ответ": {
+    "en": "USB control: incomplete response",
+    "de": "USB-Control: unvollständige Antwort"
+  },
+  "UART уже открыт": {
+    "en": "UART already open",
+    "de": "UART bereits geöffnet"
+  },
+  "USB-UART: требуется один однозначный bulk-интерфейс": {
+    "en": "USB-UART: one unambiguous bulk interface required",
+    "de": "USB-UART: eine eindeutige Bulk-Schnittstelle erforderlich"
+  },
+  "Эта версия CH340 поддерживается только в 8N1; для STM32 8E1 используй CP210x или новый CH340": {
+    "en": "This CH340 version supports only 8N1; for STM32 8E1 use CP210x or a newer CH340",
+    "de": "Diese CH340-Version unterstützt nur 8N1; für STM32 8E1 CP210x oder neueren CH340 verwenden"
+  },
+  "CH34x: проверка регистра": {
+    "en": "CH34x: register verification failed",
+    "de": "CH34x: Registerprüfung fehlgeschlagen"
+  },
+  "USB-UART закрыт": {
+    "en": "USB-UART closed",
+    "de": "USB-UART geschlossen"
+  },
+  "USB-UART: неполная запись": {
+    "en": "USB-UART: incomplete write",
+    "de": "USB-UART: unvollständige Übertragung"
+  },
+  "UART закрыт": {
+    "en": "UART closed",
+    "de": "UART geschlossen"
+  },
+  "USB-UART BREAK пока не поддерживается": {
+    "en": "USB-UART BREAK not supported yet",
+    "de": "USB-UART BREAK noch nicht unterstützt"
+  },
+  "Проект после добавления разметки превышает 15 МиБ": {
+    "en": "Project exceeds 15 MiB after adding layout",
+    "de": "Projekt überschreitet nach Hinzufügen der Speicheraufteilung 15 MiB"
+  },
+  "Разметка не совпадает с каталогом": {
+    "en": "Memory layout does not match catalog",
+    "de": "Speicheraufteilung stimmt nicht mit Katalog überein"
+  },
+  "Recovery: нужен Arduino INO или ZIP": {
+    "en": "Recovery: Arduino INO or ZIP required",
+    "de": "Recovery: Arduino-INO oder ZIP erforderlich"
+  },
+  "Recovery: нужна одна папка скетча": {
+    "en": "Recovery: exactly one sketch folder required",
+    "de": "Recovery: genau ein Sketch-Ordner erforderlich"
+  },
+  "Проект уже содержит другую partitions.csv. Измени её вручную, исходник не перезаписан.": {
+    "en": "Project already contains a different partitions.csv. Edit it manually; source has not been overwritten.",
+    "de": "Projekt enthält bereits eine andere partitions.csv. Manuell ändern; Quelldatei wurde nicht überschrieben."
+  },
+  "Recovery: требуется стандартный FQBN соответствующего ESP": {
+    "en": "Recovery: standard FQBN for the corresponding ESP required",
+    "de": "Recovery: Standard-FQBN für den entsprechenden ESP erforderlich"
+  },
+  "FlashSize конфликтует с Recovery": {
+    "en": "FlashSize conflicts with Recovery",
+    "de": "FlashSize kollidiert mit Recovery"
+  },
+  "Убери ручной PartitionScheme: используется CSV Recovery": {
+    "en": "Remove manual PartitionScheme: Recovery CSV is used",
+    "de": "Manuelles PartitionScheme entfernen: Recovery-CSV wird verwendet"
+  },
+  "Неверная таблица разделов": {
+    "en": "Invalid partition table",
+    "de": "Ungültige Partitionstabelle"
+  },
+  "Пустая таблица разделов": {
+    "en": "Empty partition table",
+    "de": "Leere Partitionstabelle"
+  },
+  "Нет адресов сегментов от компилятора": {
+    "en": "Segment addresses missing from compiler",
+    "de": "Segmentadressen des Compilers fehlen"
+  },
+  "Неоднозначная таблица или адрес приложения Recovery": {
+    "en": "Ambiguous partition table or Recovery application address",
+    "de": "Mehrdeutige Partitionstabelle oder Recovery-Anwendungsadresse"
+  },
+  "Компилятор вернул другую таблицу разделов Recovery": {
+    "en": "Compiler returned a different Recovery partition table",
+    "de": "Compiler lieferte eine andere Recovery-Partitionstabelle"
+  },
+  "Неоднозначный app-only BIN": {
+    "en": "Ambiguous application-only BIN",
+    "de": "Mehrdeutige Anwendungs-BIN"
+  },
+  "Неизвестный публичный пакет STM32": {
+    "en": "Unknown public STM32 package",
+    "de": "Unbekanntes öffentliches STM32-Paket"
+  },
+  "Публичный пакет HTTP": {
+    "en": "Public package HTTP error",
+    "de": "HTTP-Fehler beim öffentlichen Paket"
+  },
+  "SHA-256 публичного ZIP не совпадает": {
+    "en": "Public ZIP SHA-256 mismatch",
+    "de": "SHA-256 der öffentlichen ZIP-Datei stimmt nicht überein"
+  },
+  "Локальный пакет: импортируй ZIP, сетевой запрос запрещён": {
+    "en": "Local package: import ZIP; network request prohibited",
+    "de": "Lokales Paket: ZIP importieren; Netzwerkanfrage gesperrt"
+  },
+  "Введи GitHub-токен с доступом к репозиторию загрузчиков": {
+    "en": "Enter a GitHub token with access to bootloader repository",
+    "de": "GitHub-Token mit Zugriff auf Bootloader-Repository eingeben"
+  },
+  "Точный ZIP не найден или неоднозначен в Release": {
+    "en": "Exact ZIP missing or ambiguous in release",
+    "de": "Genaue ZIP-Datei fehlt im Release oder ist mehrdeutig"
+  },
+  "Точный ZIP не найден в Release": {
+    "en": "Exact ZIP not found in release",
+    "de": "Genaue ZIP-Datei im Release nicht gefunden"
+  },
+  "ZIP не совпадает с проверенным каталогом": {
+    "en": "ZIP does not match verified catalog",
+    "de": "ZIP stimmt nicht mit verifiziertem Katalog überein"
+  },
+  "STM32 Recovery: размер": {
+    "en": "STM32 Recovery: size",
+    "de": "STM32 Recovery: Größe"
+  },
+  "Образ должен быть скомпонован для 0x08004000": {
+    "en": "Image must be linked for 0x08004000",
+    "de": "Abbild muss für 0x08004000 gelinkt sein"
+  },
+  "Другой загрузчик или layout": {
+    "en": "Different bootloader or layout",
+    "de": "Anderer Bootloader oder andere Speicheraufteilung"
+  },
+  "Несовместимый или непроверенный STM32 Recovery ZIP": {
+    "en": "Incompatible or unverified STM32 Recovery ZIP",
+    "de": "Inkompatible oder nicht verifizierte STM32-Recovery-ZIP"
+  },
+  "Адрес загрузчика": {
+    "en": "Bootloader address",
+    "de": "Bootloader-Adresse"
+  },
+  "Размер загрузчика": {
+    "en": "Bootloader size",
+    "de": "Bootloader-Größe"
+  },
+  "Векторы загрузчика": {
+    "en": "Bootloader vectors",
+    "de": "Bootloader-Vektoren"
+  },
+  "Нужен ZIP проекта": {
+    "en": "Project ZIP required",
+    "de": "Projekt-ZIP erforderlich"
+  },
+  "Recovery: неоднозначный корень проекта": {
+    "en": "Recovery: ambiguous project root",
+    "de": "Recovery: mehrdeutiges Projekt-Stammverzeichnis"
+  },
+  "Уже существует другая flasher-recovery.csv": {
+    "en": "A different flasher-recovery.csv already exists",
+    "de": "Eine andere flasher-recovery.csv existiert bereits"
+  },
+  "ESP-IDF target отличается от Recovery": {
+    "en": "ESP-IDF target differs from Recovery",
+    "de": "ESP-IDF-Ziel weicht von Recovery ab"
+  },
+  "Recovery: архив содержит sdkconfig. Настрой разметку вручную или удали сгенерированный sdkconfig из копии проекта.": {
+    "en": "Recovery: archive contains sdkconfig. Configure layout manually or remove generated sdkconfig from a copy of the project.",
+    "de": "Recovery: Archiv enthält sdkconfig. Speicheraufteilung manuell konfigurieren oder generierte sdkconfig aus einer Projektkopie entfernen."
+  },
+  "Recovery: существующая конфигурация Flash/защиты; требуется ручная адаптация.": {
+    "en": "Recovery: existing Flash/security configuration requires manual adaptation.",
+    "de": "Recovery: vorhandene Flash-/Schutzkonfiguration erfordert manuelle Anpassung."
+  },
+  "Нестандартная конфигурация CMake": {
+    "en": "Nonstandard CMake configuration",
+    "de": "Nicht standardmäßige CMake-Konfiguration"
+  },
+  "Recovery: нестандартная или уже заданная конфигурация PlatformIO": {
+    "en": "Recovery: nonstandard or already specified PlatformIO configuration",
+    "de": "Recovery: nicht standardmäßige oder bereits festgelegte PlatformIO-Konfiguration"
+  },
+  "Recovery: выбери один environment PlatformIO": {
+    "en": "Recovery: select one PlatformIO environment",
+    "de": "Recovery: ein PlatformIO-Environment auswählen"
+  },
+  "Recovery: только явный ESP32 Arduino environment PlatformIO": {
+    "en": "Recovery: explicit ESP32 Arduino PlatformIO environment only",
+    "de": "Recovery: nur explizites ESP32-Arduino-PlatformIO-Environment"
+  },
+  "FS10: только STM32F103C8T6, отдельные C/C++ исходники": {
+    "en": "FS10: STM32F103C8T6 only, separate C/C++ sources",
+    "de": "FS10: nur STM32F103C8T6, separate C/C++-Quelldateien"
+  },
+  "FS10: C/C++ или ZIP": {
+    "en": "FS10: C/C++ or ZIP",
+    "de": "FS10: C/C++ oder ZIP"
+  },
+  "FS10: требуется один source-only проект без собственной разметки/startup": {
+    "en": "FS10: one source-only project without custom layout/startup required",
+    "de": "FS10: ein reines Quellprojekt ohne eigene Speicheraufteilung/Startup erforderlich"
+  },
+  "Несколько flasher-native.json": {
+    "en": "Multiple flasher-native.json files",
+    "de": "Mehrere flasher-native.json-Dateien"
+  },
+  "Конфликт конфигурации FS10": {
+    "en": "FS10 configuration conflict",
+    "de": "FS10-Konfigurationskonflikt"
+  },
+  "Сборка не подтверждает разметку FS10. Нужен Builder v0.2.7.": {
+    "en": "Build does not confirm FS10 layout. Builder v0.2.7 required.",
+    "de": "Build bestätigt FS10-Speicheraufteilung nicht. Builder v0.2.7 erforderlich."
+  },
+  "FS10: отсутствует BIN/HEX": {
+    "en": "FS10: BIN/HEX missing",
+    "de": "FS10: BIN/HEX fehlt"
+  },
+  "FS10: длина BIN/HEX отличается": {
+    "en": "FS10: BIN/HEX length mismatch",
+    "de": "FS10: BIN-/HEX-Länge stimmt nicht überein"
+  },
+  "FS10: BIN и HEX отличаются": {
+    "en": "FS10: BIN and HEX differ",
+    "de": "FS10: BIN und HEX unterscheiden sich"
+  },
+  "FS10: непредусмотренные данные BIN": {
+    "en": "FS10: unexpected BIN data",
+    "de": "FS10: unerwartete BIN-Daten"
+  },
+  "Укажи репозиторий в формате владелец/репозиторий или https://github.com/владелец/репозиторий": {
+    "en": "Enter repository as owner/repository or https://github.com/owner/repository",
+    "de": "Repository als owner/repository oder https://github.com/owner/repository angeben"
+  },
+  "Ожидается Uint8Array": {
+    "en": "Uint8Array expected",
+    "de": "Uint8Array erwartet"
+  },
+  "Не выбран файл": {
+    "en": "No file selected",
+    "de": "Keine Datei ausgewählt"
+  },
+  "Нужен .ino или .zip": {
+    "en": ".ino or .zip required",
+    "de": ".ino oder .zip erforderlich"
+  },
+  "Размер исходников должен быть от 1 байта до 950 КБ": {
+    "en": "Source size must be 1 byte to 950 KB",
+    "de": "Quelldateigröße muss zwischen 1 Byte und 950 KB liegen"
+  },
+  "Выбери тип платы": {
+    "en": "Select board type",
+    "de": "Platinentyp auswählen"
+  },
+  "Название должно быть от 1 до 120 символов": {
+    "en": "Name must be 1 to 120 characters",
+    "de": "Name muss 1 bis 120 Zeichen lang sein"
+  },
+  "Некорректная версия": {
+    "en": "Invalid version",
+    "de": "Ungültige Version"
+  },
+  "Слишком длинный список библиотек": {
+    "en": "Library list too long",
+    "de": "Bibliotheksliste zu lang"
+  },
+  "Неверный результат сборки": {
+    "en": "Invalid build result",
+    "de": "Ungültiges Build-Ergebnis"
+  },
+  "Неверный манифест прошивки:": {
+    "en": "Invalid firmware manifest:",
+    "de": "Ungültiges Firmware-Manifest:"
+  },
+  "Неверный формат merged firmware": {
+    "en": "Invalid merged firmware format",
+    "de": "Ungültiges Format der zusammengeführten Firmware"
+  },
+  "Недопустимый размер BIN": {
+    "en": "Invalid BIN size",
+    "de": "Ungültige BIN-Größe"
+  },
+  "Несовпадение общего SHA256": {
+    "en": "Overall SHA-256 mismatch",
+    "de": "Gesamt-SHA-256 stimmt nicht überein"
+  },
+  "Недопустимое количество частей": {
+    "en": "Invalid number of parts",
+    "de": "Ungültige Anzahl von Teilen"
+  },
+  "Недопустимый манифест части BIN": {
+    "en": "Invalid BIN part manifest",
+    "de": "Ungültiges Manifest eines BIN-Teils"
+  },
+  "Размер частей BIN не совпадает": {
+    "en": "BIN part sizes do not match",
+    "de": "Größen der BIN-Teile stimmen nicht überein"
+  },
+  "Неверный идентификатор запроса": {
+    "en": "Invalid request ID",
+    "de": "Ungültige Anfrage-ID"
+  },
+  "Введи GitHub fine-grained token (github_pat_...)": {
+    "en": "Enter a GitHub fine-grained token (github_pat_...)",
+    "de": "GitHub Fine-grained Token (github_pat_...) eingeben"
+  },
+  "GitHub вернул другой репозиторий": {
+    "en": "GitHub returned a different repository",
+    "de": "GitHub lieferte ein anderes Repository"
+  },
+  "Для личных исходников нужен private Builder (приватный репозиторий). Публичная загрузка запрещена.": {
+    "en": "Private Builder repository required for personal source files. Public upload prohibited.",
+    "de": "Privates Builder-Repository für persönliche Quelldateien erforderlich. Öffentlicher Upload gesperrt."
+  },
+  "Workflow не активен. Проверь вкладку Actions в репозитории.": {
+    "en": "Workflow is not active. Check repository Actions tab.",
+    "de": "Workflow nicht aktiv. Actions-Tab des Repositorys prüfen."
+  },
+  "Ответ на загрузку потерян, а GitHub пока не подтвердил файл. Не запускай повторно без проверки истории репозитория.": {
+    "en": "Upload response lost and GitHub has not confirmed the file. Do not retry without checking repository history.",
+    "de": "Upload-Antwort verloren und Datei von GitHub noch nicht bestätigt. Nicht ohne Prüfung des Repository-Verlaufs erneut starten."
+  },
+  "GitHub не подтвердил запуск. Он мог уже принять команду. Нажми «Проверить последнюю сборку» или посмотри Actions; не отправляй проект повторно вслепую.": {
+    "en": "GitHub did not confirm the launch. It may already have accepted the command. Use Check latest build or inspect Actions; do not resend the project blindly.",
+    "de": "GitHub hat den Start nicht bestätigt. Der Befehl wurde möglicherweise bereits angenommen. Letzten Build prüfen oder Actions ansehen; Projekt nicht blind erneut senden."
+  },
+  "GitHub не вернул содержимое файла": {
+    "en": "GitHub did not return file contents",
+    "de": "GitHub lieferte keinen Dateiinhalt"
+  },
+  "Неверное имя части BIN": {
+    "en": "Invalid BIN part filename",
+    "de": "Ungültiger Dateiname eines BIN-Teils"
+  },
+  "Некорректные метаданные части BIN": {
+    "en": "Invalid BIN part metadata",
+    "de": "Ungültige Metadaten eines BIN-Teils"
+  },
+  "Ответ GitHub не является файлом": {
+    "en": "GitHub response is not a file",
+    "de": "GitHub-Antwort ist keine Datei"
+  },
+  "Не запускай новую сборку: можно повторить загрузку через «Проверить последнюю сборку» или скачать готовый firmware.bin из GitHub Actions → Artifacts.": {
+    "en": "Do not start a new build: retry retrieval using Check latest build or download firmware.bin from GitHub Actions → Artifacts.",
+    "de": "Keinen neuen Build starten: Abruf über Letzten Build prüfen wiederholen oder firmware.bin aus GitHub Actions → Artifacts herunterladen."
+  },
+  "STM32WB: CPU1 C/C++/ZIP или полный CubeIDE GNU ZIP": {
+    "en": "STM32WB: CPU1 C/C++/ZIP or full CubeIDE GNU ZIP",
+    "de": "STM32WB: CPU1 C/C++/ZIP oder vollständige CubeIDE-GNU-ZIP"
+  },
+  "STM32WB: неверный профиль CPU1 в артефакте": {
+    "en": "STM32WB: incorrect CPU1 profile in artifact",
+    "de": "STM32WB: falsches CPU1-Profil im Artefakt"
+  },
+  "STM32WB: неверные диапазоны полного проекта": {
+    "en": "STM32WB: invalid full-project ranges",
+    "de": "STM32WB: ungültige Bereiche des vollständigen Projekts"
+  },
+  "STM32WB: отсутствует HEX CPU1": {
+    "en": "STM32WB: CPU1 HEX missing",
+    "de": "STM32WB: CPU1-HEX fehlt"
+  },
+  "STM32WB: HEX не совпадает с диапазонами манифеста": {
+    "en": "STM32WB: HEX does not match manifest ranges",
+    "de": "STM32WB: HEX stimmt nicht mit Manifestbereichen überein"
+  },
+  "Workflow не активен": {
+    "en": "Workflow not active",
+    "de": "Workflow nicht aktiv"
+  },
+  "Исходники: максимум 15 МиБ": {
+    "en": "Source files: maximum 15 MiB",
+    "de": "Quelldateien: maximal 15 MiB"
+  },
+  "Git blob не подтверждён": {
+    "en": "Git blob not confirmed",
+    "de": "Git-Blob nicht bestätigt"
+  },
+  "Артефакт не найден / истёк срок": {
+    "en": "Artifact missing or expired",
+    "de": "Artefakt fehlt oder ist abgelaufen"
+  },
+  "Недопустимый размер ZIP": {
+    "en": "Invalid ZIP size",
+    "de": "Ungültige ZIP-Größe"
+  },
+  "ZIP: неверный каталог": {
+    "en": "ZIP: invalid directory",
+    "de": "ZIP: ungültiges Verzeichnis"
+  },
+  "ZIP: каталог": {
+    "en": "ZIP: directory error",
+    "de": "ZIP: Verzeichnisfehler"
+  },
+  "ZIP: запись каталога": {
+    "en": "ZIP: directory entry error",
+    "de": "ZIP: Verzeichniseintragsfehler"
+  },
+  "ZIP: предел / формат": {
+    "en": "ZIP: limit or format error",
+    "de": "ZIP: Grenzwert- oder Formatfehler"
+  },
+  "ZIP: небезопасное имя": {
+    "en": "ZIP: unsafe filename",
+    "de": "ZIP: unsicherer Dateiname"
+  },
+  "ZIP: локальный заголовок": {
+    "en": "ZIP: local header error",
+    "de": "ZIP: Fehler im lokalen Header"
+  },
+  "ZIP: границы": {
+    "en": "ZIP: bounds error",
+    "de": "ZIP: Bereichsfehler"
+  },
+  "ZIP: превышение размера": {
+    "en": "ZIP: size limit exceeded",
+    "de": "ZIP: Größenlimit überschritten"
+  },
+  "ZIP: размер файла": {
+    "en": "ZIP: file size error",
+    "de": "ZIP: Dateigrößenfehler"
+  },
+  "ZIP: лишние записи": {
+    "en": "ZIP: unexpected entries",
+    "de": "ZIP: unerwartete Einträge"
+  },
+  "Требуется один манифест сборки": {
+    "en": "Exactly one build manifest required",
+    "de": "Genau ein Build-Manifest erforderlich"
+  },
+  "Манифест не соответствует запросу": {
+    "en": "Manifest does not match request",
+    "de": "Manifest stimmt nicht mit Anfrage überein"
+  },
+  "Другая система сборки": {
+    "en": "Different build system",
+    "de": "Anderes Build-System"
+  },
+  "Другой FQBN": {
+    "en": "Different FQBN",
+    "de": "Anderer FQBN"
+  },
+  "Другой исходный файл": {
+    "en": "Different source file",
+    "de": "Andere Quelldatei"
+  },
+  "Некорректный манифест файла": {
+    "en": "Invalid file manifest",
+    "de": "Ungültiges Dateimanifest"
+  },
+  "Контрольная сумма lock-файла:": {
+    "en": "Lockfile checksum:",
+    "de": "Lockfile-Prüfsumme:"
+  },
+  "Метаданные сборки не совпадают с запросом": {
+    "en": "Build metadata does not match request",
+    "de": "Build-Metadaten stimmen nicht mit Anfrage überein"
+  },
+  "SHA-256 части не совпадает": {
+    "en": "Part SHA-256 mismatch",
+    "de": "SHA-256 des Teils stimmt nicht überein"
+  },
+  "SHA-256 BIN не совпадает": {
+    "en": "BIN SHA-256 mismatch",
+    "de": "BIN-SHA-256 stimmt nicht überein"
+  },
+  "Неверный заголовок ESP BIN": {
+    "en": "Invalid ESP BIN header",
+    "de": "Ungültiger ESP-BIN-Header"
+  },
+  "Ошибка хранилища": {
+    "en": "Storage error",
+    "de": "Speicherfehler"
+  },
+  "BIN отсутствует или повреждён": {
+    "en": "Firmware file missing or corrupted",
+    "de": "Firmware-Datei fehlt oder ist beschädigt"
+  },
+  "Это не локальный кандидат нашего сборщика ESP Recovery v0.2.3": {
+    "en": "Not a local ESP Recovery v0.2.3 builder candidate",
+    "de": "Kein lokaler ESP-Recovery-v0.2.3-Build-Kandidat"
+  },
+  "Некорректный профиль ESP32-C3": {
+    "en": "Invalid ESP32-C3 profile",
+    "de": "Ungültiges ESP32-C3-Profil"
+  },
+  "Радиоинтерфейс": {
+    "en": "Radio interface",
+    "de": "Funkschnittstelle"
+  },
+  "Идентификатор / контрольные суммы": {
+    "en": "Identifier / checksums",
+    "de": "Kennung / Prüfsummen"
+  },
+  "Файлы Recovery": {
+    "en": "Recovery files",
+    "de": "Recovery-Dateien"
+  },
+  "Адрес/размер образа": {
+    "en": "Image address/size",
+    "de": "Abbildadresse/-größe"
+  },
+  "Непроверенная разметка Recovery": {
+    "en": "Unverified Recovery layout",
+    "de": "Nicht verifizierte Recovery-Speicheraufteilung"
+  },
+  "Локальный · ESP32-C3": {
+    "en": "Local · ESP32-C3",
+    "de": "Lokal · ESP32-C3"
+  },
+  "Требуются catalog.json и ZIP из собственного локального сборщика": {
+    "en": "catalog.json and ZIP from your local builder required",
+    "de": "catalog.json und ZIP aus eigenem lokalem Build erforderlich"
+  },
+  "SHA-256 локального ZIP": {
+    "en": "Local ZIP SHA-256 mismatch",
+    "de": "SHA-256 der lokalen ZIP-Datei stimmt nicht überein"
+  },
+  "Неожиданные файлы ZIP": {
+    "en": "Unexpected ZIP files",
+    "de": "Unerwartete ZIP-Dateien"
+  },
+  "manifest.json не совпадает с каталогом": {
+    "en": "manifest.json does not match catalog",
+    "de": "manifest.json stimmt nicht mit Katalog überein"
+  },
+  "Таблица разделов не совпадает с известной разметкой": {
+    "en": "Partition table does not match known layout",
+    "de": "Partitionstabelle stimmt nicht mit bekannter Speicheraufteilung überein"
+  },
+  "Отсутствуют лицензионные материалы": {
+    "en": "License materials missing",
+    "de": "Lizenzmaterialien fehlen"
+  },
+  "ESP USB отключён во время операции": {
+    "en": "ESP USB disconnected during operation",
+    "de": "ESP-USB während des Vorgangs getrennt"
+  },
+  "USB-соединение не удалось подтвердить как закрытое. Не нажимай RESET при подключённом USB. Отсоедини кабель, закрой приложение и только потом снова открой его.": {
+    "en": "USB closure could not be confirmed. Do not press RESET while USB is connected. Unplug the cable, close the app, then reopen it.",
+    "de": "Schließen der USB-Verbindung konnte nicht bestätigt werden. RESET bei verbundenem USB nicht drücken. Kabel trennen, App schließen und erst dann erneut öffnen."
+  },
+  "Только компиляция": {
+    "en": "Compilation only",
+    "de": "Nur Kompilierung"
+  },
+  "Неверные параметры ESP Recovery": {
+    "en": "Invalid ESP Recovery parameters",
+    "de": "Ungültige ESP-Recovery-Parameter"
+  },
+  "Для Recovery нужен твой приватный Builder. Публичный репозиторий запрещён.": {
+    "en": "Recovery requires your private Builder. Public repositories are prohibited.",
+    "de": "Recovery erfordert deinen privaten Builder. Öffentliche Repositorys sind gesperrt."
+  },
+  "Выбран другой Builder": {
+    "en": "Different Builder selected",
+    "de": "Anderer Builder ausgewählt"
+  },
+  "В Builder не подключён активный workflow ESP Recovery": {
+    "en": "No active ESP Recovery workflow in Builder",
+    "de": "Kein aktiver ESP-Recovery-Workflow im Builder"
+  },
+  "Обнаружено несколько сборок с одинаковым ID": {
+    "en": "Multiple builds with the same ID detected",
+    "de": "Mehrere Builds mit derselben ID erkannt"
+  },
+  "Результат не совпадает с запросом": {
+    "en": "Result does not match request",
+    "de": "Ergebnis stimmt nicht mit Anfrage überein"
+  },
+  "Некорректные части ZIP": {
+    "en": "Invalid ZIP parts",
+    "de": "Ungültige ZIP-Teile"
+  },
+  "Неверная часть ZIP": {
+    "en": "Invalid ZIP part",
+    "de": "Ungültiger ZIP-Teil"
+  },
+  "Размер ZIP не совпадает": {
+    "en": "ZIP size mismatch",
+    "de": "ZIP-Größe stimmt nicht überein"
+  },
+  "Результат GitHub не найден": {
+    "en": "GitHub result not found",
+    "de": "GitHub-Ergebnis nicht gefunden"
+  },
+  "Хранилище Recovery": {
+    "en": "Recovery storage error",
+    "de": "Recovery-Speicherfehler"
+  },
+  "CMSIS-DAP v2: неподдерживаемый STM32 или WebUSB недоступен": {
+    "en": "CMSIS-DAP v2: unsupported STM32 or WebUSB unavailable",
+    "de": "CMSIS-DAP v2: STM32 nicht unterstützt oder WebUSB nicht verfügbar"
+  },
+  "Требуется однозначный USB bulk интерфейс CMSIS-DAP v2 (не HID v1)": {
+    "en": "One unambiguous CMSIS-DAP v2 USB bulk interface required (not HID v1)",
+    "de": "Eindeutige CMSIS-DAP-v2-USB-Bulk-Schnittstelle erforderlich (nicht HID v1)"
+  },
+  "Требуется CMSIS-DAP HID / DAPLink": {
+    "en": "CMSIS-DAP HID / DAPLink required",
+    "de": "CMSIS-DAP HID / DAPLink erforderlich"
+  },
+  "CMSIS-DAP HID: требуется однозначная пара 64-байтных отчётов": {
+    "en": "CMSIS-DAP HID: unambiguous pair of 64-byte reports required",
+    "de": "CMSIS-DAP HID: eindeutiges Paar von 64-Byte-Reports erforderlich"
+  },
+  "CMSIS-DAP v1: неподдерживаемый STM32 или WebHID недоступен": {
+    "en": "CMSIS-DAP v1: unsupported STM32 or WebHID unavailable",
+    "de": "CMSIS-DAP v1: STM32 nicht unterstützt oder WebHID nicht verfügbar"
+  },
+  "Выбери один CMSIS-DAP v1": {
+    "en": "Select one CMSIS-DAP v1",
+    "de": "Ein CMSIS-DAP-v1-Gerät auswählen"
+  },
+  "Операция выполняется…": {
+    "en": "Operation in progress…",
+    "de": "Vorgang läuft…"
+  },
+  "К подключённому устройству": {
+    "en": "Go to connected device",
+    "de": "Zum verbundenen Gerät"
+  },
+  "Отключить устройство": {
+    "en": "Disconnect device",
+    "de": "Gerät trennen"
+  },
+  "Проверить Wi-Fi повторно": {
+    "en": "Check Wi-Fi again",
+    "de": "WLAN erneut prüfen"
+  },
+  "Выбор USB-устройства отменён или устройство недоступно.": {
+    "en": "USB device selection cancelled or device unavailable.",
+    "de": "USB-Geräteauswahl abgebrochen oder Gerät nicht verfügbar."
+  },
+  "ST-LINK в DFU": {
+    "en": "ST-LINK in DFU mode",
+    "de": "ST-LINK im DFU-Modus"
+  },
+  "STM32 в DFU": {
+    "en": "STM32 in DFU mode",
+    "de": "STM32 im DFU-Modus"
+  },
+  "ST-LINK in DFU": {
+    "en": "ST-LINK in DFU mode",
+    "de": "ST-LINK im DFU-Modus"
+  },
+  "SWD read length": {
+    "en": "Invalid SWD read length",
+    "de": "Ungültige SWD-Leselänge"
+  },
+  "Flash size mismatch": {
+    "en": "Flash size mismatch",
+    "de": "Flash-Größe stimmt nicht überein"
+  },
+  "STM32F1 device ID mismatch": {
+    "en": "STM32F1 device ID mismatch",
+    "de": "STM32F1-Geräte-ID stimmt nicht überein"
+  },
+  "STM32F0 Flash size mismatch": {
+    "en": "STM32F0 Flash size mismatch",
+    "de": "STM32F0-Flash-Größe stimmt nicht überein"
+  },
+  "Invalid UID": {
+    "en": "Invalid UID",
+    "de": "Ungültige UID"
+  },
+  "Cortex-M3 required": {
+    "en": "Cortex-M3 required",
+    "de": "Cortex-M3 erforderlich"
+  },
+  "UID changed": {
+    "en": "UID changed",
+    "de": "UID geändert"
+  },
+  "MAC changed": {
+    "en": "MAC changed",
+    "de": "MAC geändert"
+  },
+  "Core not halted": {
+    "en": "Core not halted",
+    "de": "CPU-Kern nicht angehalten"
+  },
+  "Write protection present": {
+    "en": "Write protection present",
+    "de": "Schreibschutz vorhanden"
+  },
+  "Flash locked": {
+    "en": "Flash locked",
+    "de": "Flash gesperrt"
+  },
+  "Flash busy timeout": {
+    "en": "Flash busy timeout",
+    "de": "Zeitüberschreitung: Flash beschäftigt"
+  },
+  "HSI not ready; Flash untouched": {
+    "en": "HSI not ready; Flash untouched",
+    "de": "HSI nicht bereit; Flash unverändert"
+  },
+  "SWD readback mismatch": {
+    "en": "SWD readback mismatch",
+    "de": "SWD-Rücklesedaten stimmen nicht überein"
+  },
+  "Flash relock failed": {
+    "en": "Flash relock failed",
+    "de": "Erneutes Sperren des Flash fehlgeschlagen"
+  },
+  "ST-LINK model unsupported": {
+    "en": "ST-LINK model unsupported",
+    "de": "ST-LINK-Modell nicht unterstützt"
+  },
+  "ST-LINK USB OUT": {
+    "en": "ST-LINK USB OUT transfer failed",
+    "de": "ST-LINK-USB-OUT-Übertragung fehlgeschlagen"
+  },
+  "ST-LINK USB IN": {
+    "en": "ST-LINK USB IN transfer failed",
+    "de": "ST-LINK-USB-IN-Übertragung fehlgeschlagen"
+  },
+  "ST-LINK status": {
+    "en": "ST-LINK status",
+    "de": "ST-LINK-Status"
+  },
+  "ST-LINK endpoint mismatch": {
+    "en": "ST-LINK endpoint mismatch",
+    "de": "ST-LINK-Endpunkte stimmen nicht überein"
+  },
+  "ST-LINK WebUSB unavailable": {
+    "en": "ST-LINK WebUSB unavailable",
+    "de": "ST-LINK-WebUSB nicht verfügbar"
+  },
+  "SWD profile unsupported": {
+    "en": "SWD profile unsupported",
+    "de": "SWD-Profil nicht unterstützt"
+  },
+  "DFU target unsupported": {
+    "en": "DFU target unsupported",
+    "de": "DFU-Ziel nicht unterstützt"
+  },
+  "DFU geometry mismatch": {
+    "en": "DFU geometry mismatch",
+    "de": "DFU-Speichergeometrie stimmt nicht überein"
+  },
+  "DFU PID mismatch": {
+    "en": "DFU PID mismatch",
+    "de": "DFU-PID stimmt nicht überein"
+  },
+  "DFU Flash size mismatch": {
+    "en": "DFU Flash size mismatch",
+    "de": "DFU-Flash-Größe stimmt nicht überein"
+  },
+  "DFU UID invalid": {
+    "en": "DFU UID invalid",
+    "de": "DFU-UID ungültig"
+  },
+  "DFU target mismatch": {
+    "en": "DFU target mismatch",
+    "de": "DFU-Ziel stimmt nicht überein"
+  },
+  "DFU readback": {
+    "en": "DFU readback failed",
+    "de": "DFU-Rücklesen fehlgeschlagen"
+  },
+  "DFU USB read": {
+    "en": "DFU USB read failed",
+    "de": "DFU-USB-Lesen fehlgeschlagen"
+  },
+  "DFU USB write": {
+    "en": "DFU USB write failed",
+    "de": "DFU-USB-Schreiben fehlgeschlagen"
+  },
+  "DFU status": {
+    "en": "DFU status",
+    "de": "DFU-Status"
+  },
+  "DFU unexpected state": {
+    "en": "DFU unexpected state",
+    "de": "Unerwarteter DFU-Zustand"
+  },
+  "DFU read size": {
+    "en": "Invalid DFU read size",
+    "de": "Ungültige DFU-Lesegröße"
+  },
+  "DFU download state/timeout": {
+    "en": "DFU download state or timeout",
+    "de": "DFU-Downloadzustand oder Zeitüberschreitung"
+  },
+  "Detect MCU": {
+    "en": "Detect MCU",
+    "de": "MCU erkennen"
+  },
+  "Read Flash": {
+    "en": "Read Flash",
+    "de": "Flash auslesen"
+  },
+  "Verify Flash": {
+    "en": "Verify Flash",
+    "de": "Flash verifizieren"
+  },
+  "Erase Flash": {
+    "en": "Erase Flash",
+    "de": "Flash löschen"
+  },
+  "Burn Bootloader": {
+    "en": "Burn bootloader",
+    "de": "Bootloader programmieren"
+  },
+  "Memory Viewer": {
+    "en": "Memory viewer",
+    "de": "Speicheransicht"
+  },
+  "Reset MCU": {
+    "en": "Reset MCU",
+    "de": "MCU zurücksetzen"
+  },
+  "Universal microcontroller flasher": {
+    "en": "Universal microcontroller flasher",
+    "de": "Universelles Mikrocontroller-Programmierwerkzeug"
+  },
+  "OTA · app-only BIN": {
+    "en": "OTA · app-only BIN",
+    "de": "OTA · Anwendungs-BIN"
+  },
+  "Arduino BIN · 0x0": {
+    "en": "Arduino BIN · 0x0",
+    "de": "Arduino-BIN · 0x0"
+  },
+  "Board specific": {
+    "en": "Board specific",
+    "de": "Platinenspezifisch"
+  },
+  "8 bit": {
+    "en": "8-bit",
+    "de": "8 Bit"
+  },
+  "Flasher Studio · v0.2.67. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.67. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.67. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
   }
 };
