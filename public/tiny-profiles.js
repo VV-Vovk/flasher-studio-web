@@ -35,6 +35,10 @@ export function tinyBuildFqbn(fqbn){return Object.keys(TINY_BOARDS).some(n=>tiny
 
 export const DIGISPARK_BOARDS=Object.freeze({
  'Digispark ATtiny85 · USB':Object.freeze({chip:'ATtiny85',fqbn:'digistump:avr:digispark-tiny:clock=clock165,micronucleus=recommended',max:6586,flash:8192,page:64,signature:'1e930b'}),
- 'Digispark Pro ATtiny167 · USB':Object.freeze({chip:'ATtiny167',fqbn:'digistump:avr:digispark-pro:micronucleus=recommended',max:14970,flash:16384,page:128,signature:'1e9487'})
+ 'Digispark Pro ATtiny167 · USB':Object.freeze({chip:'ATtiny167',fqbn:'digistump:avr:digispark-pro:micronucleus=recommended',max:14970,flash:16384,page:128,signature:'1e9487'}),
+ 'MH-ET LIVE Tiny88 · USB':Object.freeze({chip:'ATtiny88',fqbn:'TinyCore:avr:x8:chip=88,clock=16MHz_external,bootloader=micronucleus',max:6588,flash:8192,page:64,signature:'1e9311'}),
+ 'Adafruit Trinket 3.3V · USB':Object.freeze({chip:'ATtiny85',fqbn:'adafruit:avr:trinket3',max:5248,flash:8192,page:64,signature:'1e930b',trinket:true}),
+ 'Adafruit Trinket 5V · USB':Object.freeze({chip:'ATtiny85',fqbn:'adafruit:avr:trinket5',max:5248,flash:8192,page:64,signature:'1e930b',trinket:true}),
+ 'Adafruit Gemma ATtiny85 · USB':Object.freeze({chip:'ATtiny85',fqbn:'adafruit:avr:gemma',max:5248,flash:8192,page:64,signature:'1e930b',trinket:true})
 });
 export function digisparkProfile(name,chip){const p=DIGISPARK_BOARDS[name];return p&&p.chip===chip?p:null;}

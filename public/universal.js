@@ -14,7 +14,7 @@ export function builderRefForRequest(r){
   if(!wbCpu1CompileTarget(n)||!(r.engine==='stm32-bare'&&['c','cpp','zip'].includes(r.ext)||r.engine==='stm32cubeide-gcc'&&r.ext==='zip'))throw Error('STM32WB: CPU1 C/C++/ZIP или полный CubeIDE GNU ZIP');
   ref=WB_BUILDER_REF;
  }
- if(/^(?:MicroCore|TinyCore|digistump):avr:/.test(r?.fqbn||'')){if(ref!=='main'||r.engine!=='arduino'||!tinyBuildFqbn(r.fqbn))throw Error('ATtiny unsupported build profile');ref=TINY_BUILDER_REF;}
+ if((/^(?:MicroCore|TinyCore|digistump):avr:/.test(r?.fqbn||'')||/^adafruit:avr:(?:trinket3|trinket5|gemma)$/.test(r?.fqbn||''))){if(ref!=='main'||r.engine!=='arduino'||!tinyBuildFqbn(r.fqbn))throw Error('ATtiny unsupported build profile');ref=TINY_BUILDER_REF;}
  if(r?.builderRef!==undefined&&r.builderRef!==ref)throw Error('Builder branch mismatch');
  return ref;
 }

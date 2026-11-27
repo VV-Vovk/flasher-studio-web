@@ -52,7 +52,7 @@ export function targetCapability({fi,chip,board,name=board,arduino=false,bareAvr
  if(fi===5){const x=stmTarget(n);compile=stmCompile(x,catalog);if(swdProfile(x))methods.push('ST-LINK · SWD','CMSIS-DAP · SWD');if(stmUartProfile(x)&&!x.includes('X'))methods.push('UART');if(Object.hasOwn(DFU_PROFILES,x))methods.push('USB DFU');}
  else if(fi===0&&ESP.has(chip)&&n&&n!=='—'){compile=true;methods=['USB-UART','Native USB','Native USB (если доступен)'];}
  else if(fi===1&&E8266.has(n)){compile=true;methods=['USB-UART'];}
- else if(fi===2){const tiny=tinyProfile(n,chip),digi=digisparkProfile(n,chip);compile=arduino||bareAvr||!!tiny||!!digi;if(digi)methods=['Micronucleus · USB'];else if(tiny)methods=['ISP-программатор','Arduino as ISP'];else if(bareAvr)methods=['ISP-программатор'];else if(extendedAvrProfile(n))methods=['USB','USB-UART','Native USB'];else if(avrProfile(n))methods=['USB','USB-UART'];}
+ else if(fi===2){const tiny=tinyProfile(n,chip),digi=digisparkProfile(n,chip);compile=arduino||bareAvr||!!tiny||!!digi;if(digi)methods=[digi.trinket?'Trinket/Gemma · USB':'Micronucleus · USB'];else if(tiny)methods=['ISP-программатор','Arduino as ISP'];else if(bareAvr)methods=['ISP-программатор'];else if(extendedAvrProfile(n))methods=['USB','USB-UART','Native USB'];else if(avrProfile(n))methods=['USB','USB-UART'];}
  else if(fi===3){compile=arduino;}
  else if(fi===6){compile=arduino||!!nrfZephyrTarget(n,chip);nrfSwd=nrfPhysicalTarget(n,chip);}
  else if(fi===4){compile=arduino;if(UF2.has(n))methods=['UF2'];}

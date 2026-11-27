@@ -77,3 +77,17 @@ test('Digispark Pro JMP targets word address, no implicit USB start',()=>{
  const b=microPlan(Uint8Array.of(0x0c,0x94,2,0,1,2),g),v=new DataView(b.buffer);
  assert.equal(v.getUint16(2,true),g.start/2);assert.equal(v.getUint16(g.start-2,true),2);
 });
+
+import {microLegacyInfo} from '../public/micronucleus.js';
+import {openTrinket} from '../public/trinket-usb.js';
+test('legacy Digispark only 6012 bytes, does not claim signature or patch host vectors',()=>{
+ const p=DIGISPARK_BOARDS['Digispark ATtiny85 · USB'],g=microLegacyInfo(Uint8Array.of(0x17,0x7c,64,5),p);
+ assert.equal(g.signature,null);assert.equal(g.start,6016);
+ const b=microPlan(Uint8Array.of(1,0xc0,0,0,1,2),g);assert.deepEqual([...b.slice(0,6)],[1,0xc0,0,0,1,2]);
+ assert.throws(()=>microLegacyInfo(Uint8Array.of(0x17,0x7c,64,5),DIGISPARK_BOARDS['MH-ET LIVE Tiny88 · USB']),/geometry/);
+});
+test('all named USB boards exact build route; reject external USBtiny programmer before opening',async()=>{
+ for(const [name,p] of Object.entries(DIGISPARK_BOARDS)){assert.equal(builderRefForRequest({engine:'arduino',fqbn:p.fqbn}),TINY_BUILDER_REF);assert.equal(targetCapability({fi:2,name,chip:p.chip}).state,'both');}
+ let opened=false;const d={vendorId:0x1781,productId:0x0c9f,manufacturerName:'Adafruit',productName:'USBtinyISP',open:async()=>{opened=true}};
+ await assert.rejects(openTrinket('Adafruit Trinket 3.3V · USB','ATtiny85',{requestDevice:async()=>d}),/original/);assert.equal(opened,false);
+});
