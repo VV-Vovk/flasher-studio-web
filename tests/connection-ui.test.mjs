@@ -47,3 +47,12 @@ test('Device target picker stays available after selecting a target and shares t
  assert.ok(html.includes("if(hw||hwBusy||liveBusy||timer||analysisBusy)return;\n $('pickTarget').click();"));
  assert.ok(html.includes("if(!$('targetDialog').open)renderDevice()"));
 });
+
+test('USB overrides live inside the connection panel; manual picker requires explicit model after family changes',()=>{
+ assert.ok(html.includes("usbPanel23.className='usb-advanced75'"));
+ assert.ok(html.includes("$('transportDemo').after(usbPanel23)"));
+ assert.ok(html.includes("#device>.layout>.panel{margin-bottom:0"));
+ assert.ok(html.includes("#nativePanel75>a.btn{display:flex"));
+ assert.ok(html.includes("targetStage75!==null&&targetStage75!=='ready'"));
+ assert.ok(html.includes("body.scrollTo({top,behavior:"));
+});

@@ -8447,5 +8447,33 @@ const FS_I18N_MESSAGES = {
   "Изменить целевую плату": {
     "en": "Change target board",
     "de": "Zielplatine ändern"
+  },
+  "Flasher Studio · v0.2.75. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.75. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.75. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Дополнительные настройки USB": {
+    "en": "Advanced USB settings",
+    "de": "Erweiterte USB-Einstellungen"
+  },
+  "Выбери семейство микроконтроллера": {
+    "en": "Select a microcontroller family",
+    "de": "Mikrocontroller-Familie auswählen"
+  },
+  "Выбери группу STM32": {
+    "en": "Select an STM32 group",
+    "de": "STM32-Gruppe auswählen"
+  },
+  "Выбери микроконтроллер или серию": {
+    "en": "Select a microcontroller or series",
+    "de": "Mikrocontroller oder Serie auswählen"
+  },
+  "Выбери конкретную модель платы": {
+    "en": "Select a specific board model",
+    "de": "Konkretes Platinenmodell auswählen"
+  },
+  "Выбрано: ": {
+    "en": "Selected: ",
+    "de": "Ausgewählt: "
   }
 };

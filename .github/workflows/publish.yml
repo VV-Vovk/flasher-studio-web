@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '67ca530f1dacb680667fc5c6a913ebda58645f05' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.74 persistent device target picker'))
+       (github.event_name == 'push' && github.event.before == '6b6a5d99ca8a81125508f5a31368267c6a2816c6' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.75 compact device layout and guided target picker'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

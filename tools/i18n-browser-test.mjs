@@ -65,8 +65,13 @@ let browser;try{
  await page.locator('#deviceTarget74').click();
  assert.ok(await page.locator('#targetDialog').isVisible());
  await page.locator('#families [data-i="2"]').click();
+ assert.ok(await page.locator('#confirmTarget').isDisabled());
+ await page.waitForFunction(()=>{const body=document.querySelector('#targetDialog .dialog-body').getBoundingClientRect(),r=document.getElementById('chipLabel').getBoundingClientRect();return r.top>=body.top-2&&r.bottom<=body.bottom+2;});
  await page.locator('#chips [data-chip="ATmega328P"]').click();
+ assert.ok(await page.locator('#confirmTarget').isDisabled());
+ await page.waitForFunction(()=>{const body=document.querySelector('#targetDialog .dialog-body').getBoundingClientRect(),r=document.getElementById('boardLabel75').getBoundingClientRect();return r.top>=body.top-2&&r.bottom<=body.bottom+2;});
  await page.locator('#boardList [data-board="Arduino Uno R3"]').click();
+ assert.ok(await page.locator('#confirmTarget').isEnabled());
  await page.locator('#confirmTarget').click();
  assert.equal(await page.locator('#deviceTargetLabel74').textContent(),'Изменить целевую плату');
  assert.match(await page.locator('#devBoard').textContent(),/Arduino Uno R3/);
@@ -79,6 +84,22 @@ let browser;try{
  await page.locator('#confirmTarget').click();
  assert.match(await page.locator('#devBoard').textContent(),/Arduino Nano/);
  assert.ok(await page.locator('#deviceTarget74').isEnabled());
+ // Compact connection controls and link layout, including narrow/mobile screens.
+ for(const width of [320,360,430,1280]){
+  await page.setViewportSize({width,height:900});
+  const result=await page.evaluate(()=>{
+   const usb=document.getElementById('usbAdvanced75'),connect=document.getElementById('connect'),info=document.getElementById('deviceInfo12'),layout=document.querySelector('#device>.layout');
+   const native=document.getElementById('nativePanel75');native.open=true;
+   const a=native.querySelector('a.btn'),r=a.getBoundingClientRect(),prev=a.previousElementSibling.getBoundingClientRect(),next=a.nextElementSibling.getBoundingClientRect();
+   const geometry={nested:usb.parentElement===connect.parentElement,collapsed:!usb.open,gap:getComputedStyle(layout).rowGap,margin:getComputedStyle(connect.parentElement).marginBottom,infoMargin:getComputedStyle(info).marginBottom,linkWidth:r.width,available:native.clientWidth,above:r.top-prev.bottom,below:next.top-r.bottom,decoration:getComputedStyle(a).textDecorationLine};
+   native.open=false;return geometry;
+  });
+  assert.ok(result.nested&&result.collapsed);
+  assert.equal(result.gap,'14px');assert.equal(result.margin,'0px');assert.equal(result.infoMargin,'0px');
+  assert.ok(result.above>=0&&result.below>=0,'native download overlaps adjacent text at '+width);
+  assert.ok(result.linkWidth<=result.available);assert.equal(result.decoration,'none');
+ }
+ await page.setViewportSize({width:430,height:900});
  // Exercise actual browser IndexedDB, not only the metadata helper.
  await page.waitForFunction(()=>typeof live!=='undefined'&&live!==null);
  const stored=await page.evaluate(async()=>{
