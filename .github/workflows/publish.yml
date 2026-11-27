@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '6f8ff8fce919cf9dcb5107af745018b2e7ba0ed5' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.76 uniform device panel spacing'))
+       (github.event_name == 'push' && github.event.before == 'd67e4a45f24ecbce0a8f5a4b08a59373b4a58a36' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.77 simplify connection empty state'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

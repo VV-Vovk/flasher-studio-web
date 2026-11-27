@@ -8479,5 +8479,13 @@ const FS_I18N_MESSAGES = {
   "Flasher Studio · v0.2.76. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
     "en": "Flasher Studio · v0.2.76. Universal cloud builds, USB/UART programming (first hardware release).",
     "de": "Flasher Studio · v0.2.76. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Flasher Studio · v0.2.77. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.77. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.77. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Войди в системный загрузчик STM32 (Boot mode).": {
+    "en": "Enter the STM32 system bootloader (Boot mode).",
+    "de": "STM32-Systembootloader starten (Boot-Modus)."
   }
 };

@@ -62,6 +62,14 @@ let browser;try{
  // Target picker must work directly from Device before and after the first selection.
  await page.waitForFunction(()=>typeof support34!=='undefined'&&support34!==null);
  await page.evaluate(()=>{const el=document.getElementById('fsLanguage');el.value='ru';el.dispatchEvent(new Event('change'));});
+ // Empty connection state: one target selection action, no transport hint.
+ for(const lang of ['ru','en','de']){
+  await page.evaluate(lang=>{const el=document.getElementById('fsLanguage');el.value=lang;el.dispatchEvent(new Event('change'));renderDevice();},lang);
+  assert.ok(await page.locator('#deviceTarget74').isVisible());
+  assert.ok(await page.locator('#deviceTarget74').evaluate(e=>e.classList.contains('primary')));
+  for(const id of ['connect','transport','transportDemo','devStatus','usbAdvanced75'])assert.ok(await page.locator('#'+id).isHidden(),id+' in empty state '+lang);
+ }
+ await page.evaluate(()=>{const el=document.getElementById('fsLanguage');el.value='ru';el.dispatchEvent(new Event('change'));});
  await page.locator('#deviceTarget74').click();
  assert.ok(await page.locator('#targetDialog').isVisible());
  await page.locator('#families [data-i="2"]').click();
@@ -84,6 +92,11 @@ let browser;try{
  await page.locator('#confirmTarget').click();
  assert.match(await page.locator('#devBoard').textContent(),/Arduino Nano/);
  assert.ok(await page.locator('#deviceTarget74').isEnabled());
+ assert.ok(await page.locator('#connect').isVisible());
+ assert.ok(await page.locator('#transport').isVisible());
+ assert.ok(await page.locator('#devStatus').isVisible());
+ assert.ok(!(await page.locator('#deviceTarget74').evaluate(e=>e.classList.contains('primary'))));
+ assert.doesNotMatch(await page.locator('#transportDemo').textContent(),/STM32:|AVR: нужен/);
  // Compact connection controls and link layout, including narrow/mobile screens.
  for(const width of [320,360,430,1280]){
   await page.setViewportSize({width,height:900});

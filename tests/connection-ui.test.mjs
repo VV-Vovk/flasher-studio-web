@@ -61,3 +61,11 @@ test('Device panels have no legacy extra top spacing',()=>{
  assert.doesNotMatch(html,/\.device-info12\s*\{\s*margin-top\s*:/);
  assert.ok(html.includes('#device>.layout>.panel{margin-bottom:0;margin-top:0;min-width:0}'));
 });
+
+test('Empty device connection has only the target picker and no generic boot instructions',()=>{
+ assert.ok(html.includes("target.classList.toggle('primary',empty)"));
+ assert.ok(html.includes("$('connect').hidden=empty"));
+ assert.ok(html.includes("$('transport').hidden=empty"));
+ assert.ok(html.includes("notice.hidden=true;$('wirelessOptions').hidden=true"));
+ assert.doesNotMatch(html,/STM32: войди в системный Boot mode; AVR:/);
+});
