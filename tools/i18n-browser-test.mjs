@@ -36,6 +36,19 @@ let browser;try{
  assert.equal(await page.locator('#settings h1').textContent(),'Einstellungen');
  await page.locator('#nav button[data-view=device]').click();
  assert.equal(await page.locator('html').getAttribute('lang'),'de');
+ // Exercise actual browser IndexedDB, not only the metadata helper.
+ await page.waitForFunction(()=>typeof live!=='undefined'&&live!==null);
+ const stored=await page.evaluate(async()=>{
+  const api=await import('/real-build.js');
+  const input={filename:'local-test.HEX',bytes:new TextEncoder().encode(':00000001FF'),target:{board:'STM32F103C8T6',chip:'F1',family:'STM32'},session:{kind:'stm',route:'swd',pr:{flash:65536}},verified:true};
+  const first=await api.saveLocalFirmware(input),second=await api.saveLocalFirmware({...input,filename:'duplicate.hex'});
+  return {id:first.id,secondId:second.id,filename:api.firmwareFilename(second),count:(await api.list()).filter(x=>x.localFile).length};
+ });
+ assert.equal(stored.id,stored.secondId);assert.equal(stored.filename,'local-test.HEX');assert.equal(stored.count,1);
+ await page.reload();await page.waitForFunction(()=>typeof live!=='undefined'&&live!==null&&lib.some(x=>x.localFile));
+ assert.equal(await page.evaluate(async id=>{const api=await import('/real-build.js');return new TextDecoder().decode(await api.binary(id));},stored.id),':00000001FF');
+ await page.locator('#nav button[data-view=library]').click();
+ assert.ok(await page.getByText('local-test',{exact:true}).count());
  assert.deepEqual(errors,[]);
  console.log('RU/EN/DE browser localization smoke passed');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}
