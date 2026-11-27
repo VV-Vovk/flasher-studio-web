@@ -1,7 +1,7 @@
 import {TINY_ISP} from './tiny-profiles.js';
 // Real transports. No simulated success; limited to explicit device profiles.
 import {parseHex,denseImage,STM32_UART,validateStmVector} from './programmers.js';
-import {Stm32SwdSession,swdProfile,STLINK_F0_PROFILES,STLINK_F1_PROFILES} from './stm32-swd.js';
+import {Stm32SwdSession,swdProfile,swdReadRange,STLINK_F0_PROFILES,STLINK_F1_PROFILES} from './stm32-swd.js';
 import {sha256Hex} from './safety.js';
 import {unpackZip} from './universal.js';
 const u=a=>Uint8Array.from(a), eq=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
@@ -52,7 +52,7 @@ export class StLinkF1 extends Stm32SwdSession{
  async cmd(a,n=0,payload=null){let b=new Uint8Array(16);b.set(a);await this.tx(b);if(payload)await this.tx(payload);return n?this.rx(n):null;}
  async ok(a,n=2){let b=await this.cmd(a,n);if(b[0]!==0x80)throw Error('ST-LINK status '+b[0]);return b;}
  async rwStatus(){await this.ok([0xf2,0x3e],12);}
- async read(a,n){let start=a&~3,len=Math.ceil((a-start+n)/4)*4;if(n<1||len>1024)throw Error('SWD read length');let b=await this.cmd([0xf2,7,...le32(start),len&255,len>>8],len);await this.rwStatus();return b.slice(a-start,a-start+n);}
+ async read(a,n){const {start,offset,alignedLength:len}=swdReadRange(a,n);const b=await this.cmd([0xf2,7,...le32(start),len&255,len>>8],len);await this.rwStatus();return b.slice(offset,offset+n);}
  async reg(a){return word(await this.read(a,4));}
  async put(a,val){await this.ok([0xf2,0x35,...le32(a),...le32(val)]);}
  // ST-LINK/V2 normally starts in DFU. Leave it without a firmware update.

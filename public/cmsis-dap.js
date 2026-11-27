@@ -1,6 +1,6 @@
 // CMSIS-DAP v2 USB bulk / v1 HID, ARM ADIv5 MEM-AP, explicit shared STM32 profiles.
 // Protocol: https://arm-software.github.io/CMSIS-DAP/latest/group__DAP__Transfer.html
-import {Stm32SwdSession,swdProfile} from './stm32-swd.js';
+import {Stm32SwdSession,swdProfile,swdReadRange} from './stm32-swd.js';
 const u=a=>Uint8Array.from(a), le=n=>[n&255,n>>>8&255,n>>>16&255,n>>>24], word=(a,p=0)=>new DataView(a.buffer,a.byteOffset+p,4).getUint32(0,true), wait=ms=>new Promise(r=>setTimeout(r,ms));
 export class DapLink {
  constructor(device,epIn,epOut,packet=64){Object.assign(this,{device,epIn,epOut,packet});}
@@ -21,7 +21,7 @@ export class DapLink {
 export class DapStm32 extends Stm32SwdSession{
  constructor(link,pr){super(pr);this.link=link;this.device=link.device;}
  async init(){await this.link.init();return this.identify();}
- async read(a,n){if(n<1||n>1024)throw Error('DAP read length');let start=a&~3,b=new Uint8Array(Math.ceil((a-start+n)/4)*4);for(let i=0;i<b.length;i+=4)b.set(le(await this.link.readWord(start+i)),i);return b.slice(a-start,a-start+n);}
+ async read(a,n){const {start,offset,alignedLength}=swdReadRange(a,n);const b=new Uint8Array(alignedLength);for(let i=0;i<b.length;i+=4)b.set(le(await this.link.readWord(start+i)),i);return b.slice(offset,offset+n);}
  async reg(a){return this.link.readWord(a);}
  async put(a,v){return this.link.writeWord(a,v);}
  async writeHalfword(a,b){await this.link.writeHalf(a,b[0]|b[1]<<8);}

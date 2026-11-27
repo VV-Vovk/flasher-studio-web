@@ -71,6 +71,14 @@ export function swdProfile(name){
 
 const F0REG=Object.freeze({KEY:0x40022004,SR:0x4002200c,CR:0x40022010,AR:0x40022014,OBR:0x4002201c,WRP:0x40022020,DHCSR:0xe000edf0,CPUID:0xe000ed00,FLASH:0x08000000});
 
+// JavaScript bitwise operations produce signed int32 values. Keep physical
+// addresses unsigned even for the Cortex-M system region at 0xE0000000+.
+export function swdReadRange(address,length){
+ if(!Number.isInteger(address)||address<0||address>0xffffffff||!Number.isInteger(length)||length<1||length>1024||address+length>0x100000000)throw Error('SWD read length');
+ const offset=address%4,start=address-offset,alignedLength=Math.ceil((offset+length)/4)*4;
+ if(alignedLength>1024||start+alignedLength>0x100000000)throw Error('SWD read length');
+ return {start,offset,alignedLength};
+}
 export class Stm32SwdSession {
  constructor(pr){this.pr=pr;}
  async applicationLimit(){return this.pr.applicationOnly?wbApplicationLimit(this):this.pr.flash;}

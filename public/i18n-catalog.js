@@ -4895,5 +4895,9 @@ const FS_I18N_MESSAGES = {
   "ST-LINK: переход в режим SWD не подтверждён": {
     "en": "ST-LINK: SWD mode not confirmed",
     "de": "ST-LINK: SWD-Modus nicht bestätigt"
+  },
+  "Flasher Studio · v0.2.65. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.65. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.65. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
   }
 };
