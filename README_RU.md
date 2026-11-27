@@ -250,3 +250,8 @@ Nine classic ATtiny (13/25/45/85/24/44/84/2313/4313), 18 clock profiles and Digi
 ## v0.2.55 — классические ATtiny через ArduinoISP
 
 22 модельных профиля (13/25/45/85/24/44/84/2313/4313/87/167/48/88/441/841/261/461/861/1634/828/43U/26), 44 clock choices plus Digispark ISP. Verified signature/Flash/page from avrdude v8.0 src/avrdude.conf.in and FQBN from TinyCore v0.8.0/MicroCore v2.5.2. ArduinoISP sketch at 19200 8N1; explicit AVR ISP sign-on, target page/size parameter, signature, full erase and readback, no fuse writes. 16-byte pages use bounded SPI load/commit because stock ArduinoISP page mask handles 32/64/128/256 only. No high voltage, Micronucleus, UPDI, hardware or SDK compile smoke tests. ArduinoISP: load sketch first, suppress programmer autoreset, match voltage, target RESET D10, MOSI/MISO/SCK via SPI. Firmware clock profile does not change fuses. Disconnect/release RESET manually if transport fails.
+
+
+## v0.2.56 — Digispark / Digispark Pro USB preview
+
+Exact Digistump AVR 1.7.5 profiles (private Builder develop/tiny-isp), separate from destructive ISP target. Experimental Micronucleus 2.x WebUSB (16d0:0753) with live signature/page/usable length, RJMP/JMP reset patch, bounded application erase/write only, no automatic retry/start. Protocol has no readback; UI reports transfer only, never verified. Legacy v1.x lacks signature and is refused. No USB bootloader installation, hardware or real SDK smoke builds; MH-Tiny88, Trinket, Gemma and legacy v1 pending. References: micronucleus v2.6 library and firmware, ArminJo DigistumpArduino v1.7.5 boards.txt.

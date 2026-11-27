@@ -57,3 +57,23 @@ test('ArduinoISP sign-on, target parameters, erase, full readback and release RE
 test('ArduinoISP refuses oversized HEX-derived image before serial traffic',async()=>{
  const f=new FakeArduino('ATtiny13');await assert.rejects(new TinyArduinoIsp(f,'ATtiny13').program(new Uint8Array(1025)),/bounds/);assert.deepEqual(f.calls,[]);
 });
+
+import {DIGISPARK_BOARDS} from '../public/tiny-profiles.js';
+import {microInfo,microPlan,Micronucleus} from '../public/micronucleus.js';
+test('Digispark USB profiles and Micronucleus geometry/reset patch',()=>{
+ const name='Digispark ATtiny85 · USB',p=DIGISPARK_BOARDS[name],g=microInfo(Uint8Array.of(0x19,0xba,64,5,0x93,0x0b),p);
+ assert.equal(g.start,6592);assert.equal(g.max,6586);
+ assert.equal(targetCapability({fi:2,name,chip:'ATtiny85'}).state,'both');
+ assert.equal(builderRefForRequest({engine:'arduino',fqbn:p.fqbn}),TINY_BUILDER_REF);
+ const b=microPlan(Uint8Array.of(1,0xc0,0,0,1,2),g),v=new DataView(b.buffer);
+ assert.equal(v.getUint16(0,true),0xc000|((g.start/2-1)&0xfff));
+ assert.equal(v.getUint16(g.start-4,true),0xc000|((2-(g.start-4)/2-1)&0xfff));
+ assert.throws(()=>microInfo(Uint8Array.of(0x19,0xba,64,5,0x94,0x87),p),/signature/);
+ assert.throws(()=>microPlan(new Uint8Array(6587),g),/size/);
+ assert.throws(()=>microPlan(Uint8Array.of(0,0,1,2),g),/reset/);
+});
+test('Digispark Pro JMP targets word address, no implicit USB start',()=>{
+ const p=DIGISPARK_BOARDS['Digispark Pro ATtiny167 · USB'],g=microInfo(Uint8Array.of(0x3a,0x7a,128,5,0x94,0x87),p);
+ const b=microPlan(Uint8Array.of(0x0c,0x94,2,0,1,2),g),v=new DataView(b.buffer);
+ assert.equal(v.getUint16(2,true),g.start/2);assert.equal(v.getUint16(g.start-2,true),2);
+});

@@ -31,4 +31,10 @@ export const TINY_BOARDS=Object.freeze(Object.fromEntries(Object.keys(TINY_ISP).
 }).concat([['Digispark ATtiny85 · ISP (no bootloader)',Object.freeze({chip:'ATtiny85',clock:'16MHz_internal_PLL'})]])));
 export function tinyProfile(name,chip){const b=TINY_BOARDS[name];return b&&b.chip===chip?TINY_ISP[chip]:null;}
 export function tinyFqbn(name,chip){const b=TINY_BOARDS[name],p=tinyProfile(name,chip);if(!p)return '';return p.group==='13'?'MicroCore:avr:13:clock='+b.clock+',bootloader=no_bootloader':'TinyCore:avr:'+p.group+':'+(p.group.startsWith('x')?'chip='+p.number+',':'')+'clock='+b.clock+',bootloader=no_bootloader';}
-export function tinyBuildFqbn(fqbn){return Object.keys(TINY_BOARDS).some(n=>tinyFqbn(n,TINY_BOARDS[n].chip)===fqbn);}
+export function tinyBuildFqbn(fqbn){return Object.keys(TINY_BOARDS).some(n=>tinyFqbn(n,TINY_BOARDS[n].chip)===fqbn)||Object.values(DIGISPARK_BOARDS).some(p=>p.fqbn===fqbn);}
+
+export const DIGISPARK_BOARDS=Object.freeze({
+ 'Digispark ATtiny85 · USB':Object.freeze({chip:'ATtiny85',fqbn:'digistump:avr:digispark-tiny:clock=clock165,micronucleus=recommended',max:6586,flash:8192,page:64,signature:'1e930b'}),
+ 'Digispark Pro ATtiny167 · USB':Object.freeze({chip:'ATtiny167',fqbn:'digistump:avr:digispark-pro:micronucleus=recommended',max:14970,flash:16384,page:128,signature:'1e9487'})
+});
+export function digisparkProfile(name,chip){const p=DIGISPARK_BOARDS[name];return p&&p.chip===chip?p:null;}
