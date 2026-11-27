@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == 'def3fcf3d64b7c5ec1b73359d5cfd7723c2eaf31' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.58 to Firebase (authorized one-time publish)'))
+       (github.event_name == 'push' && github.event.before == '03906d47112b2aeed5ae5869dfe3be87f8f4c622' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.59 mobile UI polish'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

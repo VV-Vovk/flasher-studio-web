@@ -265,3 +265,8 @@ Exact Digistump AVR 1.7.5 profiles (private Builder develop/tiny-isp), separate 
 ## v0.2.58 — ATtiny USB boards preview
 
 MH-Tiny88 (TinyCore x8, 16 MHz external clock, Micronucleus), legacy Digispark 1.x only known 6012-byte geometry with explicit no-signature warning, Adafruit Trinket 3.3/5 V and Gemma ATtiny85 (Adafruit AVR 1.4.15, conservative 5248-byte aligned application limit). Trinket requires original descriptor 1781:0c9f Adafruit/Trinket 1.05; no generic USBtinyISP erase, no fuse writes, no physical first-page commit claim. USB writes experimental, real boards and new SDK compilation not yet tested. TPI/UPDI remain separate work. References: Arduino board indexes, TinyCore v0.8.0 boards.txt, Micronucleus v2.6 host protocol, Adafruit-Trinket-Gemma-Bootloader public boot.c/usbconfig.h/Makefile.
+
+
+## v0.2.59 — компактный мобильный интерфейс
+
+Убраны унаследованные верхние отступы details у папок каталога, компактные строки с сохранённой областью нажатия. Равные кнопки GitHub, краткий статус, пояснения о токене и ссылка создания в раскрываемой помощи; предупреждение о публичном репозитории сохранено. Настройки, токены, каталог и драйверы не меняются.
