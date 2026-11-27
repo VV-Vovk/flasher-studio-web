@@ -4935,5 +4935,53 @@ const FS_I18N_MESSAGES = {
   "Плата сборки:": {
     "en": "Build board:",
     "de": "Build-Platine:"
+  },
+  "Сохранить в каталог после успешной проверки записи": {
+    "en": "Save to catalog after successful programming verification",
+    "de": "Nach erfolgreicher Programmierprüfung im Katalog speichern"
+  },
+  "Некорректное имя локальной прошивки": {
+    "en": "Invalid local firmware filename",
+    "de": "Ungültiger Dateiname der lokalen Firmware"
+  },
+  "Локальная прошивка сохранена для другой конфигурации устройства": {
+    "en": "Local firmware was saved for a different device configuration",
+    "de": "Lokale Firmware wurde für eine andere Gerätekonfiguration gespeichert"
+  },
+  "Запись локальной прошивки не подтверждена": {
+    "en": "Local firmware programming not verified",
+    "de": "Programmierung der lokalen Firmware nicht verifiziert"
+  },
+  "Некорректный файл локальной прошивки": {
+    "en": "Invalid local firmware file",
+    "de": "Ungültige lokale Firmware-Datei"
+  },
+  "Не определена конфигурация локальной прошивки": {
+    "en": "Local firmware configuration not determined",
+    "de": "Konfiguration der lokalen Firmware nicht ermittelt"
+  },
+  "Хранилище каталога недоступно": {
+    "en": "Catalog storage unavailable",
+    "de": "Katalogspeicher nicht verfügbar"
+  },
+  "Локальная прошивка сохранена в каталоге:": {
+    "en": "Local firmware saved to catalog:",
+    "de": "Lokale Firmware im Katalog gespeichert:"
+  },
+  "Запись проверена, но не удалось сохранить файл в каталог:": {
+    "en": "Programming verified, but could not save file to catalog:",
+    "de": "Programmierung verifiziert, Datei konnte jedoch nicht im Katalog gespeichert werden:"
+  },
+  "Запись проверена · файл не сохранён в каталог": {
+    "en": "Programming verified · file not saved to catalog",
+    "de": "Programmierung verifiziert · Datei nicht im Katalog gespeichert"
+  },
+  "Скачать HEX": {
+    "en": "Download HEX",
+    "de": "HEX herunterladen"
+  },
+  "· локальный файл": {
+    "en": "· local file",
+    "de": "· lokale Datei"
   }
 };
