@@ -4871,5 +4871,29 @@ const FS_I18N_MESSAGES = {
   "Flasher Studio · v0.2.63. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
     "en": "Flasher Studio · v0.2.63. Universal cloud builds, USB/UART programming (first hardware release).",
     "de": "Flasher Studio · v0.2.63. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Flasher Studio · v0.2.64. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.64. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.64. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Требуется ST-LINK/V2": {
+    "en": "ST-LINK/V2 required",
+    "de": "ST-LINK/V2 erforderlich"
+  },
+  "ST-LINK: неизвестный или неподдерживаемый режим": {
+    "en": "ST-LINK: unknown or unsupported mode",
+    "de": "ST-LINK: unbekannter oder nicht unterstützter Modus"
+  },
+  "ST-LINK: связь потеряна при смене режима. Нажми подключение ещё раз, не отключая USB.": {
+    "en": "ST-LINK: connection lost while switching mode. Press Connect again without unplugging USB.",
+    "de": "ST-LINK: Verbindung beim Moduswechsel verloren. Drücke erneut auf Verbinden, ohne USB zu trennen."
+  },
+  "ST-LINK: не удалось выйти из текущего режима": {
+    "en": "ST-LINK: could not exit current mode",
+    "de": "ST-LINK: aktueller Modus konnte nicht verlassen werden"
+  },
+  "ST-LINK: переход в режим SWD не подтверждён": {
+    "en": "ST-LINK: SWD mode not confirmed",
+    "de": "ST-LINK: SWD-Modus nicht bestätigt"
   }
 };

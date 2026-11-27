@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '98ba011da578a88da84cba33007369f6507faa54' &&
-        github.event.head_commit.message == 'Publish tested Flasher Studio v0.2.63'))
+       (github.event_name == 'push' && github.event.before == 'b34c2c070db87d39c759b1d45fe355473c985532' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.64 ST-LINK DFU fix'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
