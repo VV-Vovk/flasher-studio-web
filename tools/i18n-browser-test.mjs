@@ -26,6 +26,27 @@ let browser;try{
   assert.equal(await page.locator('#setupGuideLink').getAttribute('href'),'/guide/');
   assert.equal(await page.locator('#setupGuideLink').textContent(),{ru:'Пошаговая инструкция · RU / EN / DE',en:'Step-by-step setup guide · RU / EN / DE',de:'Schritt-für-Schritt-Anleitung · RU / EN / DE'}[lang]);
  }
+ // Check actual geometry, not only the presence of the link.
+ for(const width of [320,360,430,1280]){
+  await page.setViewportSize({width,height:900});
+  for(const lang of ['ru','en','de']){
+   await selector.selectOption(lang);
+   await page.locator('#setupGuideLink').scrollIntoViewIfNeeded();
+   const geometry=await page.evaluate(()=>{
+    const link=document.getElementById('setupGuideLink'),status=document.getElementById('liveRepoStatus'),form=document.getElementById('githubCredentialForm'),help=link.parentElement.querySelector('.github-help59');
+    const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
+    return {link:rect(link),status:rect(status),form:rect(form),help:rect(help),display:getComputedStyle(link).display,decoration:getComputedStyle(link).textDecorationLine};
+   });
+   assert.ok(geometry.link.top>=geometry.status.bottom+8,'guide overlaps access status '+lang+' '+width);
+   assert.ok(geometry.help.top>=geometry.link.bottom,'guide overlaps help '+lang+' '+width);
+   assert.ok(Math.abs(geometry.link.width-geometry.form.width)<=2,'guide width '+lang+' '+width);
+   assert.ok(geometry.link.height>=44);
+   assert.equal(geometry.display,'flex');
+   assert.equal(geometry.decoration,'none');
+  }
+ }
+ await page.setViewportSize({width:430,height:900});
+ await selector.selectOption('ru');
  await page.evaluate(()=>{const e=document.createElement('span');e.id='i18nUser';fsLocale.setText(e,'Проект');document.body.append(e);const select=document.createElement('select');select.id='i18nValue';select.append(fsLocale.option(fsLocale.mark('Подключить устройство'),'Подключить устройство'));document.body.append(select);});
  await selector.selectOption('de');
  assert.equal(await page.locator('#i18nUser').textContent(),'Проект');

@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '35c1290f8405332c1801f541b1e25d722bcf5b4f' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.69 multilingual setup guide'))
+       (github.event_name == 'push' && github.event.before == '2e63fab8ee61a6be6268cf375ae75735eaa4a895' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.70 guide button layout fix'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
