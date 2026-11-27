@@ -245,3 +245,8 @@ ST-LINK/V2/V2-1 WebUSB memory transport reused without STM32 target commands. St
 ## v0.2.54 — ATtiny ISP preview
 
 Nine classic ATtiny (13/25/45/85/24/44/84/2313/4313), 18 clock profiles and Digispark ATtiny85 ISP (no bootloader). MicroCore 2.5.2 / TinyCore 0.8.0 via private Builder branch develop/tiny-isp. USBasp exact signature and geometry, reject locked chips, explicit full chip erase, entire Flash erase and final readback. EEPROM may erase; no fuse/lock writes. Clock profile is compile-only: existing fuse/clock must match. Digispark USB Micronucleus, UPDI, Arduino as ISP and high-voltage rescue not implemented. No physical or SDK smoke tests, no live deployment.
+
+
+## v0.2.55 — классические ATtiny через ArduinoISP
+
+22 модельных профиля (13/25/45/85/24/44/84/2313/4313/87/167/48/88/441/841/261/461/861/1634/828/43U/26), 44 clock choices plus Digispark ISP. Verified signature/Flash/page from avrdude v8.0 src/avrdude.conf.in and FQBN from TinyCore v0.8.0/MicroCore v2.5.2. ArduinoISP sketch at 19200 8N1; explicit AVR ISP sign-on, target page/size parameter, signature, full erase and readback, no fuse writes. 16-byte pages use bounded SPI load/commit because stock ArduinoISP page mask handles 32/64/128/256 only. No high voltage, Micronucleus, UPDI, hardware or SDK compile smoke tests. ArduinoISP: load sketch first, suppress programmer autoreset, match voltage, target RESET D10, MOSI/MISO/SCK via SPI. Firmware clock profile does not change fuses. Disconnect/release RESET manually if transport fails.
