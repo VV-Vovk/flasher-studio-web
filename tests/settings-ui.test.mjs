@@ -7,8 +7,10 @@ test('GitHub settings use one reset action with no orphan button references',()=
  const handlers=[...html.matchAll(/\$\('resetRepo'\)\.onclick=\(\)=>\{([^}]+)\}/g)];
  const handler=handlers.at(-1)?.[1]||'';
  assert.ok(handler.includes("$('token').value=''"));
- assert.ok(handler.includes("$('repo').value=defaultRepo"));
- assert.ok(handler.includes("safeWrite(liveRepoKey,defaultRepo)"));
+ assert.ok(!handler.includes("$('repo')"));
+ assert.ok(!handler.includes("safeWrite("));
+ assert.ok(!handler.includes("defaultRepo"));
+ for(const match of handlers)assert.ok(!match[1].includes("$('repo')"));
  assert.ok(handler.includes("$('liveRepoStatus').textContent='Доступ ещё не проверен.'"));
  assert.ok(html.includes('help.append(notice)'));
 });
