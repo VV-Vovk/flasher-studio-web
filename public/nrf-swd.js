@@ -3,6 +3,7 @@
 // No mass erase, UICR writes, CTRL-AP recovery or security changes.
 import {openDapUsbLink,openDapHidLink} from './cmsis-dap.js';
 import {parseHex} from './programmers.js';
+import {openStLinkMemory} from './extra-programmers.js';
 const F=0x10000000,N=0x4001e000,DHCSR=0xe000edf0,CPUID=0xe000ed00;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const eq=(a,b)=>a.length===b.length&&a.every((v,i)=>v===b[i]);
@@ -23,13 +24,17 @@ export function nrfGeometry(chip,info){
 }
 export function nrfImage(ranges,p){
  if(!Array.isArray(ranges)||!ranges.length||ranges[0].address!==0)throw Error('nRF: standalone image must begin at zero');
- let end=0;
- for(const r of ranges){if(!(r.data instanceof Uint8Array)||!r.data.length||!Number.isInteger(r.address)||r.address!==end||r.address+r.data.length>p.flash)throw Error('nRF: contiguous code Flash only; UICR and sparse HEX rejected');end+=r.data.length;}
- if(end<8)throw Error('nRF: vector table missing');
+ let end=0,used=0;const offsets=new Set();
+ for(const r of ranges){
+  if(!(r.data instanceof Uint8Array)||!r.data.length||!Number.isInteger(r.address)||r.address<end||r.address+r.data.length>p.flash)throw Error('nRF: overlapping or out-of-Flash HEX (UICR forbidden)');
+  end=r.address+r.data.length;used+=r.data.length;
+  for(let a=Math.floor(r.address/p.page)*p.page;a<end;a+=p.page)offsets.add(a);
+ }
+ if(ranges[0].data.length<8)throw Error('nRF: vector table missing');
  const b=new Uint8Array(Math.ceil(end/p.page)*p.page).fill(255);for(const r of ranges)b.set(r.data,r.address);
  const v=new DataView(b.buffer),sp=v.getUint32(0,true),pc=v.getUint32(4,true);
- if(sp<=0x20000000||sp>0x20000000+p.ram||sp%8||!(pc&1)||(pc&~1)>=end||(pc&~1)<8)throw Error('nRF: invalid application vectors');
- return {bytes:b,used:end,pages:b.length/p.page};
+ if(sp<=0x20000000||sp>0x20000000+p.ram||sp%8||!(pc&1)||(pc&~1)<8||!ranges.some(r=>(pc&~1)>=r.address&&(pc&~1)+2<=r.address+r.data.length))throw Error('nRF: invalid application vectors');
+ return {bytes:b,used,pages:offsets.size,offsets:[...offsets],span:b.length};
 }
 export class NrfSwd{
  #used=false;
@@ -51,7 +56,7 @@ export class NrfSwd{
   await this.link.writeWord(DHCSR,0xa05f0003);await this.link.readWord(DHCSR);
   await this.guard(p);await this.ready();
   if(await this.link.readWord(N+0x504)!==0)throw Error('nRF NVMC is not read-only');
-  const bytes=new Uint8Array(plan.bytes.length);
+  const bytes=new Uint8Array(plan.span);
   for(let a=0;a<bytes.length;a+=p.page){await this.guard(p);bytes.set(await this.read(a,p.page),a);progress(.5*(a+p.page)/bytes.length);}
   for(let a=0;a<bytes.length;a+=p.page){await this.guard(p);if(!eq(await this.read(a,p.page),bytes.slice(a,a+p.page)))throw Error('nRF backup changed');progress(.5+.5*(a+p.page)/bytes.length);}
   await this.guard(p);return {...p,bytes};
@@ -72,13 +77,13 @@ export class NrfSwd{
   for(let a=0;a<plan.bytes.length;a+=p.page){
    await this.guard(p);const old=await this.read(a,p.page);
    if(erase&&!eq(old,saved.slice(a,a+p.page)))throw Error('nRF backup differs from target');
-   if(old.some(v=>v!==255)){if(!erase)throw Error('nRF page is not blank; no erase performed');if(!eq(old,plan.bytes.slice(a,a+p.page)))dirty++;}
+   if(plan.offsets.includes(a)&&old.some(v=>v!==255)){if(!erase)throw Error('nRF page is not blank; no erase performed');if(!eq(old,plan.bytes.slice(a,a+p.page)))dirty++;}
    progress(.25*(a+p.page)/plan.bytes.length);
   }
-  if(dirty&&await options.confirmErase({...p,dirtyPages:dirty,totalPages:plan.pages,end:plan.bytes.length})!==true)return {cancelled:true};
+  if(dirty&&await options.confirmErase({...p,dirtyPages:dirty,totalPages:plan.pages,end:plan.span})!==true)return {cancelled:true};
   const v=new DataView(plan.bytes.buffer);
   try{
-   for(let a=0;a<plan.bytes.length;a+=p.page){
+   for(const a of plan.offsets){
     await this.guard(p);
     const old=await this.read(a,p.page),expected=plan.bytes.slice(a,a+p.page);
     if(erase&&!eq(old,saved.slice(a,a+p.page)))throw Error('nRF backup differs before page write');
@@ -100,17 +105,29 @@ export class NrfSwd{
     if(!eq(await this.read(a,p.page),plan.bytes.slice(a,a+p.page)))throw Error('nRF page readback mismatch');
     progress(.25+.75*(a+p.page)/plan.bytes.length);
    }
-   for(let a=0;a<plan.bytes.length;a+=p.page){await this.guard(p);if(!eq(await this.read(a,p.page),plan.bytes.slice(a,a+p.page)))throw Error('nRF final readback mismatch');}
+   for(let a=0;a<plan.span;a+=p.page){await this.guard(p);if(plan.offsets.includes(a)){if(!eq(await this.read(a,p.page),plan.bytes.slice(a,a+p.page)))throw Error('nRF final readback mismatch');}else if(erase&&!eq(await this.read(a,p.page),saved.slice(a,a+p.page)))throw Error('nRF untouched gap page changed');}
    await this.guard(p);return {verified:true,bytes:plan.used,pages:plan.pages,erasedPages:dirty,uid:p.uid,executionVerified:false};
   }finally{if(JSON.stringify(await this.info())!==JSON.stringify(p))throw Error('nRF identity changed; cannot safely restore NVMC');await this.link.writeWord(N+0x504,0);await this.ready();if(await this.link.readWord(N+0x504)!==0)throw Error('nRF NVMC read-only restoration failed');}
  }
 }
-export async function withNrfSwd(chip,fn,usb=navigator.usb,hid=null){
+export async function withNrfSwd(chip,fn,usb=navigator.usb,hid=null,stlink=false){
  if(!Object.hasOwn(NRF_SWD,chip))throw Error('nRF SWD target unsupported');
- const link=hid?await openDapHidLink(hid):await openDapUsbLink(usb);
+ const link=stlink?await openStLinkMemory(usb):hid?await openDapHidLink(hid):await openDapUsbLink(usb);
  try{return await fn(new NrfSwd(link,chip));}finally{await link.close();}
 }
-export function probeNrf(chip,usb=navigator.usb,hid=null){return withNrfSwd(chip,s=>s.info(),usb,hid);}
-export function programNrfHex(chip,hex,approve,progress,usb=navigator.usb,options={},hid=null){const ranges=parseHex(hex);return withNrfSwd(chip,s=>s.program(ranges,approve,progress,options),usb,hid);}
-export function backupNrfHex(chip,hex,approve,progress,usb=navigator.usb,hid=null){const ranges=parseHex(hex);return withNrfSwd(chip,s=>s.backup(ranges,approve,progress),usb,hid);}
+export function probeNrf(chip,usb=navigator.usb,hid=null,stlink=false){return withNrfSwd(chip,s=>s.info(),usb,hid,stlink);}
+export function programNrfHex(chip,hex,approve,progress,usb=navigator.usb,options={},hid=null,stlink=false){const ranges=parseHex(hex);return withNrfSwd(chip,s=>s.program(ranges,approve,progress,options),usb,hid,stlink);}
+export function backupNrfHex(chip,hex,approve,progress,usb=navigator.usb,hid=null,stlink=false){const ranges=parseHex(hex);return withNrfSwd(chip,s=>s.backup(ranges,approve,progress),usb,hid,stlink);}
 
+
+// Only an exact board/chip build and one unambiguous application HEX.
+export function nrfCatalogHex(result,meta,board,chip,expectedZephyr,expectedFqbn){
+ if(!meta?.universal||meta.family!=='Nordic nRF'||meta.board!==board||meta.chip!==chip)throw Error('nRF catalogue target mismatch');
+ const b=result?.m?.build;
+ if(!b||!(b.engine==='zephyr'&&expectedZephyr&&b.target===expectedZephyr||b.engine==='arduino'&&expectedFqbn&&b.fqbn===expectedFqbn))throw Error('nRF build engine/target not reviewed');
+ const f=result.m.files.filter(f=>f.file.endsWith('.hex')&&!/bootloader|softdevice|merged|settings|uicr/i.test(f.file));
+ if(f.length!==1)throw Error('nRF requires one unambiguous application HEX');
+ const bytes=result.files.get(f[0].file);
+ if(!(bytes instanceof Uint8Array)||!bytes.length)throw Error('nRF missing HEX');
+ const hex=new TextDecoder('utf-8',{fatal:true}).decode(bytes);parseHex(hex);return hex;
+}

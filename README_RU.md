@@ -230,3 +230,8 @@ Experimental USB DFU radio start: inspect current installed stack and FUS idle, 
 - FICR identity and geometry for 52805/810/811/820/832/833/840, BPROT vs ACL guards, physical custom PCB targets distinct from Zephyr emulation boards. CMSIS-DAP v1 (WebHID desktop) and v2 (WebUSB).
 - Exact affected-page backup, double read, separate approval of erase; byte equality before any write and before each page. Only nonblank differing pages erased via NVMC ERASEPAGE, readback of erased page and final image; no UICR, mass erase, unlock or CTRL-AP operations. CPU halted, manual restart; stale content outside new image remains. Standalone contiguous HEX at zero only. No hardware verification.
 - Nordic PS: https://docs.nordicsemi.com/r/bundle/struct_nrf52/page/struct/nrf52.html ; NVMC, FICR, BPROT/ACL chapters for each part. No new dependencies or SDK binaries. Builder, Firebase unchanged.
+
+
+## v0.2.52 — Nordic SWD: ST-LINK, sparse HEX, каталог
+
+ST-LINK/V2/V2-1 WebUSB memory transport reused without STM32 target commands. Standalone sparse HEX at zero allowed: wholly absent pages never written/erased, gaps inside touched pages filled with FF; backup is full span from zero. Exact physical board/chip and reviewed Zephyr/Arduino target, SHA-256 verified ZIP and one unambiguous application HEX from local catalogue. No UICR, SoftDevice/offset applications, recovery, J-Link, hardware verification, private build or deployment.

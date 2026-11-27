@@ -109,3 +109,24 @@ export function validateUf2(b,family){const ids={rp2040:0xe48bff56,rp2350:0xe48b
 export async function espBootPackage(bytes,entry){const {m,files}=await verifyBootZip(bytes,entry);const chip=m.target.mcu,cap=m.target.flashBytes;if(m.kind!=='esp-recovery'||!['esp32c3','esp32s3','esp32c6'].includes(chip)||![4194304,8388608,16777216].includes(cap))throw Error('ESP Recovery profile unsupported');const csv=files.get(m.partitionTable.file);if(!csv||csv.length!==m.partitionTable.size||await sha256Hex(csv)!==m.partitionTable.sha256)throw Error('Partition CSV SHA-256');const roles={bootloader:0,'partition-table':0x8000,'ota-data':0xf000,recovery:0x20000}, seen=new Set();let images=[];for(let f of m.files){if(!Object.hasOwn(roles,f.role)||seen.has(f.role)||f.offset!==roles[f.role]||f.offset+f.size>cap)throw Error('ESP Recovery offsets');seen.add(f.role);let data=files.get(f.file);if(['bootloader','recovery'].includes(f.role)){let expected={esp32c3:5,esp32s3:9,esp32c6:13}[chip];if(data.length<24||data[0]!==0xe9||data[12]+256*data[13]!==expected)throw Error('ESP header chip');}if(f.role==='recovery'&&f.size>0x180000)throw Error('Recovery too large');images.push({address:f.offset,data});}if(seen.size!==4)throw Error('ESP Recovery incomplete');images.sort((a,b)=>a.address-b.address);for(let i=1;i<images.length;i++)if(images[i-1].address+Math.ceil(images[i-1].data.length/4096)*4096>images[i].address)throw Error('ESP overlap');return {m,images};}
 export async function checkEspRecoveryTarget(s,pkg){if(s.chip!==pkg.m.target.mcu||s.flash!==pkg.m.target.flashBytes)throw Error('ESP model / Flash mismatch');if(typeof s.loader.getSecurityInfo!=='function'||s.loader.secureDownloadMode)throw Error('ESP security state unavailable');let sec=await s.loader.getSecurityInfo();if(sec?.flags!==0||sec?.flashCryptCnt!==0||sec?.chipId!==({esp32c3:5,esp32s3:9,esp32c6:13}[s.chip]))throw Error('ESP: не подтверждено отсутствие защиты. Запись запрещена.');if('esp-'+String(await s.loader.chip.readMac(s.loader)).toLowerCase()!==s.id)throw Error('MAC changed');}
 export async function installEspRecovery(s,pkg,vendor,progress=()=>{}){await checkEspRecoveryTarget(s,pkg);if(!s.backupSha256||!/^[a-f0-9]{64}$/.test(s.backupSha256))throw Error('Сначала резервная копия');await s.loader.writeFlash({fileArray:pkg.images,flashMode:'keep',flashFreq:'keep',flashSize:'keep',eraseAll:true,compress:true,calculateMD5Hash:vendor.md5,reportProgress:(idx,done,total)=>progress((idx+done/total)/pkg.images.length)});for(let f of pkg.images){let got=await s.loader.readFlash(f.address,f.data.length);if(!(got instanceof Uint8Array)||!eq(got,f.data))throw Error('ESP Recovery readback mismatch');}progress(1);}
+
+// Target-neutral ST-LINK/V2 and V2-1 memory transport. No STM32 identification
+// or STM32 flash algorithm is invoked for Nordic.
+export async function openStLinkMemory(usb=navigator.usb){
+ if(!usb?.requestDevice)throw Error('ST-LINK WebUSB unavailable');
+ const d=await usb.requestDevice({filters:[0x3748,0x374b,0x3752].map(productId=>({vendorId:0x0483,productId}))});
+ try{
+  if(d.vendorId!==0x0483||![0x3748,0x374b,0x3752].includes(d.productId))throw Error('ST-LINK model unsupported');
+  const a=new StLinkF1(d,{});
+  await d.open();if(!d.configuration)await d.selectConfiguration(1);
+  const i=d.configuration.interfaces.find(i=>i.interfaceNumber===0&&i.alternate.interfaceClass===255&&i.alternate.endpoints.some(e=>e.direction==='in'&&e.type==='bulk'&&e.endpointNumber===1)&&i.alternate.endpoints.some(e=>e.direction==='out'&&e.type==='bulk'&&e.endpointNumber===a.out));
+  if(!i)throw Error('ST-LINK endpoint mismatch');await d.claimInterface(i.interfaceNumber);
+  const v=await a.cmd([0xf1],6);if(v[0]>>>4!==2)throw Error('ST-LINK/V2 required');
+  const mode=await a.cmd([0xf5],2);if(mode[0]===0)throw Error('ST-LINK in DFU');
+  if(mode[0]!==2)await a.ok([0xf2,0x30,0xa3]);
+  return {readWord:async addr=>{if(addr%4)throw Error('ST-LINK word alignment');return a.reg(addr);},writeWord:async(addr,val)=>{
+   if(addr%4||!Number.isInteger(val)||val<0||val>0xffffffff)throw Error('ST-LINK word arguments');
+   await a.cmd([0xf2,8,...le32(addr),4,0],0,u(le32(val)));await a.rwStatus();
+  },close:()=>a.close()};
+ }catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}
+}
