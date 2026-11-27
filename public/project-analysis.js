@@ -1,6 +1,6 @@
 // Read-only evidence collection. Never execute project code or select a board
 // from a generic MCU/library name. Keep build-system and hardware evidence separate.
-const skip=/(^|\/)(?:\.git|\.pio|build|debug|release|firmware|drivers|middlewares|managed_components|node_modules|libraries|lib|examples|test|tests|vendor|__macosx)(\/|$)/i;
+const skip=/(^|\/)(?:\.git|\.pio|build|debug|release|drivers|middlewares|managed_components|node_modules|libraries|lib|examples|test|tests|vendor|__macosx)(\/|$)/i;
 const leaf=p=>p.split('/').pop();
 const source=/\.(?:ino|c|cc|cpp|cxx|h|hpp|s)$/i;
 const config=/(?:^|\/)(?:Makefile|GNUmakefile|CMakeLists\.txt|platformio\.ini|sdkconfig(?:\.[^/]+)?|prj\.conf|west\.yml|flasher-native\.json|sketch\.json|\.cproject|\.project)$/i;
@@ -10,7 +10,10 @@ const unique=a=>[...new Set(a)];
 const norm=v=>v.toUpperCase().replace(/[-_]/g,'');
 const espChip=v=>({ESP32:'ESP32',ESP32C2:'ESP32-C2',ESP32C3:'ESP32-C3',ESP32C6:'ESP32-C6',ESP32S2:'ESP32-S2',ESP32S3:'ESP32-S3',ESP32H2:'ESP32-H2',ESP32P4:'ESP32-P4',ESP8266:'ESP8266'})[norm(v)];
 export function analyzeProject(entries,filename=''){
- const e=entries.filter(x=>relevant(x.path));
+ // A ZIP may be wrapped in any folder, even "firmware", "lib" or "examples".
+ let root='';const raw=entries.filter(x=>!x.path.endsWith('/'));
+ if(raw.length){const parts=raw[0].path.split('/').slice(0,-1);while(parts.length&&!raw.every(x=>x.path.startsWith(parts.join('/')+'/')))parts.pop();root=parts.length?parts.join('/')+'/':'';}
+ const e=raw.map(x=>({...x,path:x.path.slice(root.length)})).filter(x=>relevant(x.path));
  const names=e.map(x=>x.path).join('\n'),code=e.filter(x=>source.test(x.path)).map(x=>x.text||'').join('\n'),cfg=e.filter(x=>config.test(x.path)||/\.(ioc|ld|cmake|mk)$/i.test(x.path)).map(x=>x.text||'').join('\n');
  const doc=e.filter(x=>docs.test(x.path)).map(x=>x.text||'').join('\n');
  const actual=names+'\n'+code+'\n'+cfg,all=actual+'\n'+doc+'\n'+filename;
@@ -39,6 +42,7 @@ export function analyzeProject(entries,filename=''){
  const series=x=>x.startsWith('STM32H7R')||x.startsWith('STM32H7S')?'H7RS':/^STM32WBA/.test(x)?'WBA':/^STM32W[BL]/.test(x)?x.slice(5,7):x.slice(5,7);
  if(exact.length)for(const x of exact)add('STM32',series(x),x);
  else for(const x of short)add('STM32',series(x),'');
+ const shortConflict=exact.length>0&&short.some(x=>!exact.some(y=>y.startsWith(x)));
  const esp=unique([...actual.matchAll(/(?:^|[^A-Z0-9])(ESP32(?:[-_]?S[23]|[-_]?C[236]|[-_]?H2|[-_]?P4)?|ESP8266)(?=$|[^A-Z0-9])/gi)].map(m=>espChip(m[1])).filter(Boolean));
  // A generic ESP32 reference often accompanies a specific variant.
  const concrete=esp.filter(x=>x!=='ESP32');
@@ -61,13 +65,13 @@ export function analyzeProject(entries,filename=''){
  const seen=new Map();for(const x of [...mcu,...boards]){const k=x.family+'|'+x.chip+'|'+x.part+'|'+x.board;seen.set(k,x);}
  const targets=[...seen.values()],families=unique(targets.map(x=>x.family+'|'+x.chip));
  const exactParts=unique(targets.map(x=>x.part).filter(Boolean)),explicitBoards=unique(boards.map(x=>x.board));
- const conflict=families.length>1||exactParts.length>1||explicitBoards.length>1;
+ const conflict=shortConflict||families.length>1||exactParts.length>1||explicitBoards.length>1;
  const target=!conflict?(exactParts.length===1?targets.find(x=>x.part===exactParts[0]):explicitBoards.length===1?boards.find(x=>x.board===explicitBoards[0]):null):null;
  const hint=conflict?targets.map(x=>x.part||x.board||x.chip).filter((v,i,a)=>a.indexOf(v)===i).join(' / '):target?target.part||target.board:short.length===1?short[0]:targets[0]?.chip||'';
  const cpu=unique([...cfg.matchAll(/-mcpu[=\s]+(cortex-[a-z0-9+]+)/gi),...code.matchAll(/^\s*\.cpu\s+(cortex-[a-z0-9+]+)/gmi)].map(m=>m[1].toLowerCase()));
- const compiler=/arm-none-eabi-/i.test(cfg)?'arm-none-eabi-gcc':/\bavr-g(?:cc|\+\+)\b/i.test(cfg)?'avr-gcc':/\briscv(?:32|64)[\w-]*-gcc\b/i.test(cfg)?(cfg.match(/\briscv(?:32|64)[\w-]*-gcc\b/i)||[])[0]:'';
+ const compiler=/\bclang\b/i.test(cfg)&&!/\bgcc\b/i.test(cfg)?'Clang':/arm-none-eabi-/i.test(cfg)?'arm-none-eabi-gcc':/\bavr-g(?:cc|\+\+)\b/i.test(cfg)?'avr-gcc':/\briscv(?:32|64)[\w-]*-gcc\b/i.test(cfg)?(cfg.match(/\briscv(?:32|64)[\w-]*-gcc\b/i)||[])[0]:'';
  const memory=[];for(const x of e.filter(x=>/\.ld$/i.test(x.path))){for(const m of String(x.text||'').matchAll(/\b(FLASH|RAM)\s*(?:\([^)]*\))?\s*:\s*ORIGIN\s*=\s*(0x[0-9a-f]+|\d+)\s*,\s*LENGTH\s*=\s*(0x[0-9a-f]+|\d+)\s*([KM])?/gi)){memory.push({region:m[1].toUpperCase(),origin:Number(m[2]),bytes:Number(m[3])*({K:1024,M:1048576}[m[4]?.toUpperCase()]||1)});}}
- return {framework:frames.length===1?frames[0]:frames.length===2&&frames.includes('STM32 HAL')&&frames.includes('STM32 LL')?'STM32 HAL / LL':'',system:builds.length===1?builds[0]:'',compiler,cpu:cpu.length===1?cpu[0]:'',target,hint,conflict:conflict||builds.length>1,targets,memory};
+ return {framework:frames.length===1?frames[0]:frames.length===2&&frames.includes('STM32 HAL')&&frames.includes('STM32 LL')?'STM32 HAL / LL':'',system:builds.length===1?builds[0]:'',compiler,cpu:cpu.length===1?cpu[0]:'',target,hint,conflict:conflict||builds.length>1,buildConflict:builds.length>1,targetConflict:conflict,targets,memory};
 }
 // ZIP metadata is read first; extract only evidence files under strict byte budgets.
 export async function readProjectEntries(file){
@@ -78,15 +82,25 @@ export async function readProjectEntries(file){
  if(end<0||u16(end+4)||u16(end+6)||u16(end+8)!==u16(end+10))throw Error('ZIP не распознан');
  const n=u16(end+10),start=u32(end+16);let p=start,total=0;
  if(n>10000||start+u32(end+12)!==end)throw Error('ZIP повреждён');
- const entries=[],seen=new Set();
+ const entries=[],seen=new Set(),records=[];
  for(let i=0;i<n;i++){
   if(p+46>end||u32(p)!==0x02014b50)throw Error('ZIP повреждён');
   const flags=u16(p+8),method=u16(p+10),packed=u32(p+20),raw=u32(p+24),nl=u16(p+28),off=u32(p+42),next=p+46+nl+u16(p+30)+u16(p+32);
   if(next>end)throw Error('ZIP повреждён');
   const path=new TextDecoder().decode(b.subarray(p+46,p+46+nl));p=next;
-  if(path.endsWith('/')||!relevant(path))continue;
+  if(path.endsWith('/'))continue;
   if(path.startsWith('/')||path.includes('\\')||path.split('/').includes('..')||seen.has(path))throw Error('ZIP: небезопасное имя');seen.add(path);
-  const x={path,text:''};entries.push(x);
+  records.push({path,raw,packed,flags,method,off});
+ }
+ if(p!==end)throw Error('ZIP повреждён');
+ // Establish wrapper directory before filtering; read configuration first.
+ let parts=records[0]?.path.split('/').slice(0,-1)||[];
+ while(parts.length&&!records.every(x=>x.path.startsWith(parts.join('/')+'/')))parts.pop();
+ const prefix=parts.length?parts.join('/')+'/':'';
+ const rank=p=>config.test(p)||/\.(ioc|ld|mk|cmake)$/i.test(p)?0:docs.test(p)?1:2;
+ for(const {path,raw,packed,flags,method,off} of records.sort((a,b)=>rank(a.path)-rank(b.path)||a.path.localeCompare(b.path))){
+  if(!relevant(path.slice(prefix.length)))continue;
+  const x={path:path.slice(prefix.length),text:''};entries.push(x);
   if(raw>512*1024||total+raw>8*1024*1024||flags&1||![0,8].includes(method))continue;
   if(off+30>start||u32(off)!==0x04034b50)throw Error('ZIP повреждён');
   const at=off+30+u16(off+26)+u16(off+28);if(at+packed>start)throw Error('ZIP повреждён');
@@ -94,5 +108,5 @@ export async function readProjectEntries(file){
   if(method===8){const reader=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw')).getReader();let parts=[],count=0;try{while(true){const {done,value}=await reader.read();if(done)break;count+=value.length;if(count>raw)throw Error('ZIP: превышение размера');parts.push(value);}}finally{await reader.cancel().catch(()=>{});}data=new Uint8Array(count);let j=0;for(const part of parts){data.set(part,j);j+=part.length;}}
   if(data.length!==raw)throw Error('ZIP: размер файла');total+=raw;x.text=new TextDecoder().decode(data);
  }
- if(p!==end)throw Error('ZIP повреждён');return entries;
+ return entries;
 }

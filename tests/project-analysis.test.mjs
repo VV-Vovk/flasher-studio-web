@@ -31,3 +31,12 @@ test('SDK dependencies are not mistaken for project hardware',()=>{
  const a=analyze({'project.ioc':'Mcu.CPN=STM32G431CBT6','Drivers/Other/README.md':'STM32F070F6P6','Core/Src/main.c':'HAL_Init();'});
  assert.equal(a.target.part,'STM32G431CBT6');assert.equal(a.framework,'STM32 HAL');
 });
+
+test('Arbitrary archive wrapper and conflicting part-line evidence',()=>{
+ const a=analyze({'firmware/src/main.c':'int main(void){}','firmware/README.md':'STM32F070F6P6','firmware/Makefile':'CC=arm-none-eabi-gcc\nCFLAGS=-ffreestanding'});
+ assert.equal(a.target.part,'STM32F070F6P6');assert.equal(a.compiler,'arm-none-eabi-gcc');
+ const b=analyze({'README.md':'STM32F070F6P6','stm32f411.ld':'','main.c':'int main(){}'});
+ assert.equal(b.target,null);assert.equal(b.targetConflict,true);
+ const c=analyze({'Makefile':'CC=arm-none-eabi-gcc','CMakeLists.txt':'project(test)','main.c':'int main(){}'});
+ assert.equal(c.buildConflict,true);assert.equal(c.system,'');
+});
