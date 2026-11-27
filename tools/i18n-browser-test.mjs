@@ -49,6 +49,22 @@ let browser;try{
  assert.equal(await page.evaluate(async id=>{const api=await import('/real-build.js');return new TextDecoder().decode(await api.binary(id));},stored.id),':00000001FF');
  await page.locator('#nav button[data-view=library]').click();
  assert.ok(await page.getByText('local-test',{exact:true}).count());
+ // Simulate a confirmed session in the test page only, without USB writes.
+ await page.waitForFunction(()=>typeof extra!=='undefined'&&extra!==null);
+ await page.evaluate(()=>{
+  fi=5;chip='F1';board='STM32F103C8T6';custom='';targetState='manual';methodSelected='ST-LINK · SWD';renderFamily();
+  methodSelected='ST-LINK · SWD';
+  hw={kind:'stm',route:'swd',pr:{flash:65536},desc:'STM32F103C8T6 · ST-LINK/V2',key:targetKey12(target12())+'|'+methodSelected,io:{close:async()=>{}}};
+  go('device');logHW(fsLocale.errorMessage('DFU: нет дескриптора внутренней Flash'));renderDevice();
+ });
+ for(const [lang,action,status,diagnostic] of [['en','Disconnect device','Connected','internal Flash descriptor missing'],['de','Gerät trennen','Verbunden','Deskriptor des internen Flash fehlt'],['ru','Отключить устройство','Подключено','нет дескриптора внутренней Flash']]){
+  await page.evaluate(lang=>{const el=document.getElementById('fsLanguage');el.value=lang;el.dispatchEvent(new Event('change'));renderDevice();},lang);
+  assert.equal(await page.locator('#connect').textContent(),action);
+  assert.ok((await page.locator('#devStatus').textContent()).startsWith(status));
+  assert.ok((await page.locator('#flashLog').textContent()).includes(diagnostic));
+ }
+ await page.evaluate(()=>{hw=null;renderDevice();});
+ assert.equal(await page.locator('#connect').textContent(),'Подключить устройство');
  assert.deepEqual(errors,[]);
  console.log('RU/EN/DE browser localization smoke passed');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

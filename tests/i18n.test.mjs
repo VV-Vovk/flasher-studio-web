@@ -47,3 +47,10 @@ test('Dynamic inventory translated and user data stays verbatim',()=>{
  assert.match(locale.decode(html,'en'),/data-method="Запись приложения" title="Connect device">Connect device/);
  assert.equal(locale.decode('Проект','de'),'Проект');
 });
+
+test('Driver diagnostics are translated at presentation boundary',()=>{
+ for(const source of ['DFU: нет дескриптора внутренней Flash','STM32: проверка Flash не прошла','ST-LINK в DFU','Не прочитан MAC'])for(const lang of ['en','de'])assert.doesNotMatch(locale.decode(locale.errorMessage(source),lang),/[А-Яа-яЁё]/);
+ assert.equal(locale.decode(locale.errorMessage("Failed to execute 'requestDevice' on 'USB': No device selected."),'de'),'USB-Geräteauswahl abgebrochen oder Gerät nicht verfügbar.');
+ assert.equal(locale.decode(locale.errorMessage('ST-LINK status 0x81'),'de'),'ST-LINK-Status 0x81');
+ assert.equal(locale.decode(locale.errorMessage('SWD read length'),'de'),'Ungültige SWD-Leselänge');
+});
