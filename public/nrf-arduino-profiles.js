@@ -1,6 +1,7 @@
 // Exact board names verified against Zephyr v4.1.0 board.yml.
 // Emulation targets must never be treated as physical SoC identities.
 export const NRF_ZEPHYR=Object.freeze({
+ 'nRF52 DK (nRF52805 emulation)':'nrf52dk/nrf52805',
  'nRF52 DK (nRF52810 emulation)':'nrf52dk/nrf52810',
  'nRF52840 DK (nRF52811 emulation)':'nrf52840dk/nrf52811',
  'nRF52833 DK (nRF52820 emulation)':'nrf52833dk/nrf52820',
@@ -14,6 +15,7 @@ export const NRF_ZEPHYR=Object.freeze({
  'Adafruit Feather nRF52840':'adafruit_feather_nrf52840/nrf52840'
 });
 export const NRF_CHIPS=Object.freeze({
+ 'nRF52 DK (nRF52805 emulation)':'nRF52805',
  'nRF52 DK (nRF52810 emulation)':'nRF52810',
  'nRF52840 DK (nRF52811 emulation)':'nRF52811',
  'nRF52833 DK (nRF52820 emulation)':'nRF52820',
@@ -29,3 +31,8 @@ export const PRO_MINI=Object.freeze({
  'Arduino Pro Mini 3.3V / 8 MHz':'arduino:avr:pro:cpu=8MHzatmega328'
 });
 export function proMiniProfile(name){return Object.hasOwn(PRO_MINI,name)?{baud:57600,signature:'1e950f',limit:30720}:null;}
+
+export const NRF52_PARTS=Object.freeze(['nRF52805','nRF52810','nRF52811','nRF52820','nRF52832','nRF52833','nRF52840']);
+export function nrfPhysicalTarget(name,chip){
+ return NRF52_PARTS.includes(chip)&&(name===chip+' (custom PCB)'||NRF_CHIPS[name]===chip&&!name.includes('emulation'));
+}

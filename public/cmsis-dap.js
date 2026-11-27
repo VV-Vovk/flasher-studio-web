@@ -59,3 +59,13 @@ export async function openDapUsbLink(usb=navigator.usb){
   const link=new DapLink(d,input.endpointNumber,out.endpointNumber,Math.max(64,input.packetSize||64));await link.init();return link;
  }catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}
 }
+
+// Target-independent CMSIS-DAP v1 HID link. No target flash operation here.
+export async function openDapHidLink(hid=navigator.hid){
+ if(!hid?.requestDevice)throw Error('CMSIS-DAP WebHID unavailable');
+ const ds=await hid.requestDevice({filters:[{usagePage:0xff00}]});
+ if(ds.length!==1)throw Error('Select one CMSIS-DAP v1');
+ const d=ds[0],ids=hidReportIds(d);
+ try{await d.open();const link=new DapHidLink(d,...ids);await link.init();if(link.packet!==64)throw Error('DAP HID packet size unsupported');return link;}
+ catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}
+}

@@ -223,3 +223,10 @@ Experimental USB DFU radio start: inspect current installed stack and FUS idle, 
 ## v0.2.50 — Nordic/Arduino начало
 
 Точные цели Zephyr 4.1.0 для nRF52 DK, nRF52833/840 DK, nRF5340 CPUAPP, nRF54L15 CPUAPP, nRF9160 DK, XIAO BLE, Feather; эмуляционные варианты маркированы явно. Компиляция — профиль, не подтверждённая сборка всех SDK. Arduino Pro Mini ATmega328P 5V/16 MHz и 3.3V/8 MHz: Arduino AVR 1.8.6 FQBN, STK500 57600, внешний USB-UART. Nordic nRF52832/840: отдельная экспериментальная CMSIS-DAP v2 диагностика FICR и запись только пустых страниц самостоятельного HEX от 0, без erase/UICR/CTRL-AP/защитных изменений; проверка геометрии, UID, блокировок и readback. Не поддерживает SoftDevice/bootloader-offset, существующие прошивки, HID v1, nRF53/54/91 Flash. Нет аппаратной проверки и новых SDK smoke; Firebase/Builder не изменены.
+
+
+## v0.2.51 — все семь nRF52, экспериментальная перепрошивка
+
+- FICR identity and geometry for 52805/810/811/820/832/833/840, BPROT vs ACL guards, physical custom PCB targets distinct from Zephyr emulation boards. CMSIS-DAP v1 (WebHID desktop) and v2 (WebUSB).
+- Exact affected-page backup, double read, separate approval of erase; byte equality before any write and before each page. Only nonblank differing pages erased via NVMC ERASEPAGE, readback of erased page and final image; no UICR, mass erase, unlock or CTRL-AP operations. CPU halted, manual restart; stale content outside new image remains. Standalone contiguous HEX at zero only. No hardware verification.
+- Nordic PS: https://docs.nordicsemi.com/r/bundle/struct_nrf52/page/struct/nrf52.html ; NVMC, FICR, BPROT/ACL chapters for each part. No new dependencies or SDK binaries. Builder, Firebase unchanged.
