@@ -8287,5 +8287,13 @@ const FS_I18N_MESSAGES = {
   "Clang": {
     "en": "Clang",
     "de": "Clang"
+  },
+  "Пошаговая инструкция · RU / EN / DE": {
+    "en": "Step-by-step setup guide · RU / EN / DE",
+    "de": "Schritt-für-Schritt-Anleitung · RU / EN / DE"
+  },
+  "Flasher Studio · v0.2.69. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.69. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.69. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
   }
 };

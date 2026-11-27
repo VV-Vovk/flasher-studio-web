@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 const root=resolve('public');
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json','.css':'text/css','.wasm':'application/wasm'};
 const server=createServer(async(req,res)=>{try{
- const path=resolve(root,'.'+(new URL(req.url,'http://localhost').pathname==='/'?'/index.html':new URL(req.url,'http://localhost').pathname));
+ const path=resolve(root,'.'+(new URL(req.url,'http://localhost').pathname==='/'?'/index.html':new URL(req.url,'http://localhost').pathname==='/guide/'?'/guide/index.html':new URL(req.url,'http://localhost').pathname));
  if(!path.startsWith(root+'/'))throw Error('invalid path');
  res.setHeader('content-type',types[extname(path)]||'application/octet-stream');res.end(await readFile(path));
 }catch{res.statusCode=404;res.end();}});
@@ -23,6 +23,8 @@ let browser;try{
   await selector.selectOption(lang);
   assert.equal(await page.locator('html').getAttribute('lang'),lang);
   assert.equal(await page.locator('#settings h1').textContent(),label);
+  assert.equal(await page.locator('#setupGuideLink').getAttribute('href'),'/guide/');
+  assert.equal(await page.locator('#setupGuideLink').textContent(),{ru:'Пошаговая инструкция · RU / EN / DE',en:'Step-by-step setup guide · RU / EN / DE',de:'Schritt-für-Schritt-Anleitung · RU / EN / DE'}[lang]);
  }
  await page.evaluate(()=>{const e=document.createElement('span');e.id='i18nUser';fsLocale.setText(e,'Проект');document.body.append(e);const select=document.createElement('select');select.id='i18nValue';select.append(fsLocale.option(fsLocale.mark('Подключить устройство'),'Подключить устройство'));document.body.append(select);});
  await selector.selectOption('de');
@@ -71,4 +73,54 @@ let browser;try{
  assert.match(await page.locator('#configRows').textContent(),/Выбрать микроконтроллер/);
  assert.deepEqual(errors,[]);
  console.log('RU/EN/DE browser localization smoke passed');
+ const origin='http://127.0.0.1:'+server.address().port;
+ for(const viewport of [{width:430,height:900},{width:1280,height:800}]){
+  const guide=await browser.newPage({viewport,acceptDownloads:true,serviceWorkers:'block'});
+  const guideErrors=[];guide.on('pageerror',e=>guideErrors.push(e.message));
+  await guide.goto(origin+'/guide/');
+  assert.equal(await guide.locator('[data-lang]').count(),3);
+  for(const lang of ['ru','en','de']){
+   await guide.locator('[data-lang='+lang+']').click();
+   assert.equal(await guide.locator('html').getAttribute('lang'),lang);
+   assert.equal(await guide.locator('#steps button').count(),9);
+   for(let i=0;i<9;i++){
+    await guide.locator('#steps button').nth(i).click();
+    assert.equal(await guide.locator('.slide h2').count(),1);
+    assert.ok((await guide.locator('.slide h2').textContent()).length>0);
+    assert.equal(await guide.locator('#progress').getAttribute('aria-valuenow'),String(i+1));
+    assert.ok(await guide.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+2),'horizontal overflow '+lang+' '+i);
+   }
+   await guide.locator('#steps button').nth(3).click();
+   const zipButton=guide.locator('[data-download$=".zip"]');
+   const [zipDownload]=await Promise.all([guide.waitForEvent('download'),zipButton.click()]);
+   const zipBytes=await readFile(await zipDownload.path());
+   assert.equal(zipBytes.subarray(0,4).toString('hex'),'504b0304');
+   await guide.locator('#steps button').nth(7).click();
+   await guide.locator('#username').fill('test-user');
+   assert.equal(await guide.locator('#repo').textContent(),'test-user/flasher-studio-builder');
+   await guide.locator('#steps button').nth(8).click();
+   const [testDownload]=await Promise.all([guide.waitForEvent('download'),guide.locator('[data-download="test.ino"]').click()]);
+   assert.match(await readFile(await testDownload.path(),'utf8'),/void setup/);
+   await guide.locator('#language').click();
+  }
+  const [htmlDownload]=await Promise.all([guide.waitForEvent('download'),guide.locator('#saveGuide').click()]);
+  const htmlText=await readFile(await htmlDownload.path(),'utf8');
+  assert.match(htmlText,/data-lang="de"/);assert.match(htmlText,/const payload=/);
+  assert.deepEqual(guideErrors,[]);
+  await guide.close();
+ }
+ // Verify the real service-worker path after the app has installed it.
+ const offline=await browser.newContext({serviceWorkers:'allow'});
+ const op=await offline.newPage();
+ await op.goto(origin);
+ await op.evaluate(async()=>{await navigator.serviceWorker.register('/sw.js');await navigator.serviceWorker.ready;});
+ await op.waitForFunction(()=>!!navigator.serviceWorker.controller);
+ await op.goto(origin+'/guide/');
+ await op.locator('[data-lang=de]').click();
+ await offline.setOffline(true);
+ await op.reload();
+ await op.locator('[data-lang=de]').click();
+ assert.equal(await op.locator('.slide h2').textContent(),'Was du brauchst');
+ await offline.close();
+ console.log('Setup guide: RU/EN/DE, mobile/desktop, local downloads and offline navigation passed');
 }finally{await browser?.close();await new Promise(r=>server.close(r));}

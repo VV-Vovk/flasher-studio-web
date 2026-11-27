@@ -1,8 +1,11 @@
-const CACHE = 'flasher-studio-live-v0.2.68';
+const CACHE = 'flasher-studio-live-v0.2.69';
 const SHELL = ['/', '/index.html', '/i18n.js', '/project-analysis.js', '/i18n-catalog.js', '/manifest.webmanifest', '/favicon.ico', '/icons/icon.svg', '/icons/icon-48.png', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/icon-maskable-512.png', '/real-build.js', '/github-api.js', '/safety.js', '/programmers.js', '/extra-programmers.js', '/universal.js', '/boot-catalog.json', '/stm32-targets.json', '/usb-vendor.js', '/recovery-integration.js', '/recovery-layouts.json', '/native-tools.py', '/usb-uart.js', '/serial-routing.js', '/esp-usb-cdc.js', '/esp-lifecycle.js', '/wifi-recovery.js', '/stm32-rom-profiles.js', '/cmsis-dap.js', '/stm32-swd.js', '/stm32-g-page.js', '/stm32-cl-page.js','/stm32-l0.js','/stm32-h72.js','/stm32-h7ab.js','/stm32-wb.js','/wb-memory.js','/wb-radio.js','/wb-radio-catalog.js','/wb-radio-plan.js','/stm32-wb-dfu.js','/wb-ota.js', '/stm32-sector.js', '/target-support.js', '/nrf-arduino-profiles.js', '/nrf-swd.js', '/tiny-profiles.js', '/micronucleus.js', '/trinket-usb.js', '/catalog-view.js', '/licenses/README.txt', '/licenses/npm-THIRD-PARTY-NOTICES.txt', '/local-esp.js', '/cloud-esp.js', '/serial-monitor.js'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(async c=>{await c.addAll(SHELL);await self.skipWaiting();})));
 self.addEventListener('activate', e => e.waitUntil((async()=>{for(const k of await caches.keys()) if((k.startsWith('flasher-studio-preview-')||k.startsWith('flasher-studio-live-')) && k!==CACHE) await caches.delete(k); await self.clients.claim();})()));
 self.addEventListener('fetch', e=>{const r=e.request,u=new URL(r.url);if(r.method!=='GET'||u.origin!==self.location.origin)return;
+ if(r.mode==='navigate'&&['/guide/','/guide/index.html','/guide'].includes(u.pathname)){
+  e.respondWith((async()=>{const c=await caches.open(CACHE);try{const response=await fetch(r);if(response.ok&&response.headers.get('content-type')?.includes('text/html')){try{await c.put('/guide/',response.clone());}catch{}}return response;}catch{return (await c.match('/guide/'))||Response.error();}})());return;
+ }
  if(r.mode==='navigate'){e.respondWith(fetch(r).catch(async()=> (await caches.match('/index.html')) || Response.error()));return;}
  if(SHELL.includes(u.pathname)) e.respondWith(fetch(r).catch(async()=> (await caches.match(u.pathname)) || Response.error()));
 });
