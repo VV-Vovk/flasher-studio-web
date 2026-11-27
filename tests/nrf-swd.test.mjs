@@ -77,3 +77,26 @@ test('catalogue requires exact physical board and build target, one application 
  assert.throws(()=>nrfCatalogHex(result,meta,name,chip,'different',''),/engine/);
  assert.throws(()=>nrfCatalogHex({...result,m:{...result.m,files:[{file:'a.hex'},{file:'b.hex'}]}},meta,name,chip,target,''),/unambiguous/);
 });
+
+test('offset image requires explicit aligned region and correct vectors',()=>{
+ const bytes=image()[0].data;new DataView(bytes.buffer).setUint32(4,0x2009,true);
+ const ranges=[{address:0x2000,data:bytes}],layout={start:0x2000,limit:0x4000};
+ assert.throws(()=>nrfImage(ranges,p),/selected application address/);
+ assert.equal(nrfImage(ranges,p,layout).span,0x3000);
+ assert.throws(()=>nrfImage(ranges,p,{...layout,limit:0x2000}),/region/);
+ assert.throws(()=>nrfImage(ranges,p,{...layout,start:0x2004}),/aligned/);
+ assert.throws(()=>nrfImage([...ranges,{address:0x4000,data:Uint8Array.of(1)}],p,layout),/out-of-application/);
+});
+test('offset programming preserves existing prefix and rejects bootloader overlap or unverified backup',async()=>{
+ const fresh=()=>{const f=new Fake();f.memory[0]=0x20001000;f.memory[1]=0x101;f.memory[1024]=0x12345678;f.memory[2048]=0;
+ f.regs.set(0x10001014,0x4000);f.regs.set(0x10001018,0xffffffff);
+ const orig=f.writeWord.bind(f);f.writeWord=async(a,w)=>{if(a>=8192&&a<12288){f.calls.push([a,w]);assert.equal(f.regs.get(0x4001e504),1);f.memory[a/4]&=w;}else await orig(a,w);};return f;};
+ const bytes=image()[0].data;new DataView(bytes.buffer).setUint32(4,0x2009,true);
+ const ranges=[{address:0x2000,data:bytes}],layout={start:0x2000,limit:0x4000};
+ let f=fresh(),s=new NrfSwd(f,'nRF52832');const backup=(await s.backup(ranges,()=>true,()=>{},layout)).bytes;
+ const r=await new NrfSwd(f,'nRF52832').program(ranges,()=>true,()=>{},{layout,erase:true,backup,confirmErase:()=>true});
+ assert.equal(r.verified,true);assert.equal(f.memory[0],0x20001000);assert.equal(f.memory[1024],0x12345678);assert.deepEqual(f.calls.filter(([a])=>a===0x4001e508),[[0x4001e508,8192]]);
+ f=fresh();await assert.rejects(new NrfSwd(f,'nRF52832').program(ranges,()=>true,()=>{},{layout}),/verified backup/);
+ f=fresh();f.regs.set(0x10001014,0x2000);await assert.rejects(new NrfSwd(f,'nRF52832').program(ranges,()=>true,()=>{},{layout,erase:true,backup,confirmErase:()=>true}),/overlaps/);
+ f=fresh();f.memory[100]=0;await assert.rejects(new NrfSwd(f,'nRF52832').program(ranges,()=>true,()=>{},{layout,erase:true,backup,confirmErase:()=>true}),/backup differs/);assert.ok(f.calls.every(([a])=>a===0xe000edf0));
+});

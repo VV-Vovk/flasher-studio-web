@@ -235,3 +235,8 @@ Experimental USB DFU radio start: inspect current installed stack and FUS idle, 
 ## v0.2.52 — Nordic SWD: ST-LINK, sparse HEX, каталог
 
 ST-LINK/V2/V2-1 WebUSB memory transport reused without STM32 target commands. Standalone sparse HEX at zero allowed: wholly absent pages never written/erased, gaps inside touched pages filled with FF; backup is full span from zero. Exact physical board/chip and reviewed Zephyr/Arduino target, SHA-256 verified ZIP and one unambiguous application HEX from local catalogue. No UICR, SoftDevice/offset applications, recovery, J-Link, hardware verification, private build or deployment.
+
+
+## v0.2.53 — Nordic nRF52: приложение со смещением
+
+Экспериментальная запись адресного HEX с заданными вручную page-aligned границами приложения из linker script. Требуются существующий MBR/loader с правдоподобными векторами, проверка MBR/UICR bootloader/parameter pointers (0xFF8/FFC и UICR NRFFW[0/1]), точная резервная копия всего диапазона 0..конец образа, включая неизменяемый префикс. Отдельное подтверждение и постраничная запись только в разрешённой области. Сохранение префикса проверяется чтением. Не устанавливает SoftDevice/bootloader, не обновляет bootloader settings/CRC, не гарантирует запуск защищённых приложений или совместимость версии стека. No UICR writes or hardware tests. Nordic nRF5 SDK 17.0.2 Bootloader and S140 MBR docs.

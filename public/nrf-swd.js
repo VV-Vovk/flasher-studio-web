@@ -22,19 +22,21 @@ export function nrfGeometry(chip,info){
  if(!Array.isArray(info.uid)||info.uid.length!==2||!info.uid.every(v=>Number.isInteger(v)&&v>=0&&v<=0xffffffff)||info.uid.every(v=>v===0)||info.uid.every(v=>v===0xffffffff))throw Error('nRF: invalid DEVICEID');
  return Object.freeze({chip,flash:info.flashKiB*1024,ram:info.ramKiB*1024,page:info.page,uid:info.uid.map(v=>v.toString(16).padStart(8,'0')).join('')});
 }
-export function nrfImage(ranges,p){
- if(!Array.isArray(ranges)||!ranges.length||ranges[0].address!==0)throw Error('nRF: standalone image must begin at zero');
- let end=0,used=0;const offsets=new Set();
+export function nrfImage(ranges,p,layout=null){
+ const start=layout?.start??0,limit=layout?.limit??p.flash;
+ if(layout&&(!Number.isInteger(start)||start<p.page||start%p.page||!Number.isInteger(limit)||limit%p.page||limit<=start||limit>p.flash))throw Error('nRF application region must be page aligned and within Flash');
+ if(!Array.isArray(ranges)||!ranges.length||ranges[0].address!==start)throw Error('nRF: image must begin at selected application address');
+ let end=start,used=0;const offsets=new Set();
  for(const r of ranges){
-  if(!(r.data instanceof Uint8Array)||!r.data.length||!Number.isInteger(r.address)||r.address<end||r.address+r.data.length>p.flash)throw Error('nRF: overlapping or out-of-Flash HEX (UICR forbidden)');
+  if(!(r.data instanceof Uint8Array)||!r.data.length||!Number.isInteger(r.address)||r.address<end||r.address+r.data.length>limit)throw Error('nRF: overlapping or out-of-application HEX (UICR forbidden)');
   end=r.address+r.data.length;used+=r.data.length;
   for(let a=Math.floor(r.address/p.page)*p.page;a<end;a+=p.page)offsets.add(a);
  }
  if(ranges[0].data.length<8)throw Error('nRF: vector table missing');
  const b=new Uint8Array(Math.ceil(end/p.page)*p.page).fill(255);for(const r of ranges)b.set(r.data,r.address);
- const v=new DataView(b.buffer),sp=v.getUint32(0,true),pc=v.getUint32(4,true);
- if(sp<=0x20000000||sp>0x20000000+p.ram||sp%8||!(pc&1)||(pc&~1)<8||!ranges.some(r=>(pc&~1)>=r.address&&(pc&~1)+2<=r.address+r.data.length))throw Error('nRF: invalid application vectors');
- return {bytes:b,used,pages:offsets.size,offsets:[...offsets],span:b.length};
+ const v=new DataView(b.buffer),sp=v.getUint32(start,true),pc=v.getUint32(start+4,true);
+ if(sp<=0x20000000||sp>0x20000000+p.ram||sp%8||!(pc&1)||(pc&~1)<start+8||!ranges.some(r=>(pc&~1)>=r.address&&(pc&~1)+2<=r.address+r.data.length))throw Error('nRF: invalid application vectors');
+ return {bytes:b,used,pages:offsets.size,offsets:[...offsets],span:b.length,start,limit};
 }
 export class NrfSwd{
  #used=false;
@@ -48,14 +50,30 @@ export class NrfSwd{
   if(NRF_SWD[this.chip].protection==='bprot'){for(const off of (p.flash>256*1024?[0x600,0x604,0x610,0x614]:[0x600,0x604]))if(await r(0x40000000+off)!==0)throw Error('nRF BPROT active');}
   else {for(let i=0;i<8;i++){const base=N+0x800+i*0x10;if(await r(base)!==0||await r(base+4)!==0||await r(base+8)!==0)throw Error('nRF ACL configured');}}
  }
- async backup(ranges,approve,progress=()=>{}){
+ async checkApplicationRegion(p,plan,layout){
+  if(!layout)return;
+  // Nordic MBR bootloader and parameter-page pointers, stored in MBR or UICR.
+  // Never modify any pointer. Treat any plausible reserved address as a limit;
+  // a conflict or invalid address is a reason to stop, not to guess.
+  const read=a=>this.link.readWord(a);
+  const a=await read(0xff8),b=await read(0xffc),c=await read(0x10001014),d=await read(0x10001018);
+  const pointers=[a,b,c,d].filter(v=>v!==0xffffffff);
+  if(pointers.some(v=>!Number.isInteger(v)||v<p.page||v>=p.flash||v%p.page))throw Error('nRF invalid MBR/UICR reserved pointer');
+  if(a!==0xffffffff&&c!==0xffffffff&&a!==c||b!==0xffffffff&&d!==0xffffffff&&b!==d)throw Error('nRF conflicting MBR/UICR pointers');
+  const limit=Math.min(p.flash,...pointers);
+  if(plan.start<p.page||plan.limit>limit||plan.span>limit)throw Error('nRF application region overlaps bootloader/MBR parameter page');
+  const sp=await read(0),pc=await read(4);
+  if(sp<=0x20000000||sp>0x20000000+p.ram||sp%4||!(pc&1)||(pc&~1)>=plan.start)throw Error('nRF existing MBR/loader vectors not plausible');
+ }
+ async backup(ranges,approve,progress=()=>{},layout=null){
   if(this.#used)throw Error('nRF session already used');this.#used=true;
-  const p=await this.info(),plan=nrfImage(ranges,p);
-  if(typeof approve!=='function'||await approve({...p,pages:plan.pages,bytes:plan.bytes.length})!==true)return {cancelled:true};
+  const p=await this.info(),plan=nrfImage(ranges,p,layout);
+  if(typeof approve!=='function'||await approve({...p,pages:plan.pages,bytes:plan.bytes.length,start:plan.start,limit:plan.limit})!==true)return {cancelled:true};
   if(JSON.stringify(await this.info())!==JSON.stringify(p))throw Error('nRF identity changed');
   await this.link.writeWord(DHCSR,0xa05f0003);await this.link.readWord(DHCSR);
   await this.guard(p);await this.ready();
   if(await this.link.readWord(N+0x504)!==0)throw Error('nRF NVMC is not read-only');
+  await this.checkApplicationRegion(p,plan,layout);
   const bytes=new Uint8Array(plan.span);
   for(let a=0;a<bytes.length;a+=p.page){await this.guard(p);bytes.set(await this.read(a,p.page),a);progress(.5*(a+p.page)/bytes.length);}
   for(let a=0;a<bytes.length;a+=p.page){await this.guard(p);if(!eq(await this.read(a,p.page),bytes.slice(a,a+p.page)))throw Error('nRF backup changed');progress(.5+.5*(a+p.page)/bytes.length);}
@@ -63,15 +81,18 @@ export class NrfSwd{
  }
  async program(ranges,approve,progress=()=>{},options={}){
   if(this.#used)throw Error('nRF programming session already used');this.#used=true;
-  const p=await this.info(),plan=nrfImage(ranges,p);
+  const layout=options.layout?{...options.layout}:null;
+  const p=await this.info(),plan=nrfImage(ranges,p,layout);
   const erase=options.erase===true,saved=options.backup instanceof Uint8Array?options.backup.slice():null;
+  if(layout&&!erase)throw Error('nRF offset application requires verified backup mode');
   if(erase&&(!saved||saved.length!==plan.bytes.length||typeof options.confirmErase!=='function'))throw Error('nRF exact backup of affected pages and separate erase approval required');
-  if(typeof approve!=='function'||await approve({...p,pages:plan.pages,bytes:plan.used,blankOnly:!erase})!==true)return {cancelled:true};
+  if(typeof approve!=='function'||await approve({...p,pages:plan.pages,bytes:plan.used,blankOnly:!erase,start:plan.start,limit:plan.limit})!==true)return {cancelled:true};
   if(JSON.stringify(await this.info())!==JSON.stringify(p))throw Error('nRF identity changed');
   // Halt only after confirmation; clear sticky reset state by reading DHCSR.
   await this.link.writeWord(DHCSR,0xa05f0003);await this.link.readWord(DHCSR);
   await this.guard(p);await this.ready();
   if(await this.link.readWord(N+0x504)!==0)throw Error('nRF NVMC is not read-only');
+  await this.checkApplicationRegion(p,plan,layout);
   // Full preflight before modifying any page; no implicit erase.
   let dirty=0;
   for(let a=0;a<plan.bytes.length;a+=p.page){
@@ -80,11 +101,11 @@ export class NrfSwd{
    if(plan.offsets.includes(a)&&old.some(v=>v!==255)){if(!erase)throw Error('nRF page is not blank; no erase performed');if(!eq(old,plan.bytes.slice(a,a+p.page)))dirty++;}
    progress(.25*(a+p.page)/plan.bytes.length);
   }
-  if(dirty&&await options.confirmErase({...p,dirtyPages:dirty,totalPages:plan.pages,end:plan.span})!==true)return {cancelled:true};
+  if((dirty||layout)&&await options.confirmErase({...p,dirtyPages:dirty,totalPages:plan.pages,start:plan.start,end:plan.span})!==true)return {cancelled:true};
   const v=new DataView(plan.bytes.buffer);
   try{
    for(const a of plan.offsets){
-    await this.guard(p);
+    await this.guard(p);await this.checkApplicationRegion(p,plan,layout);
     const old=await this.read(a,p.page),expected=plan.bytes.slice(a,a+p.page);
     if(erase&&!eq(old,saved.slice(a,a+p.page)))throw Error('nRF backup differs before page write');
     if(eq(old,expected)){progress(.25+.75*(a+p.page)/plan.bytes.length);continue;}
@@ -117,7 +138,7 @@ export async function withNrfSwd(chip,fn,usb=navigator.usb,hid=null,stlink=false
 }
 export function probeNrf(chip,usb=navigator.usb,hid=null,stlink=false){return withNrfSwd(chip,s=>s.info(),usb,hid,stlink);}
 export function programNrfHex(chip,hex,approve,progress,usb=navigator.usb,options={},hid=null,stlink=false){const ranges=parseHex(hex);return withNrfSwd(chip,s=>s.program(ranges,approve,progress,options),usb,hid,stlink);}
-export function backupNrfHex(chip,hex,approve,progress,usb=navigator.usb,hid=null,stlink=false){const ranges=parseHex(hex);return withNrfSwd(chip,s=>s.backup(ranges,approve,progress),usb,hid,stlink);}
+export function backupNrfHex(chip,hex,approve,progress,usb=navigator.usb,hid=null,stlink=false,layout=null){const ranges=parseHex(hex);return withNrfSwd(chip,s=>s.backup(ranges,approve,progress,layout),usb,hid,stlink);}
 
 
 // Only an exact board/chip build and one unambiguous application HEX.
