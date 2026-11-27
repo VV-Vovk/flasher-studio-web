@@ -1,0 +1,670 @@
+{
+  "Таблица FUS недоступна.": {
+    "en": "FUS table unavailable.",
+    "de": "FUS-Tabelle nicht verfügbar."
+  },
+  "BLE OTA характеристики найдены. Модель, границы Flash и версия радиостека не подтверждены. Запись не выполнялась.": {
+    "en": "BLE OTA characteristics found. Model, Flash boundaries and radio stack version are not confirmed. No programming performed.",
+    "de": "BLE-OTA-Characteristics gefunden. Modell, Flash-Grenzen und Funkstack-Version sind nicht bestätigt. Keine Programmierung durchgeführt."
+  },
+  "Выбери HEX до 8 МиБ": {
+    "en": "Select HEX up to 8 MiB",
+    "de": "HEX-Datei bis 8 MiB auswählen"
+  },
+  "байт ·": {
+    "en": "bytes ·",
+    "de": "Bytes ·"
+  },
+  "страниц · SHA-256": {
+    "en": "pages · SHA-256",
+    "de": "Seiten · SHA-256"
+  },
+  "· только экспорт, не запись.": {
+    "en": "· export only, no programming.",
+    "de": "· nur Export, keine Programmierung."
+  },
+  "Выбери обычный CPU1 HEX до 8 МиБ": {
+    "en": "Select standard CPU1 HEX up to 8 MiB",
+    "de": "Normale CPU1-HEX bis 8 MiB auswählen"
+  },
+  "Экспериментальная DFU запись CPU1,": {
+    "en": "Experimental DFU CPU1 programming,",
+    "de": "Experimentelle DFU-CPU1-Programmierung,"
+  },
+  "страниц. Подтверди резервную копию и совместимость радио. Если регистры или FUS недоступны, запись запрещена. Продолжить?": {
+    "en": "pages. Confirm backup and radio compatibility. If registers or FUS are unavailable, programming is prohibited. Continue?",
+    "de": "Seiten. Bestätige Sicherung und Funkkompatibilität. Wenn Register oder FUS nicht verfügbar sind, ist Programmierung gesperrt. Fortfahren?"
+  },
+  "Отменено до записи.": {
+    "en": "Cancelled before programming.",
+    "de": "Vor Programmierung abgebrochen."
+  },
+  "CPU1 Flash и хвост страниц проверены. Выход из DFU вручную. Запуск приложения не проверен.": {
+    "en": "CPU1 Flash and page tails verified. Exit DFU manually. Application execution not verified.",
+    "de": "CPU1-Flash und Seitenenden verifiziert. DFU manuell beenden. Ausführung der Anwendung nicht geprüft."
+  },
+  "Выбери OTA HEX до 8 МиБ": {
+    "en": "Select OTA HEX up to 8 MiB",
+    "de": "OTA-HEX bis 8 MiB auswählen"
+  },
+  "Экспериментальный BLE OTA:": {
+    "en": "Experimental BLE OTA:",
+    "de": "Experimentelles BLE-OTA:"
+  },
+  "страниц. Подтверди, что это твой WB55, установлен совместимый BLE_Ota, SFSA проверена, страницы приложения уже стёрты для этого размера, есть резервная копия. Начать?": {
+    "en": "pages. Confirm that this is your WB55, a compatible BLE_Ota is installed, SFSA has been checked, application pages are already erased for this size, and a backup exists. Start?",
+    "de": "Seiten. Bestätige, dass dies dein WB55 ist, ein kompatibles BLE_Ota installiert ist, SFSA geprüft wurde, die Anwendungsseiten für diese Größe bereits gelöscht sind und eine Sicherung existiert. Starten?"
+  },
+  "Загрузчик подтвердил перезагрузку. Независимый readback и запуск не подтверждены.": {
+    "en": "Bootloader confirmed reboot. Independent readback and execution have not been confirmed.",
+    "de": "Bootloader hat Neustart bestätigt. Unabhängiges Rücklesen und Ausführung sind nicht bestätigt."
+  },
+  "Выбери совместимую OTA-сборку в каталоге": {
+    "en": "Select a compatible OTA build in the catalog",
+    "de": "Wähle einen kompatiblen OTA-Build im Katalog"
+  },
+  "Нужна OTA-сборка": {
+    "en": "An OTA build is required",
+    "de": "Ein OTA-Build ist erforderlich"
+  },
+  "байт · SHA-256": {
+    "en": "bytes · SHA-256",
+    "de": "Bytes · SHA-256"
+  },
+  "· запись не выполнялась. Проверь совместимость загрузчика и границу SFSA.": {
+    "en": "· no programming performed. Verify bootloader compatibility and the SFSA boundary.",
+    "de": "· keine Programmierung durchgeführt. Prüfe Bootloader-Kompatibilität und SFSA-Grenze."
+  },
+  "Выбери официальный BIN ST": {
+    "en": "Select an official ST BIN",
+    "de": "Offizielle ST-BIN auswählen"
+  },
+  "· файл совпадает с Git blob ST v1.24.0 · SHA-256": {
+    "en": "· file matches ST Git blob v1.24.0 · SHA-256",
+    "de": "· Datei stimmt mit ST-Git-Blob v1.24.0 überein · SHA-256"
+  },
+  "· совместимость и установка не подтверждены. Проверь Release Notes.": {
+    "en": "· compatibility and installation unconfirmed. Check Release Notes.",
+    "de": "· Kompatibilität und Installation nicht bestätigt. Release Notes prüfen."
+  },
+  "Сначала проверь предыдущую команду FUS": {
+    "en": "Check the previous FUS command first",
+    "de": "Prüfe zuerst den vorherigen FUS-Befehl"
+  },
+  "Запустить установленный радиостек": {
+    "en": "Start installed radio stack",
+    "de": "Installierten Funkstack starten:"
+  },
+  "? CPU2 может вызвать сброс. Не повторяй команду без проверки.": {
+    "en": "? CPU2 may trigger a reset. Do not repeat the command without verification.",
+    "de": "? CPU2 kann einen Reset auslösen. Befehl nicht ohne Prüfung wiederholen."
+  },
+  "Отменено.": {
+    "en": "Cancelled.",
+    "de": "Abgebrochen."
+  },
+  "Исход запуска неизвестен: не повторяй команду, переподключи и проверь.": {
+    "en": "Startup outcome unknown: do not repeat the command; reconnect and check.",
+    "de": "Startergebnis unbekannt: Befehl nicht wiederholen; erneut verbinden und prüfen."
+  },
+  "Команда запуска принята. Переподключи и проверь состояние.": {
+    "en": "Start command accepted. Reconnect and verify state.",
+    "de": "Startbefehl angenommen. Erneut verbinden und Zustand prüfen."
+  },
+  "Укажи сохраняемую область CPU1 в КиБ, кратную 4": {
+    "en": "Specify CPU1 area to preserve in KiB, a multiple of 4",
+    "de": "Gib den zu erhaltenden CPU1-Bereich in KiB als Vielfaches von 4 an"
+  },
+  "WB: подготовка и чтение Flash ·": {
+    "en": "WB: preparing and reading Flash ·",
+    "de": "WB: Flash wird vorbereitet und ausgelesen ·"
+  },
+  "Подтвердить запись оригинального BIN": {
+    "en": "Confirm programming original BIN",
+    "de": "Programmierung der originalen BIN-Datei bestätigen:"
+  },
+  "в пустую область 0x": {
+    "en": "into empty area 0x",
+    "de": "in leeren Bereich 0x"
+  },
+  "? Убедись, что есть резервная копия и проверены Release Notes ST. Стирания и установки на этом этапе нет.": {
+    "en": "? Make sure a backup exists and ST Release Notes have been checked. No erasing or installation at this stage.",
+    "de": "? Stelle sicher, dass eine Sicherung vorhanden ist und die ST Release Notes geprüft wurden. In diesem Schritt wird weder gelöscht noch installiert."
+  },
+  "BIN записан и проверен чтением. Установка FUS/радиостека НЕ выполнена. Можно продолжить отдельной командой установки с этим же файлом после проверки всей области CPU1.": {
+    "en": "BIN programmed and verified by readback. FUS/radio stack installation has NOT been performed. Continue with a separate installation command for the same file after checking the entire CPU1 area.",
+    "de": "BIN programmiert und durch Rücklesen verifiziert. FUS/Funkstack-Installation wurde NICHT durchgeführt. Nach Prüfung des gesamten CPU1-Bereichs kann ein separater Installationsbefehl für dieselbe Datei ausgeführt werden."
+  },
+  "Переключить CPU2 из радиостека в FUS? Возможен сброс. Сначала останови использование радиосвязи и сохрани данные. Не повторяй запрос без диагностики.": {
+    "en": "Switch CPU2 from radio stack to FUS? A reset may occur. Stop using radio communication and save data first. Do not repeat the request without diagnostics.",
+    "de": "CPU2 vom Funkstack zu FUS wechseln? Ein Reset ist möglich. Funkkommunikation zuerst beenden und Daten sichern. Anfrage nicht ohne Diagnose wiederholen."
+  },
+  "FUS уже idle.": {
+    "en": "FUS is already idle.",
+    "de": "FUS ist bereits im Zustand idle."
+  },
+  "Вход в FUS заблокирован.": {
+    "en": "FUS entry blocked.",
+    "de": "Wechsel zu FUS gesperrt."
+  },
+  "Запрос входа отправлен; переподключи и проверь FUS.": {
+    "en": "Entry request sent; reconnect and check FUS.",
+    "de": "Wechselanfrage gesendet; erneut verbinden und FUS prüfen."
+  },
+  "Укажи сохраняемую область CPU1, положительное число КиБ, кратное 4": {
+    "en": "Specify CPU1 area to preserve as a positive number of KiB, a multiple of 4",
+    "de": "Gib den zu erhaltenden CPU1-Bereich als positive KiB-Zahl und Vielfaches von 4 an"
+  },
+  "Прочитать указанную область CPU1 дважды и сохранить локальный BIN? Проверь, что размер включает все нужные данные. Содержимое не отправляется на сервер.": {
+    "en": "Read the specified CPU1 area twice and save a local BIN? Verify that the size includes all required data. Contents are not sent to a server.",
+    "de": "Angegebenen CPU1-Bereich zweimal auslesen und lokale BIN-Datei speichern? Prüfe, dass die Größe alle benötigten Daten umfasst. Inhalt wird nicht an einen Server gesendet."
+  },
+  "Резервная копия CPU1:": {
+    "en": "CPU1 backup:",
+    "de": "CPU1-Sicherung:"
+  },
+  "· выбери сохранённый BIN в поле резервной копии перед установкой.": {
+    "en": "· select the saved BIN in the backup field before installation.",
+    "de": "· wähle vor der Installation die gespeicherte BIN im Sicherungsfeld."
+  },
+  "Сначала проверь предыдущую команду FUS или локальное сохранение": {
+    "en": "Check the previous FUS command or local storage first",
+    "de": "Prüfe zuerst den vorherigen FUS-Befehl oder die lokale Speicherung"
+  },
+  "Выбери резервную копию CPU1 точного размера": {
+    "en": "Select a CPU1 backup of the exact size",
+    "de": "Wähle eine CPU1-Sicherung mit exakter Größe"
+  },
+  "Прямое обновление: требуется FUS 2.2.0, остановленный старый стек, новая версия и новый формат. Pairing не гарантируется.": {
+    "en": "Direct update: FUS 2.2.0, stopped old stack, new version and new format are required. Pairing is not guaranteed.",
+    "de": "Direktes Update: FUS 2.2.0, gestoppter alter Stack, neue Version und neues Format erforderlich. Pairing wird nicht garantiert."
+  },
+  "Установка требует отсутствия установленного стека.": {
+    "en": "Installation requires that no stack is installed.",
+    "de": "Installation setzt voraus, dass kein Stack installiert ist."
+  },
+  "Содержимое сохраняемой области будет сравнено с резервной копией, остальные страницы должны быть пустыми вне BIN. Возможны аппаратные сбросы. Обеспечь стабильное питание. Продолжить?": {
+    "en": "The preserved area's contents will be compared with the backup; remaining pages outside the BIN must be empty. Hardware resets may occur. Ensure stable power. Continue?",
+    "de": "Der Inhalt des zu erhaltenden Bereichs wird mit der Sicherung verglichen; übrige Seiten außerhalb der BIN müssen leer sein. Hardware-Resets sind möglich. Stabile Stromversorgung sicherstellen. Fortfahren?"
+  },
+  "BIN проверен чтением. Отправить одноразовую команду FUS_FW_UPGRADE для": {
+    "en": "BIN verified by readback. Send the one-time FUS_FW_UPGRADE command for",
+    "de": "BIN durch Rücklesen verifiziert. Einmaligen FUS_FW_UPGRADE-Befehl senden für"
+  },
+  "? Возможны несколько сбросов. Не отключай питание и не повторяй команду.": {
+    "en": "? Multiple resets may occur. Do not disconnect power or repeat the command.",
+    "de": "? Mehrere Resets sind möglich. Stromversorgung nicht trennen und Befehl nicht wiederholen."
+  },
+  "BIN проверен; активация отменена.": {
+    "en": "BIN verified; activation cancelled.",
+    "de": "BIN verifiziert; Aktivierung abgebrochen."
+  },
+  "BIN проверен; активация заблокирована:": {
+    "en": "BIN verified; activation blocked:",
+    "de": "BIN verifiziert; Aktivierung gesperrt:"
+  },
+  "Команда FUS принята; установка ещё НЕ подтверждена.": {
+    "en": "FUS command accepted; installation is NOT yet confirmed.",
+    "de": "FUS-Befehl angenommen; Installation ist noch NICHT bestätigt."
+  },
+  "Исход команды неизвестен (возможен сброс); НЕ повторяй команду.": {
+    "en": "Command outcome unknown (reset possible); do NOT repeat the command.",
+    "de": "Befehlsergebnis unbekannt (Reset möglich); Befehl NICHT wiederholen."
+  },
+  "Установка не подтверждена.": {
+    "en": "Installation unconfirmed.",
+    "de": "Installation nicht bestätigt."
+  },
+  "Выбери официальный BIN нового радиостека или следующего этапа FUS": {
+    "en": "Select the official BIN of the new radio stack or next FUS stage",
+    "de": "Offizielle BIN-Datei des neuen Funkstacks oder der nächsten FUS-Stufe auswählen"
+  },
+  "Перед удалением создай резервную копию CPU1, данных и проверь Release Notes ST. Старый радиостек перестанет работать, пока не установлен новый. Поддержка сохранения pairing/NVM не проверена. Продолжить диагностику?": {
+    "en": "Before deletion, back up CPU1 and data and check ST Release Notes. The old radio stack will stop working until a new one is installed. Preservation of pairing/NVM has not been verified. Continue diagnostics?",
+    "de": "Sichere vor dem Löschen CPU1 und Daten und prüfe ST Release Notes. Der alte Funkstack funktioniert nicht mehr, bis ein neuer installiert ist. Erhalt von Pairing/NVM wurde nicht geprüft. Diagnose fortsetzen?"
+  },
+  "Удалить радиостек версии": {
+    "en": "Delete radio stack version",
+    "de": "Funkstack-Version löschen:"
+  },
+  "на": {
+    "en": "on",
+    "de": "auf"
+  },
+  "? Следующий BIN": {
+    "en": "? The next BIN",
+    "de": "? Die nächste BIN-Datei"
+  },
+  "проверен по каталогу, но его установка будет отдельной операцией. Возможны аппаратные сбросы. Не отключай питание и не повторяй команду.": {
+    "en": "has been verified against the catalog, but installation is a separate operation. Hardware resets may occur. Do not disconnect power or repeat the command.",
+    "de": "wurde mit dem Katalog abgeglichen, die Installation ist jedoch ein separater Vorgang. Hardware-Resets sind möglich. Stromversorgung nicht trennen und Befehl nicht wiederholen."
+  },
+  "Удаление заблокировано:": {
+    "en": "Deletion blocked:",
+    "de": "Löschen gesperrt:"
+  },
+  "Команда удаления принята. Дождись завершения и проверь после переподключения.": {
+    "en": "Delete command accepted. Wait for completion and verify after reconnecting.",
+    "de": "Löschbefehl angenommen. Warte auf den Abschluss und prüfe nach erneutem Verbinden."
+  },
+  "Исход удаления неизвестен. НЕ повторяй команду.": {
+    "en": "Deletion outcome unknown. Do NOT repeat the command.",
+    "de": "Löschergebnis unbekannt. Befehl NICHT wiederholen."
+  },
+  "Удаление не подтверждено.": {
+    "en": "Deletion unconfirmed.",
+    "de": "Löschen nicht bestätigt."
+  },
+  "Нет предыдущей команды FUS": {
+    "en": "No previous FUS command",
+    "de": "Kein vorheriger FUS-Befehl"
+  },
+  "Таблица FUS сообщает, что нужный стек запущен. Функциональный тест BLE/радио ещё необходим.": {
+    "en": "FUS table reports that the required stack is running. Functional BLE/radio testing is still required.",
+    "de": "FUS-Tabelle meldet, dass der benötigte Stack läuft. Funktionstest von BLE/Funk ist weiterhin erforderlich."
+  },
+  "Запуск не подтверждён.": {
+    "en": "Startup unconfirmed.",
+    "de": "Start nicht bestätigt."
+  },
+  "Не повторяй команду без диагностики.": {
+    "en": "Do not repeat the command without diagnostics.",
+    "de": "Befehl nicht ohne Diagnose wiederholen."
+  },
+  "CPU1 не совпадает с резервной копией.": {
+    "en": "CPU1 does not match the backup.",
+    "de": "CPU1 stimmt nicht mit Sicherung überein."
+  },
+  "CPU1 совпадает с резервной копией.": {
+    "en": "CPU1 matches the backup.",
+    "de": "CPU1 stimmt mit Sicherung überein."
+  },
+  "FUS idle подтверждён на том же устройстве.": {
+    "en": "FUS idle confirmed on the same device.",
+    "de": "FUS-Zustand idle auf demselben Gerät bestätigt."
+  },
+  "Вход в FUS не подтверждён. Не повторяй автоматически; проверь после переподключения или в CubeProgrammer.": {
+    "en": "FUS entry unconfirmed. Do not retry automatically; check after reconnecting or in CubeProgrammer.",
+    "de": "Wechsel zu FUS nicht bestätigt. Nicht automatisch wiederholen; nach erneutem Verbinden oder in CubeProgrammer prüfen."
+  },
+  "не получен": {
+    "en": "not obtained",
+    "de": "nicht ermittelt"
+  },
+  "Старый стек отсутствует; FUS idle. Теперь можно отдельно проверить возможность записи нового BIN. Существующие данные CPU1/NVM могут блокировать экспериментальную установку.": {
+    "en": "Old stack absent; FUS idle. You can now separately check whether the new BIN can be programmed. Existing CPU1/NVM data may block experimental installation.",
+    "de": "Alter Stack fehlt; FUS ist idle. Jetzt kann separat geprüft werden, ob die neue BIN programmiert werden kann. Vorhandene CPU1-/NVM-Daten können experimentelle Installation blockieren."
+  },
+  "Удаление не подтверждено. Не повторяй команду; при busy проверь после очередного переподключения, иначе используй CubeProgrammer.": {
+    "en": "Deletion unconfirmed. Do not repeat the command; if busy, check after reconnecting again, otherwise use CubeProgrammer.",
+    "de": "Löschen nicht bestätigt. Befehl nicht wiederholen; bei busy nach erneutem Verbinden nochmals prüfen, sonst CubeProgrammer verwenden."
+  },
+  "Версия из таблицы FUS:": {
+    "en": "Version from FUS table:",
+    "de": "Version aus FUS-Tabelle:"
+  },
+  "не определена": {
+    "en": "not detected",
+    "de": "nicht erkannt"
+  },
+  "· ожидалась": {
+    "en": "· expected",
+    "de": "· erwartet"
+  },
+  "Версия и состояние совпадают; функциональная проверка радиостека ещё необходима.": {
+    "en": "Version and state match; functional radio stack testing is still required.",
+    "de": "Version und Zustand stimmen überein; Funktionstest des Funkstacks weiterhin erforderlich."
+  },
+  "Завершение не подтверждено. Не повторяй команду до диагностики.": {
+    "en": "Completion unconfirmed. Do not repeat the command before diagnostics.",
+    "de": "Abschluss nicht bestätigt. Befehl vor Diagnose nicht wiederholen."
+  },
+  "ВНИМАНИЕ: CPU1 не совпадает или недоступна; сохрани резервную копию, не выполняй повторную установку.": {
+    "en": "WARNING: CPU1 does not match or is unavailable; retain the backup and do not install again.",
+    "de": "WARNUNG: CPU1 stimmt nicht überein oder ist nicht verfügbar; Sicherung aufbewahren und Installation nicht wiederholen."
+  },
+  "Стек установлен, но остановлен. Нажми «Запустить установленный радиостек» для отдельной подтверждённой операции.": {
+    "en": "Stack installed but stopped. Press “Start installed radio stack” for a separate confirmed operation.",
+    "de": "Stack installiert, aber gestoppt. Drücke „Installierten Funkstack starten“ für einen separat bestätigten Vorgang."
+  },
+  "Сними блокировку только после проверки в STM32CubeProgrammer того же устройства: операция завершена, FUS не занят, установленные версии и SFSA известны. Это НЕ повторяет команду и не подтверждает успех. Снять блокировку?": {
+    "en": "Unlock only after checking the same device in STM32CubeProgrammer: operation complete, FUS not busy, installed versions and SFSA known. This does NOT repeat the command or confirm success. Unlock?",
+    "de": "Sperre nur nach Prüfung desselben Geräts in STM32CubeProgrammer aufheben: Vorgang beendet, FUS nicht busy, installierte Versionen und SFSA bekannt. Dies wiederholt den Befehl NICHT und bestätigt keinen Erfolg. Sperre aufheben?"
+  },
+  "Блокировка снята вручную после официальной диагностики.": {
+    "en": "Manually unlocked after official diagnostics.",
+    "de": "Sperre nach offizieller Diagnose manuell aufgehoben."
+  },
+  "Укажи сохраняемую область CPU1": {
+    "en": "Specify the CPU1 area to preserve",
+    "de": "Gib den zu erhaltenden CPU1-Bereich an"
+  },
+  "Подтверди резервную копию CPU1 и данных, точную версию FUS и проверку Release Notes. План не запускает прошивку.": {
+    "en": "Confirm CPU1 and data backup, exact FUS version and Release Notes review. The plan does not initiate programming.",
+    "de": "Bestätige CPU1- und Datensicherung, genaue FUS-Version und Prüfung der Release Notes. Der Plan startet keine Programmierung."
+  },
+  "Модель:": {
+    "en": "Model:",
+    "de": "Modell:"
+  },
+  "Файл:": {
+    "en": "File:",
+    "de": "Datei:"
+  },
+  "Версия:": {
+    "en": "Version:",
+    "de": "Version:"
+  },
+  "Адрес установки ST:": {
+    "en": "ST installation address:",
+    "de": "ST-Installationsadresse:"
+  },
+  "Перед обновлением сохрани CPU1 и данные. Используй официальную процедуру STM32CubeProgrammer, после каждого шага заново считай версию FUS и SFSA. SWD FUS Operator может перезаписать CPU1.\nSHA-256:": {
+    "en": "Back up CPU1 and data before updating. Use the official STM32CubeProgrammer procedure, re-read FUS version and SFSA after every step. SWD FUS Operator may overwrite CPU1.\nSHA-256:",
+    "de": "Sichere CPU1 und Daten vor dem Update. Verwende das offizielle STM32CubeProgrammer-Verfahren und lies FUS-Version und SFSA nach jedem Schritt erneut aus. SWD FUS Operator kann CPU1 überschreiben.\nSHA-256:"
+  },
+  "Nordic nRF52 · SWD (эксперимент)": {
+    "en": "Nordic nRF52 · SWD (experimental)",
+    "de": "Nordic nRF52 · SWD (experimentell)"
+  },
+  "Самостоятельный HEX от 0, разрывы между секциями допустимы. Полностью пропущенные страницы не стираются; неуказанные байты внутри затрагиваемых страниц заполняются FF. Для повторной прошивки сначала сохрани BIN затрагиваемых страниц и выбери его как резервную копию. Стираются только изменяемые непустые страницы, остальные сохраняются. Хвост последней страницы заполняется FF. Старый код вне новых страниц может остаться. Режим приложения со смещением требует точного диапазона из linker script, существующего MBR/загрузчика и резервной копии. Совместимость SoftDevice и настройки загрузчика не проверяются; UICR и APPROTECT не меняются. После операции перезапусти плату вручную.": {
+    "en": "Standalone HEX from address 0; gaps between sections are allowed. Completely skipped pages are not erased; unspecified bytes in affected pages are filled with FF. To reprogram, first save a BIN of affected pages and select it as backup. Only changed nonempty pages are erased; others are preserved. The last page tail is filled with FF. Old code outside the new pages may remain. Offset application mode requires the exact range from the linker script, an existing MBR/bootloader and a backup. SoftDevice compatibility and bootloader settings are not verified; UICR and APPROTECT are not changed. Restart the board manually after the operation.",
+    "de": "Eigenständige HEX-Datei ab Adresse 0; Lücken zwischen Sektionen sind erlaubt. Vollständig übersprungene Seiten werden nicht gelöscht; nicht angegebene Bytes in betroffenen Seiten werden mit FF gefüllt. Speichere zur erneuten Programmierung zuerst eine BIN-Datei der betroffenen Seiten und wähle sie als Sicherung. Nur geänderte nichtleere Seiten werden gelöscht; andere bleiben erhalten. Das Ende der letzten Seite wird mit FF gefüllt. Alter Code außerhalb der neuen Seiten kann erhalten bleiben. Anwendungsmodus mit Offset erfordert den exakten Bereich aus dem Linker-Skript, vorhandenen MBR/Bootloader und eine Sicherung. SoftDevice-Kompatibilität und Bootloader-Einstellungen werden nicht geprüft; UICR und APPROTECT bleiben unverändert. Starte die Platine nach dem Vorgang manuell neu."
+  },
+  "CMSIS-DAP v1 · WebHID (ПК)": {
+    "en": "CMSIS-DAP v1 · WebHID (PC)",
+    "de": "CMSIS-DAP v1 · WebHID (PC)"
+  },
+  "Считать модель и геометрию": {
+    "en": "Read model and geometry",
+    "de": "Modell und Geometrie auslesen"
+  },
+  "Источник HEX": {
+    "en": "HEX source",
+    "de": "HEX-Quelle"
+  },
+  "Локальный HEX": {
+    "en": "Local HEX",
+    "de": "Lokale HEX-Datei"
+  },
+  "Из каталога сборок": {
+    "en": "From build catalog",
+    "de": "Aus dem Build-Katalog"
+  },
+  "HEX нового приложения": {
+    "en": "New application HEX",
+    "de": "HEX-Datei der neuen Anwendung"
+  },
+  "Скачать BIN затрагиваемых страниц": {
+    "en": "Download BIN of affected pages",
+    "de": "BIN der betroffenen Seiten herunterladen"
+  },
+  "Разметка приложения": {
+    "en": "Application memory layout",
+    "de": "Speicheraufteilung der Anwendung"
+  },
+  "Самостоятельное приложение от 0": {
+    "en": "Standalone application from address 0",
+    "de": "Eigenständige Anwendung ab Adresse 0"
+  },
+  "Приложение с существующим MBR / загрузчиком": {
+    "en": "Application with existing MBR / bootloader",
+    "de": "Anwendung mit vorhandenem MBR / Bootloader"
+  },
+  "Начало приложения (hex, например 0x27000)": {
+    "en": "Application start (hex, e.g. 0x27000)",
+    "de": "Anwendungsbeginn (Hex, z. B. 0x27000)"
+  },
+  "Конец разрешённой области (hex, не включительно)": {
+    "en": "End of allowed area (hex, exclusive)",
+    "de": "Ende des erlaubten Bereichs (Hex, exklusiv)"
+  },
+  "Укажи адреса из linker script именно своей платы; не включай области NVM, SoftDevice, загрузчика или settings. Проверяется совпадение резервной копии от 0 до конца образа, включая префикс.": {
+    "en": "Use addresses from the linker script of your specific board; do not include NVM, SoftDevice, bootloader or settings areas. The backup is checked from address 0 to image end, including the prefix.",
+    "de": "Verwende Adressen aus dem Linker-Skript deiner konkreten Platine; NVM-, SoftDevice-, Bootloader- oder Settings-Bereiche nicht einbeziehen. Die Übereinstimmung der Sicherung wird ab Adresse 0 bis zum Abbildende einschließlich Präfix geprüft."
+  },
+  "Резервная копия (BIN от адреса 0)": {
+    "en": "Backup (BIN from address 0)",
+    "de": "Sicherung (BIN ab Adresse 0)"
+  },
+  "Записать HEX в пустые страницы": {
+    "en": "Program HEX into empty pages",
+    "de": "HEX in leere Seiten programmieren"
+  },
+  "Перепрошить с постраничным стиранием": {
+    "en": "Reprogram with page erase",
+    "de": "Mit seitenweisem Löschen neu programmieren"
+  },
+  "Для Nordic используй отдельный блок SWD ниже.": {
+    "en": "For Nordic, use the separate SWD section below.",
+    "de": "Verwende für Nordic den separaten SWD-Bereich unten."
+  },
+  "Укажи точный шестнадцатеричный адрес 0x…": {
+    "en": "Specify exact hexadecimal address 0x…",
+    "de": "Genaue Hexadezimaladresse 0x… angeben"
+  },
+  "· при ошибке после начала записи проверь Flash перед повтором. CPU может остаться остановленным.": {
+    "en": "· if an error occurs after programming starts, check Flash before retrying. CPU may remain halted.",
+    "de": "· bei Fehler nach Programmierbeginn vor Wiederholung Flash prüfen. CPU kann angehalten bleiben."
+  },
+  "Выбери проверенную сборку Nordic": {
+    "en": "Select a verified Nordic build",
+    "de": "Verifizierten Nordic-Build auswählen"
+  },
+  "ZIP SHA-256 не совпадает": {
+    "en": "ZIP SHA-256 mismatch",
+    "de": "ZIP-SHA-256 stimmt nicht überein"
+  },
+  "КиБ · RAM": {
+    "en": "KiB · RAM",
+    "de": "KiB · RAM"
+  },
+  "КиБ · UID": {
+    "en": "KiB · UID",
+    "de": "KiB · UID"
+  },
+  "· только чтение.": {
+    "en": "· read only.",
+    "de": "· nur lesen."
+  },
+  "Остановить CPU и дважды прочитать": {
+    "en": "Halt CPU and read twice",
+    "de": "CPU anhalten und zweimal auslesen:"
+  },
+  "страниц приложения": {
+    "en": "application pages of",
+    "de": "Anwendungsseiten von"
+  },
+  "? Будет сохранено": {
+    "en": "? The backup will contain",
+    "de": "? Gesichert werden"
+  },
+  "байт от адреса 0, включая пропущенные страницы. Стирания нет; это не полная копия Flash/UICR.": {
+    "en": "bytes from address 0, including skipped pages. No erase; this is not a full Flash/UICR backup.",
+    "de": "Bytes ab Adresse 0, einschließlich übersprungener Seiten. Kein Löschen; dies ist keine vollständige Flash-/UICR-Sicherung."
+  },
+  "BIN затрагиваемых страниц сохранён:": {
+    "en": "BIN of affected pages saved:",
+    "de": "BIN der betroffenen Seiten gespeichert:"
+  },
+  "байт. CPU остановлен; выбери BIN для повторной прошивки.": {
+    "en": "bytes. CPU halted; select BIN for reprogramming.",
+    "de": "Bytes. CPU angehalten; wähle BIN zur erneuten Programmierung."
+  },
+  "Выбери BIN резервной копии затрагиваемых страниц": {
+    "en": "Select the backup BIN of affected pages",
+    "de": "Wähle die Sicherungs-BIN der betroffenen Seiten"
+  },
+  "Приложение со смещением требует резервной копии": {
+    "en": "Offset application requires a backup",
+    "de": "Anwendung mit Offset erfordert eine Sicherung"
+  },
+  "Резервная копия совпадает. Стереть": {
+    "en": "Backup matches. Erase",
+    "de": "Sicherung stimmt überein. Lösche"
+  },
+  "изменяемых непустых страниц в области 0x": {
+    "en": "changed nonempty pages in area 0x",
+    "de": "geänderte nichtleere Seiten im Bereich 0x"
+  },
+  "? Данные в этих страницах будут заменены. Это не полное стирание.": {
+    "en": "? Data in those pages will be replaced. This is not a full erase.",
+    "de": "? Daten in diesen Seiten werden ersetzt. Dies ist kein vollständiges Löschen."
+  },
+  "Остановить CPU": {
+    "en": "Halt CPU",
+    "de": "CPU anhalten:"
+  },
+  ", и проверить": {
+    "en": ", and verify",
+    "de": ", und prüfe"
+  },
+  "страниц?": {
+    "en": "pages?",
+    "de": "Seiten?"
+  },
+  "Стирание только после отдельного подтверждения.": {
+    "en": "Erase only after separate confirmation.",
+    "de": "Löschen nur nach separater Bestätigung."
+  },
+  "Стирания нет.": {
+    "en": "No erase.",
+    "de": "Kein Löschen."
+  },
+  "Отменено; CPU может остаться остановленным.": {
+    "en": "Cancelled; CPU may remain halted.",
+    "de": "Abgebrochen; CPU kann angehalten bleiben."
+  },
+  "Записано и проверено чтением:": {
+    "en": "Programmed and verified by readback:",
+    "de": "Programmiert und durch Rücklesen verifiziert:"
+  },
+  "байт · стёрто страниц": {
+    "en": "bytes · pages erased",
+    "de": "Bytes · gelöschte Seiten"
+  },
+  ". Запуск не проверен. Отключи программатор и перезапусти плату вручную.": {
+    "en": ". Execution unverified. Disconnect the programmer and restart the board manually.",
+    "de": ". Ausführung nicht geprüft. Trenne das Programmiergerät und starte die Platine manuell neu."
+  },
+  "Диагностика USB (ESP)": {
+    "en": "USB diagnostics (ESP)",
+    "de": "USB-Diagnose (ESP)"
+  },
+  "Последние 80 событий сохраняются только на этом устройстве. После сбоя можно скачать журнал.": {
+    "en": "The last 80 events are stored only on this device. Download the log after a failure.",
+    "de": "Die letzten 80 Ereignisse werden nur auf diesem Gerät gespeichert. Nach einem Fehler kann das Protokoll heruntergeladen werden."
+  },
+  "Скачать журнал USB": {
+    "en": "Download USB log",
+    "de": "USB-Protokoll herunterladen"
+  },
+  "Очистить журнал": {
+    "en": "Clear log",
+    "de": "Protokoll leeren"
+  },
+  "Нет событий": {
+    "en": "No events",
+    "de": "Keine Ereignisse"
+  },
+  "Лицензии и сторонние компоненты": {
+    "en": "Licenses and third-party components",
+    "de": "Lizenzen und Drittanbieter-Komponenten"
+  },
+  "Тексты лицензий npm": {
+    "en": "npm license texts",
+    "de": "npm-Lizenztexte"
+  },
+  "Прошивка ↗": {
+    "en": "Firmware ↗",
+    "de": "Firmware ↗"
+  },
+  "Загрузчик ↗": {
+    "en": "Bootloader ↗",
+    "de": "Bootloader ↗"
+  },
+  "Заявлено сохранённым загрузчиком; будет проверено при подключении": {
+    "en": "Declared by saved bootloader; verified on connection",
+    "de": "Vom gespeicherten Bootloader angegeben; wird bei Verbindung geprüft"
+  },
+  "Подключись к сети платы FS-… · Recovery v0.2.1 · 192.168.4.1.": {
+    "en": "Connect to board network FS-… · Recovery v0.2.1 · 192.168.4.1.",
+    "de": "Verbinde dich mit dem Platinen-WLAN FS-… · Recovery v0.2.1 · 192.168.4.1."
+  },
+  "Выбрать OTA-сборку из каталога": {
+    "en": "Select OTA build from catalog",
+    "de": "OTA-Build aus Katalog auswählen"
+  },
+  "Для выбранной версии или загрузчика нет совместимой Wi-Fi-разметки": {
+    "en": "No compatible Wi-Fi layout for selected version or bootloader",
+    "de": "Keine kompatible WLAN-Speicheraufteilung für gewählte Version oder Bootloader"
+  },
+  "Выбери совместимую OTA-сборку или сохрани сведения об установленном Recovery": {
+    "en": "Select a compatible OTA build or save information about the installed Recovery",
+    "de": "Wähle einen kompatiblen OTA-Build oder speichere Informationen zum installierten Recovery"
+  },
+  "Подключено другое устройство": {
+    "en": "Different device connected",
+    "de": "Anderes Gerät verbunden"
+  },
+  "Цель или токен изменились": {
+    "en": "Target or token changed",
+    "de": "Ziel oder Token geändert"
+  },
+  "Recovery ответил:": {
+    "en": "Recovery responded:",
+    "de": "Recovery hat geantwortet:"
+  },
+  ". Разметка подтверждена. Запись не выполнялась.": {
+    "en": ". Memory layout confirmed. No programming performed.",
+    "de": ". Speicheraufteilung bestätigt. Keine Programmierung durchgeführt."
+  },
+  "Нет доступных интерфейсов": {
+    "en": "No available interfaces",
+    "de": "Keine verfügbaren Schnittstellen"
+  },
+  "Проверить Wi-Fi": {
+    "en": "Check Wi-Fi",
+    "de": "WLAN prüfen"
+  },
+  "Recovery ответил ·": {
+    "en": "Recovery responded ·",
+    "de": "Recovery hat geantwortet ·"
+  },
+  "Не проверено": {
+    "en": "Not verified",
+    "de": "Nicht verifiziert"
+  },
+  "OTA · приложение": {
+    "en": "OTA · application",
+    "de": "OTA · Anwendung"
+  },
+  "Обновить по Wi-Fi": {
+    "en": "Update via Wi-Fi",
+    "de": "Über WLAN aktualisieren"
+  },
+  "Recovery проверяет SHA-256. Запуск приложения отдельно не подтверждается.": {
+    "en": "Recovery checks SHA-256. Application execution is not independently confirmed.",
+    "de": "Recovery prüft SHA-256. Ausführung der Anwendung wird nicht unabhängig bestätigt."
+  },
+  "STM32WB55 · BLE_Ota. Поиск проверяет сервис, не идентичность чипа.": {
+    "en": "STM32WB55 · BLE_Ota. Discovery verifies the service, not chip identity.",
+    "de": "STM32WB55 · BLE_Ota. Die Suche prüft den Dienst, nicht die Chip-Identität."
+  },
+  "Найти BLE OTA": {
+    "en": "Find BLE OTA",
+    "de": "BLE-OTA suchen"
+  },
+  "nRF52 · экспериментальный SWD. Подключение проверяется для каждой операции.": {
+    "en": "nRF52 · experimental SWD. Connection is checked for each operation.",
+    "de": "nRF52 · experimentelles SWD. Die Verbindung wird bei jedem Vorgang geprüft."
+  },
+  "Проверить программатор": {
+    "en": "Check programmer",
+    "de": "Programmiergerät prüfen"
+  },
+  "Сначала отключи устройство или заверши операцию": {
+    "en": "Disconnect the device or finish the operation first",
+    "de": "Trenne zuerst das Gerät oder beende den Vorgang"
+  }
+}
