@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == 'd67e4a45f24ecbce0a8f5a4b08a59373b4a58a36' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.77 simplify connection empty state'))
+       (github.event_name == 'push' && github.event.before == '6d8787277f59e282bc162a287a835259f78fe3df' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.77 fix connection picker visibility'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

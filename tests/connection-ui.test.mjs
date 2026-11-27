@@ -69,3 +69,8 @@ test('Empty device connection has only the target picker and no generic boot ins
  assert.ok(html.includes("notice.hidden=true;$('wirelessOptions').hidden=true"));
  assert.doesNotMatch(html,/STM32: войди в системный Boot mode; AVR:/);
 });
+
+test('Empty-state visibility is synchronized to the custom transport picker',()=>{
+ const render=html.slice(html.indexOf('const layout77=renderDevice'),html.indexOf('// Initial state: no hardware is connected.'));
+ assert.ok(render.indexOf('syncPickers17();')>render.indexOf("$('transport').hidden=empty"));
+});

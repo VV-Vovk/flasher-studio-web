@@ -68,6 +68,8 @@ let browser;try{
   assert.ok(await page.locator('#deviceTarget74').isVisible());
   assert.ok(await page.locator('#deviceTarget74').evaluate(e=>e.classList.contains('primary')));
   for(const id of ['connect','transport','transportDemo','devStatus','usbAdvanced75'])assert.ok(await page.locator('#'+id).isHidden(),id+' in empty state '+lang);
+  assert.ok(await page.locator('#transport + button.picker17').isHidden(),'custom transport picker in empty state '+lang);
+  assert.ok(await page.locator('label[for="transport"]').isHidden());
  }
  await page.evaluate(()=>{const el=document.getElementById('fsLanguage');el.value='ru';el.dispatchEvent(new Event('change'));});
  await page.locator('#deviceTarget74').click();
@@ -93,7 +95,14 @@ let browser;try{
  assert.match(await page.locator('#devBoard').textContent(),/Arduino Nano/);
  assert.ok(await page.locator('#deviceTarget74').isEnabled());
  assert.ok(await page.locator('#connect').isVisible());
- assert.ok(await page.locator('#transport').isVisible());
+ assert.ok(await page.locator('#transport').isHidden(),'native select remains visually replaced');
+ const transportPicker77=page.locator('#transport + button.picker17');
+ assert.ok(await transportPicker77.isVisible(),'custom transport picker visible after target selection');
+ assert.ok(await transportPicker77.isEnabled());
+ assert.ok(await page.locator('label[for="transport"]').isVisible());
+ await transportPicker77.click();
+ assert.ok(await page.locator('#selectItems17').isVisible());
+ await page.locator('#selectClose17').click();
  assert.ok(await page.locator('#devStatus').isVisible());
  assert.ok(!(await page.locator('#deviceTarget74').evaluate(e=>e.classList.contains('primary'))));
  assert.doesNotMatch(await page.locator('#transportDemo').textContent(),/STM32:|AVR: нужен/);
@@ -125,6 +134,11 @@ let browser;try{
   assert.ok(result.linkWidth<=result.available);assert.equal(result.decoration,'none');
  }
  await page.setViewportSize({width:430,height:900});
+ // Returning to the empty state must hide the same custom control again.
+ await page.evaluate(()=>{clearProject();go('device');renderDevice();});
+ assert.ok(await transportPicker77.isHidden());
+ assert.ok(await page.locator('#connect').isHidden());
+ assert.ok(await page.locator('#deviceTarget74').isVisible());
  // Exercise actual browser IndexedDB, not only the metadata helper.
  await page.waitForFunction(()=>typeof live!=='undefined'&&live!==null);
  const stored=await page.evaluate(async()=>{

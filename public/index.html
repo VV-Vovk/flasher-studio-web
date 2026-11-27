@@ -1722,6 +1722,8 @@ const layout77=renderDevice;renderDevice=function(){
   }
   notice.hidden=!fsLocale.rawText(notice).trim();
  }
+ // The native select is replaced by a custom button; synchronize its final state.
+ syncPickers17();
 };
 // Initial state: no hardware is connected.
 syncDeveloper();clearProject();go('build');syncPickers17();
