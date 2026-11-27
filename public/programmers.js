@@ -1,3 +1,4 @@
+import {proMiniProfile} from './nrf-arduino-profiles.js';
 import {stmUartProfile} from './stm32-rom-profiles.js';
 import {espLifecycle,ESP_CLOSE_WARNING} from './esp-lifecycle.js';
 export {espLifecycle,ESP_CLOSE_WARNING};
@@ -37,7 +38,7 @@ export class Stk500{
 }
 // Deliberately narrow tested-by-protocol allowlist. PID is a family/density identifier, not a unique part number.
 export const STM32_UART=Object.freeze({STM32F103C8T6:{pid:0x410,flash:65536,uid:0x1ffff7e8,sizeReg:0x1ffff7e0,ram:20480},STM32F103CBT6:{pid:0x410,flash:131072,uid:0x1ffff7e8,sizeReg:0x1ffff7e0,ram:20480},STM32F030F4P6:{pid:0x444,flash:16384,uid:0x1ffff7ac,sizeReg:0x1ffff7cc,ram:4096},STM32F030K6T6:{pid:0x444,flash:32768,uid:0x1ffff7ac,sizeReg:0x1ffff7cc,ram:4096},STM32F030C8T6:{pid:0x440,flash:65536,uid:0x1ffff7ac,sizeReg:0x1ffff7cc,ram:8192}});
-export function avrProfile(board){if(/Uno R3|Arduino Uno$/.test(board))return {baud:115200,signature:'1e950f',limit:32256};if(/Nano.*old|Nano.*стар/i.test(board))return {baud:57600,signature:'1e950f',limit:30720};if(/Arduino Nano/.test(board)&&!/Every|33/.test(board))return {baud:115200,signature:'1e950f',limit:30720};return null;}
+export function avrProfile(board){const pro=proMiniProfile(board);if(pro)return pro;if(/Uno R3|Arduino Uno$/.test(board))return {baud:115200,signature:'1e950f',limit:32256};if(/Nano.*old|Nano.*стар/i.test(board))return {baud:57600,signature:'1e950f',limit:30720};if(/Arduino Nano/.test(board)&&!/Every|33/.test(board))return {baud:115200,signature:'1e950f',limit:30720};return null;}
 export function validateStmVector(image,profile){if(!(image instanceof Uint8Array)||image.length<8)throw Error('Нет таблицы векторов');const v=new DataView(image.buffer,image.byteOffset,image.byteLength),sp=v.getUint32(0,true),pc=v.getUint32(4,true);const main=sp>0x20000000&&sp<=0x20000000+profile.ram,ccm=profile.ccm>0&&sp>0x10000000&&sp<=0x10000000+profile.ccm,stack=profile.stackRegions?profile.stackRegions.some(([start,end])=>sp>start&&sp<=end):main||ccm;if(!stack||sp%(profile.stackAlign||4)||!(pc&1)||(pc&~1)<0x08000000||(pc&~1)>=0x08000000+image.length)throw Error('Таблица векторов не соответствует обычной STM32 Flash');}
 export function stmFirmwareImage(ranges,profile){const image=denseImage(ranges,0x08000000,0x08000000+profile.flash,profile.controller==='l0-pecr'?0:255);validateStmVector(image,profile);return image;}
 export async function stmSessionIdentity(rom,profile){if(typeof rom.identify==='function')return rom.identify();const uid=await rom.read(profile.uid,12);if(uid.length!==12||uid.every(x=>x===0)||uid.every(x=>x===255))throw Error('UID не прочитан');return 'stm32-'+Array.from(uid,x=>x.toString(16).padStart(2,'0')).join('');}

@@ -41,3 +41,31 @@ export class DapHidLink extends DapLink {
 }
 export function hidReportIds(d){if(!/CMSIS.DAP|DAPLink/i.test(d.productName||''))throw Error('Требуется CMSIS-DAP HID / DAPLink');let candidates=[];function size(r){return (r.items||[]).reduce((n,i)=>n+i.reportSize*i.reportCount,0);}for(let c of d.collections||[]){if(c.usagePage!==0xff00)continue;let i=(c.inputReports||[]).filter(r=>size(r)===512),o=(c.outputReports||[]).filter(r=>size(r)===512);if(i.length===1&&o.length===1)candidates.push([i[0].reportId,o[0].reportId]);}if(candidates.length!==1)throw Error('CMSIS-DAP HID: требуется однозначная пара 64-байтных отчётов');return candidates[0];}
 export async function openCmsisDapHid(name,hid=navigator.hid){let pr=swdProfile(name);if(!pr||!hid)throw Error('CMSIS-DAP v1: неподдерживаемый STM32 или WebHID недоступен');let ds=await hid.requestDevice({filters:[{usagePage:0xff00}]});if(ds.length!==1)throw Error('Выбери один CMSIS-DAP v1');let d=ds[0],ids=hidReportIds(d);try{await d.open();let link=new DapHidLink(d,...ids),s=new DapStm32(link,pr);s.id=await s.init();if(link.packet!==64)throw Error('CMSIS-DAP HID packet size unsupported');return s;}catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}}
+
+// Shared transport for non-STM32 devices. No target-specific Flash accesses.
+export async function openDapUsbLink(usb=navigator.usb){
+ if(!usb?.requestDevice)throw Error('CMSIS-DAP WebUSB unavailable');
+ const d=await usb.requestDevice({filters:[{classCode:255}]});
+ try{
+  await d.open();if(!d.configuration)await d.selectConfiguration(1);
+  const choices=[];
+  for(const i of d.configuration.interfaces)for(const a of i.alternates){
+   if(a.interfaceClass!==255||!/CMSIS.DAP/i.test(a.interfaceName||''))continue;
+   const input=a.endpoints.filter(e=>e.type==='bulk'&&e.direction==='in'),out=a.endpoints.filter(e=>e.type==='bulk'&&e.direction==='out');
+   if(input.length===1&&out.length===1)choices.push({i,a,input:input[0],out:out[0]});
+  }
+  if(choices.length!==1)throw Error('CMSIS-DAP v2 requires one bulk interface');
+  const {i,a,input,out}=choices[0];await d.claimInterface(i.interfaceNumber);await d.selectAlternateInterface(i.interfaceNumber,a.alternateSetting);
+  const link=new DapLink(d,input.endpointNumber,out.endpointNumber,Math.max(64,input.packetSize||64));await link.init();return link;
+ }catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}
+}
+
+// Target-independent CMSIS-DAP v1 HID link. No target flash operation here.
+export async function openDapHidLink(hid=navigator.hid){
+ if(!hid?.requestDevice)throw Error('CMSIS-DAP WebHID unavailable');
+ const ds=await hid.requestDevice({filters:[{usagePage:0xff00}]});
+ if(ds.length!==1)throw Error('Select one CMSIS-DAP v1');
+ const d=ds[0],ids=hidReportIds(d);
+ try{await d.open();const link=new DapHidLink(d,...ids);await link.init();if(link.packet!==64)throw Error('DAP HID packet size unsupported');return link;}
+ catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}
+}

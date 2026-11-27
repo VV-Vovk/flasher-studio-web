@@ -1,3 +1,4 @@
+import {tinyBuildFqbn} from './tiny-profiles.js';
 import {GithubBuilder,normalizeRepo} from './github-api.js';
 import {sha256Hex} from './safety.js';
 import {wbCpu1CompileTarget,wbProfile} from './stm32-wb.js';
@@ -5,6 +6,7 @@ import {parseHex} from './programmers.js';
 import {auditWbElf} from './wb-memory.js';
 import {checkWbOtaImage,wbOtaCandidate,WB_OTA_BASE} from './wb-ota.js';
 export const WB_BUILDER_REF='develop/wb-cpu1';
+export const TINY_BUILDER_REF='develop/tiny-isp';
 export function builderRefForRequest(r){
  const n=String(r?.nativeTarget||'').trim().toUpperCase();
  let ref='main';
@@ -12,10 +14,11 @@ export function builderRefForRequest(r){
   if(!wbCpu1CompileTarget(n)||!(r.engine==='stm32-bare'&&['c','cpp','zip'].includes(r.ext)||r.engine==='stm32cubeide-gcc'&&r.ext==='zip'))throw Error('STM32WB: CPU1 C/C++/ZIP или полный CubeIDE GNU ZIP');
   ref=WB_BUILDER_REF;
  }
+ if((/^(?:MicroCore|TinyCore|digistump):avr:/.test(r?.fqbn||'')||/^adafruit:avr:(?:trinket3|trinket5|gemma)$/.test(r?.fqbn||''))){if(ref!=='main'||r.engine!=='arduino'||!tinyBuildFqbn(r.fqbn))throw Error('ATtiny unsupported build profile');ref=TINY_BUILDER_REF;}
  if(r?.builderRef!==undefined&&r.builderRef!==ref)throw Error('Builder branch mismatch');
  return ref;
 }
-function checkedRef(ref){if(!['main',WB_BUILDER_REF].includes(ref))throw Error('Builder branch unsupported');return ref;}
+function checkedRef(ref){if(!['main',WB_BUILDER_REF,TINY_BUILDER_REF].includes(ref))throw Error('Builder branch unsupported');return ref;}
 export function checkWbBuildMetadata(build,r){
  if(builderRefForRequest(r)!==WB_BUILDER_REF)return;
  const p=wbProfile(r.nativeTarget),m=build?.memory;
@@ -42,7 +45,7 @@ export class UniversalBuilder extends GithubBuilder{
   const branch=builderRefForRequest(r),encoded=encodeURIComponent(branch);
   if(!/^[a-f0-9]{32}$/.test(r.requestId)||!['ino','zip','c','cpp','ioc'].includes(r.ext))throw Error('Request ID / format');
   await this.requirePrivate();
-  if(branch===WB_BUILDER_REF)await this.api('/git/ref/heads/'+branch);
+  if(branch===WB_BUILDER_REF||branch===TINY_BUILDER_REF)await this.api('/git/ref/heads/'+branch);
   if(file.size<1||file.size>15*1024*1024)throw Error('Исходники: максимум 15 МиБ');
   const bytes=new Uint8Array(await file.arrayBuffer());let s='';for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode(...bytes.subarray(i,i+8192));
   const blob=await this.api('/git/blobs','POST',{content:btoa(s),encoding:'base64'});

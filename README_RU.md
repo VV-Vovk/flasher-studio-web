@@ -218,3 +218,50 @@ Experimental USB DFU radio start: inspect current installed stack and FUS idle, 
 - Совпадение версии остановленного радиостека не считается подтверждением запуска. Возможен отдельный переход к START_WS с сохранением UID, версии, типа стека и хеша CPU1.
 - После сбросов проверяется таблица состояния, тот же UID, версия, тип стека и сохранённая область CPU1. Не отправляется дополнительный GET_STATE после запуска; метаданные не заменяют реальный радиотест.
 - Операция START_WS записывается локально до команды и остаётся незавершённой при неизвестном результате; автоматического повтора нет.
+
+
+## v0.2.50 — Nordic/Arduino начало
+
+Точные цели Zephyr 4.1.0 для nRF52 DK, nRF52833/840 DK, nRF5340 CPUAPP, nRF54L15 CPUAPP, nRF9160 DK, XIAO BLE, Feather; эмуляционные варианты маркированы явно. Компиляция — профиль, не подтверждённая сборка всех SDK. Arduino Pro Mini ATmega328P 5V/16 MHz и 3.3V/8 MHz: Arduino AVR 1.8.6 FQBN, STK500 57600, внешний USB-UART. Nordic nRF52832/840: отдельная экспериментальная CMSIS-DAP v2 диагностика FICR и запись только пустых страниц самостоятельного HEX от 0, без erase/UICR/CTRL-AP/защитных изменений; проверка геометрии, UID, блокировок и readback. Не поддерживает SoftDevice/bootloader-offset, существующие прошивки, HID v1, nRF53/54/91 Flash. Нет аппаратной проверки и новых SDK smoke; Firebase/Builder не изменены.
+
+
+## v0.2.51 — все семь nRF52, экспериментальная перепрошивка
+
+- FICR identity and geometry for 52805/810/811/820/832/833/840, BPROT vs ACL guards, physical custom PCB targets distinct from Zephyr emulation boards. CMSIS-DAP v1 (WebHID desktop) and v2 (WebUSB).
+- Exact affected-page backup, double read, separate approval of erase; byte equality before any write and before each page. Only nonblank differing pages erased via NVMC ERASEPAGE, readback of erased page and final image; no UICR, mass erase, unlock or CTRL-AP operations. CPU halted, manual restart; stale content outside new image remains. Standalone contiguous HEX at zero only. No hardware verification.
+- Nordic PS: https://docs.nordicsemi.com/r/bundle/struct_nrf52/page/struct/nrf52.html ; NVMC, FICR, BPROT/ACL chapters for each part. No new dependencies or SDK binaries. Builder, Firebase unchanged.
+
+
+## v0.2.52 — Nordic SWD: ST-LINK, sparse HEX, каталог
+
+ST-LINK/V2/V2-1 WebUSB memory transport reused without STM32 target commands. Standalone sparse HEX at zero allowed: wholly absent pages never written/erased, gaps inside touched pages filled with FF; backup is full span from zero. Exact physical board/chip and reviewed Zephyr/Arduino target, SHA-256 verified ZIP and one unambiguous application HEX from local catalogue. No UICR, SoftDevice/offset applications, recovery, J-Link, hardware verification, private build or deployment.
+
+
+## v0.2.53 — Nordic nRF52: приложение со смещением
+
+Экспериментальная запись адресного HEX с заданными вручную page-aligned границами приложения из linker script. Требуются существующий MBR/loader с правдоподобными векторами, проверка MBR/UICR bootloader/parameter pointers (0xFF8/FFC и UICR NRFFW[0/1]), точная резервная копия всего диапазона 0..конец образа, включая неизменяемый префикс. Отдельное подтверждение и постраничная запись только в разрешённой области. Сохранение префикса проверяется чтением. Не устанавливает SoftDevice/bootloader, не обновляет bootloader settings/CRC, не гарантирует запуск защищённых приложений или совместимость версии стека. No UICR writes or hardware tests. Nordic nRF5 SDK 17.0.2 Bootloader and S140 MBR docs.
+
+
+## v0.2.54 — ATtiny ISP preview
+
+Nine classic ATtiny (13/25/45/85/24/44/84/2313/4313), 18 clock profiles and Digispark ATtiny85 ISP (no bootloader). MicroCore 2.5.2 / TinyCore 0.8.0 via private Builder branch develop/tiny-isp. USBasp exact signature and geometry, reject locked chips, explicit full chip erase, entire Flash erase and final readback. EEPROM may erase; no fuse/lock writes. Clock profile is compile-only: existing fuse/clock must match. Digispark USB Micronucleus, UPDI, Arduino as ISP and high-voltage rescue not implemented. No physical or SDK smoke tests, no live deployment.
+
+
+## v0.2.55 — классические ATtiny через ArduinoISP
+
+22 модельных профиля (13/25/45/85/24/44/84/2313/4313/87/167/48/88/441/841/261/461/861/1634/828/43U/26), 44 clock choices plus Digispark ISP. Verified signature/Flash/page from avrdude v8.0 src/avrdude.conf.in and FQBN from TinyCore v0.8.0/MicroCore v2.5.2. ArduinoISP sketch at 19200 8N1; explicit AVR ISP sign-on, target page/size parameter, signature, full erase and readback, no fuse writes. 16-byte pages use bounded SPI load/commit because stock ArduinoISP page mask handles 32/64/128/256 only. No high voltage, Micronucleus, UPDI, hardware or SDK compile smoke tests. ArduinoISP: load sketch first, suppress programmer autoreset, match voltage, target RESET D10, MOSI/MISO/SCK via SPI. Firmware clock profile does not change fuses. Disconnect/release RESET manually if transport fails.
+
+
+## v0.2.56 — Digispark / Digispark Pro USB preview
+
+Exact Digistump AVR 1.7.5 profiles (private Builder develop/tiny-isp), separate from destructive ISP target. Experimental Micronucleus 2.x WebUSB (16d0:0753) with live signature/page/usable length, RJMP/JMP reset patch, bounded application erase/write only, no automatic retry/start. Protocol has no readback; UI reports transfer only, never verified. Legacy v1.x lacks signature and is refused. No USB bootloader installation, hardware or real SDK smoke builds; MH-Tiny88, Trinket, Gemma and legacy v1 pending. References: micronucleus v2.6 library and firmware, ArminJo DigistumpArduino v1.7.5 boards.txt.
+
+
+## v0.2.57 — каталог по семействам
+
+Группировка проектов, загрузчиков и физических устройств по семейству и чипу из существующих метаданных. Пустые семейства скрыты, один чип не требует дополнительного раскрытия, поиск открывает совпавшие группы; общий список доступен одним переключателем. Многоплатный проект разбивается только в представлении; идентификаторы, бинарные файлы и связи сохраняются. Устройства ведут к точным сохранённым версиям прошивки и загрузчика. Настройки раскрытия/режима локальные; неопределённые цели не угадываются. No hardware/build/deployment changes.
+
+
+## v0.2.58 — ATtiny USB boards preview
+
+MH-Tiny88 (TinyCore x8, 16 MHz external clock, Micronucleus), legacy Digispark 1.x only known 6012-byte geometry with explicit no-signature warning, Adafruit Trinket 3.3/5 V and Gemma ATtiny85 (Adafruit AVR 1.4.15, conservative 5248-byte aligned application limit). Trinket requires original descriptor 1781:0c9f Adafruit/Trinket 1.05; no generic USBtinyISP erase, no fuse writes, no physical first-page commit claim. USB writes experimental, real boards and new SDK compilation not yet tested. TPI/UPDI remain separate work. References: Arduino board indexes, TinyCore v0.8.0 boards.txt, Micronucleus v2.6 host protocol, Adafruit-Trinket-Gemma-Bootloader public boot.c/usbconfig.h/Makefile.

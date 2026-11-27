@@ -90,3 +90,19 @@ test('Supported templates offer exact-code entry but are never selectable as wil
  assert.equal(stmTemplateCapability('STM32F030C6',catalog),null);
  assert.equal(stmTemplateCapability('STM32F334K4Tx',catalog).state,'both');
 });
+
+import {nrfZephyrTarget,PRO_MINI} from '../public/nrf-arduino-profiles.js';
+test('exact Nordic Zephyr profiles and Arduino Pro Mini clock variants',()=>{
+ for(const [name,chip] of [['nRF52 DK','nRF52832'],['nRF52833 DK','nRF52833'],['nRF52840 DK','nRF52840'],['nRF5340 DK','nRF5340'],['nRF54L15 DK','nRF54'],['nRF9160 DK','nRF91'],['nRF52 DK (nRF52810 emulation)','nRF52810']]){
+  assert.ok(nrfZephyrTarget(name,chip));assert.equal(targetCapability({fi:6,name,chip}).state,['nRF52832','nRF52833','nRF52840'].includes(chip)?'both':'compile');
+ }
+ assert.equal(nrfZephyrTarget('nRF52 DK','nRF52840'),'');assert.equal(targetCapability({fi:6,name:'unknown',chip:'nRF52840'}).state,'none');
+ for(const name of Object.keys(PRO_MINI))assert.equal(targetCapability({fi:2,name,arduino:true}).state,'both');
+ assert.equal(targetCapability({fi:2,name:'Arduino Pro Mini'}).state,'none');
+});
+
+test('Nordic raw physical profiles are flash-only, emulation never enables SWD',()=>{
+ for(const chip of ['nRF52805','nRF52810','nRF52811','nRF52820','nRF52832','nRF52833','nRF52840']){const c=targetCapability({fi:6,name:chip+' (custom PCB)',chip});assert.equal(c.state,'flash');assert.equal(c.nrfSwd,true);}
+ assert.equal(targetCapability({fi:6,name:'nRF52 DK (nRF52805 emulation)',chip:'nRF52805'}).state,'compile');
+ assert.equal(targetCapability({fi:6,name:'nRF52840 (custom PCB)',chip:'nRF52832'}).state,'none');
+});
