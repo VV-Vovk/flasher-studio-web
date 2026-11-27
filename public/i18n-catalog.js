@@ -8439,5 +8439,13 @@ const FS_I18N_MESSAGES = {
   "Тактовая частота": {
     "en": "Clock frequency",
     "de": "Taktfrequenz"
+  },
+  "Flasher Studio · v0.2.74. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.74. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.74. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Изменить целевую плату": {
+    "en": "Change target board",
+    "de": "Zielplatine ändern"
   }
 };

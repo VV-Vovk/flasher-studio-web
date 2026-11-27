@@ -39,3 +39,11 @@ test('Manual AVR record IDs are separate from physical IDs and never auto-select
  assert.ok(html.includes("d.manual===true&&targetKey12(d.target)===targetKey12(target)"));
  assert.ok(html.includes("s.avr.readApplication(size,s.pr.limit)"));
 });
+
+test('Device target picker stays available after selecting a target and shares the existing modal',()=>{
+ assert.match(html,/id="deviceTarget74"/);
+ assert.ok(html.includes("targetState==='none'?'Выбрать целевую плату':'Изменить целевую плату'"));
+ assert.ok(html.includes('b.disabled=!!hw||hwBusy||liveBusy||!!timer||analysisBusy'));
+ assert.ok(html.includes("if(hw||hwBusy||liveBusy||timer||analysisBusy)return;\n $('pickTarget').click();"));
+ assert.ok(html.includes("if(!$('targetDialog').open)renderDevice()"));
+});

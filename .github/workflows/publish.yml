@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == 'e15199b565891c5e5b81d7c6d6939bc915a73ef6' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.73 named AVR boards and device information'))
+       (github.event_name == 'push' && github.event.before == '67ca530f1dacb680667fc5c6a913ebda58645f05' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.74 persistent device target picker'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

@@ -59,6 +59,26 @@ let browser;try{
  assert.equal(await page.locator('#settings h1').textContent(),'Einstellungen');
  await page.locator('#nav button[data-view=device]').click();
  assert.equal(await page.locator('html').getAttribute('lang'),'de');
+ // Target picker must work directly from Device before and after the first selection.
+ await page.waitForFunction(()=>typeof support34!=='undefined'&&support34!==null);
+ await page.evaluate(()=>{const el=document.getElementById('fsLanguage');el.value='ru';el.dispatchEvent(new Event('change'));});
+ await page.locator('#deviceTarget74').click();
+ assert.ok(await page.locator('#targetDialog').isVisible());
+ await page.locator('#families [data-i="2"]').click();
+ await page.locator('#chips [data-chip="ATmega328P"]').click();
+ await page.locator('#boardList [data-board="Arduino Uno R3"]').click();
+ await page.locator('#confirmTarget').click();
+ assert.equal(await page.locator('#deviceTargetLabel74').textContent(),'Изменить целевую плату');
+ assert.match(await page.locator('#devBoard').textContent(),/Arduino Uno R3/);
+ await page.locator('#deviceTarget74').click();
+ await page.locator('#boardList [data-board="Arduino Nano"]').click();
+ await page.locator('#closeTarget').click();
+ await page.waitForFunction(()=>board==='Arduino Uno R3'&&!document.getElementById('targetDialog').open);
+ await page.locator('#deviceTarget74').click();
+ await page.locator('#boardList [data-board="Arduino Nano"]').click();
+ await page.locator('#confirmTarget').click();
+ assert.match(await page.locator('#devBoard').textContent(),/Arduino Nano/);
+ assert.ok(await page.locator('#deviceTarget74').isEnabled());
  // Exercise actual browser IndexedDB, not only the metadata helper.
  await page.waitForFunction(()=>typeof live!=='undefined'&&live!==null);
  const stored=await page.evaluate(async()=>{
@@ -83,11 +103,13 @@ let browser;try{
  for(const [lang,action,status,diagnostic] of [['en','Disconnect device','Connected','internal Flash descriptor missing'],['de','Gerät trennen','Verbunden','Deskriptor des internen Flash fehlt'],['ru','Отключить устройство','Подключено','нет дескриптора внутренней Flash']]){
   await page.evaluate(lang=>{const el=document.getElementById('fsLanguage');el.value=lang;el.dispatchEvent(new Event('change'));renderDevice();},lang);
   assert.equal(await page.locator('#connect').textContent(),action);
+  assert.ok(await page.locator('#deviceTarget74').isDisabled());
   assert.ok((await page.locator('#devStatus').textContent()).startsWith(status));
   assert.ok((await page.locator('#flashLog').textContent()).includes(diagnostic));
  }
  await page.evaluate(()=>{hw=null;renderDevice();});
  assert.equal(await page.locator('#connect').textContent(),'Подключить устройство');
+ assert.ok(await page.locator('#deviceTarget74').isEnabled());
  await page.evaluate(async()=>{await choose(new File(['void setup(){} void loop(){}'],'Blink.ino'));});
  assert.equal(await page.locator('#detFramework').textContent(),'Arduino');
  assert.equal(await page.locator('#detSystem').textContent(),'Arduino CLI');
