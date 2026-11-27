@@ -1,5 +1,8 @@
 name: Publish Flasher Studio to Firebase
 on:
+  # One-time authorized release; all later releases still require manual confirmation.
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       confirm_live:
@@ -14,7 +17,11 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
-    if: github.ref == 'refs/heads/main' && inputs.confirm_live
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
+       (github.event_name == 'push' && github.event.before == 'def3fcf3d64b7c5ec1b73359d5cfd7723c2eaf31' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.58 to Firebase (authorized one-time publish)'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

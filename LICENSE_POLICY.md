@@ -30,3 +30,5 @@
 - WB1x RM0473/AN5811 and WB55 640 KiB geometry from factual DFP metadata; no third-party Flash implementation or FUS/wireless binaries included.
 
 - WB factory high FUS mapping and flash checks based on factual AN5185 Rev 15 and RM0434 register definitions; no FUS implementation or binaries added.
+
+- v0.2.41–0.2.58: new browser drivers use factual STM32WB, Nordic, AVR ISP and USB bootloader protocol definitions. References include AN5185 Rev 15, Nordic product specifications, AVRDUDE v8.0 part geometry, ArduinoISP protocol, Micronucleus v2.6 host protocol (MIT), Adafruit Trinket/Gemma protocol and board definitions, TinyCore/MicroCore board definitions. No upstream firmware source or new vendor firmware binaries are bundled. New board cores are downloaded for private builds only; no new public npm dependency versions or user artifacts. Existing ESP stub and Recovery restrictions remain.

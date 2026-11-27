@@ -1,13 +1,14 @@
 // CPU1 application Flash only. Independent implementation from RM0434 and AN5451.
 // No CPU2 firmware, FUS, option byte writes, or mass erase.
 import {validateStmVector} from './programmers.js';
+import {wbCheckMemoryFit,wbSharedBounds} from './wb-memory.js';
 const BASE=0x08000000,F=0x58004000,PWR=0x58000400,ID=0xe0042000,DHCSR=0xe000edf0;
 const ACR=F,KEY=F+8,SR=F+16,CR=F+20,ECCR=F+24,OPT=F+32,C2SR=F+0x60,C2CR=F+0x64,SFR=F+0x80,SRRVR=F+0x84;
 const LOCK=0x80000000,OPTLOCK=0x40000000,IRQ=0x07000000,START=0x10000,ERR=0xc3fa,BUSY=0xd0000;
 const patterns=["STM32WB55CGUx","STM32WB55RGVx","STM32WB55VGYx","STM32WB55VGQx","STM32WB55VYYx","STM32WB55CEUx","STM32WB55REVx","STM32WB55VEYx","STM32WB55VEQx","STM32WB55CCUx","STM32WB55RCVx","STM32WB55VCYx","STM32WB55VCQx","STM32WB50CGUx","STM32WB5MMGHx","STM32WB35CEUxA","STM32WB35CCUxA","STM32WB30CEUxA","STM32WB15CCUx","STM32WB15CCUxE","STM32WB15CCYx","STM32WB10CCUx","STM32WB1MMCHx"],sizes={C:256,E:512,G:1024,Y:640};
 export const WB_PROFILES=Object.freeze(Object.fromEntries(patterns.map(n=>{
  const line=n.slice(5,9),small=['WB15','WB10','WB1M'].includes(line),ram=small?12:line==='WB35'||line==='WB30'?32:line==='WB50'||n[10]==='C'?64:192;
- return [n,Object.freeze({controller:'wb-app',pid:small?0x494:0x495,core:0xc24,idReg:ID,uid:0x1fff7590,sizeReg:0x1fff75e0,flash:(small?320:sizes[n[10]])*1024,ram:ram*1024,pageSize:small?2048:4096,sbrvMask:small?0x1ffff:0x3ffff,wrpMask:['WB35','WB30'].includes(line)?0x7f:0xff,pcropMask:['WB35','WB30'].includes(line)?0xff:0x1ff,applicationOnly:true})];
+ return [n,Object.freeze({controller:'wb-app',pid:small?0x494:0x495,core:0xc24,idReg:ID,uid:0x1fff7590,sizeReg:0x1fff75e0,flash:(small?320:sizes[n[10]])*1024,ram:ram*1024,pageSize:small?2048:4096,sbrvMask:small?0x1ffff:0x3ffff,wrpMask:['WB35','WB30'].includes(line)?0x7f:0xff,pcropMask:['WB35','WB30'].includes(line)?0xff:0x1ff,applicationOnly:true,sharedLayout:true})];
 })));
 export function wbProfile(name){
  const n=String(name).trim().toUpperCase().replace(/TR$/,'');
@@ -45,6 +46,13 @@ export async function wbApplicationLimit(s){
  const p=s.pr;
  if((await s.reg(SR))&0xe000)throw Error('STM32WB invalid option or read status');
  return wbFlashLayout(p,await s.reg(SFR),await s.reg(OPT),await s.reg(SRRVR)).limit;
+}
+// Read-only live memory snapshot; RM0434 and RM0473 SRAM geometries.
+export async function wbProjectMemory(s,project=null){
+ if(s.pr.controller!=='wb-app'||!s.pr.sharedLayout)throw Error('WB shared RAM geometry not reviewed');
+ const limit=await wbApplicationLimit(s),rv=await s.reg(SRRVR),ipcc=await s.reg(F+0x3c);
+ const bounds=project?wbCheckMemoryFit(project,limit,rv,ipcc,s.pr.ram/1024):wbSharedBounds(rv,ipcc,s.pr.ram/1024);
+ return {limit,...bounds};
 }
 // A fresh system reset with CPU1 vector catch prevents the old application
 // from launching CPU2 before programming. Merely seeing C2BOOT=0 is not proof
@@ -104,7 +112,7 @@ async function preflight(s,b){
  if((await s.reg(ECCR))&0xc0000000)throw Error('STM32WB ECC fault');
  return {limit,span};
 }
-export async function programWB(s,b,progress=()=>{}){
+export async function programWB(s,b,progress=()=>{},project=null){
  const p=s.pr;
  if(!(b instanceof Uint8Array)||b.length>p.flash||typeof s.writeDoubleword!=='function')throw Error('STM32WB image or transport');
  validateStmVector(b,p);
@@ -112,6 +120,7 @@ export async function programWB(s,b,progress=()=>{}){
  await resetHaltWB(s);
  if(await identifyWB(s)!==s.id)throw Error('STM32WB UID changed after reset');
  const {limit,span}=await preflight(s,b),acr=await s.reg(ACR),off=acr&~0x1f00;
+ if(project)await wbProjectMemory(s,project);
  if(acr&0x8000)throw Error('STM32WB Flash suspend requested');
  try{
   if(await s.reg(CR)&LOCK){await s.put(KEY,0x45670123);await s.put(KEY,0xcdef89ab);}
@@ -122,14 +131,14 @@ export async function programWB(s,b,progress=()=>{}){
   // Only pages occupied by the incoming application. Never erase the tail of
   // the nonsecure area, which may contain persistent application data.
   for(let i=0;i<span;i+=p.pageSize){
-   await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');
+   await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');if(project)await wbProjectMemory(s,project);
    const cmd=OPTLOCK|IRQ|2|((i/p.pageSize)<<3);
    await s.put(CR,cmd);await s.put(CR,cmd|START);await complete(s);await checkHalted(s);
    progress(.2*(i+p.pageSize)/span);
   }
   await s.put(CR,OPTLOCK|IRQ|1);
   for(let i=0;i<b.length;i+=8){
-   if(i%p.pageSize===0){await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');}
+   if(i%p.pageSize===0){await checkHalted(s);if(await wbApplicationLimit(s)!==limit)throw Error('STM32WB secure boundary changed');if(project)await wbProjectMemory(s,project);}
    const data=new Uint8Array(8).fill(255);data.set(b.slice(i,i+8));
    if(data.some(x=>x!==255)){await s.writeDoubleword(BASE+i,data);await complete(s);await checkHalted(s);}
    if(i%1024===0)progress(.2+.6*Math.min(i+8,b.length)/b.length);

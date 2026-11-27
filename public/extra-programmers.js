@@ -1,3 +1,4 @@
+import {TINY_ISP} from './tiny-profiles.js';
 // Real transports. No simulated success; limited to explicit device profiles.
 import {parseHex,denseImage,STM32_UART,validateStmVector} from './programmers.js';
 import {Stm32SwdSession,swdProfile,STLINK_F0_PROFILES,STLINK_F1_PROFILES} from './stm32-swd.js';
@@ -31,13 +32,14 @@ export class UsbAsp{
  async init(){await this.request(1);try{let r=await this.request(10,[2],1);if(r[0]!==0)throw Error('SCK');}catch{} // slow SCK jumper required on older programmers
  if((await this.request(5,[],1))[0]!==0)throw Error('USBasp: ISP enable; проверь питание, RESET, slow SCK');return this.signature();}
  async signature(){let a=[];for(let i=0;i<3;i++)a.push(await this.spi([0x30,0,i,0]));return hex(a);}
- async read(a,n){if(a<0||a+n>32768||n<1||n>256)throw Error('USBasp: границы');return this.request(4,[a&255,a>>8,0,0],n);}
+ async read(a,n){if(!Number.isInteger(a)||!Number.isInteger(n)||a<0||a+n>(this.tiny?.limit||32768)||n<1||n>256)throw Error('USBasp: границы');return this.request(4,[a&255,a>>8,0,0],n);}
  async poll(){let end=Date.now()+1500;while(Date.now()<end){if(!((await this.spi([0xf0,0,0,0]))&1))return;await wait(5);}throw Error('AVR busy timeout');}
- async erase(){await this.spi([0xac,0x80,0,0]);await wait(20);await this.poll();}
- async page(a,b){if(a%128||b.length!==128||a<0||a+128>32768)throw Error('USBasp page');let r=await this.device.controlTransferOut({requestType:'vendor',recipient:'device',request:6,value:a,index:128|(3<<8)},b);if(r.status!=='ok'||r.bytesWritten!==128)throw Error('USBasp write');await this.poll();if(!eq(b,await this.read(a,128)))throw Error('USBasp readback');}
- async program(b,progress=()=>{}){if(!b.length||b.length>32768)throw Error('AVR Flash size');let sig=await this.signature();if(!['1e950f','1e9514'].includes(sig)||sig!==this.expectedSignature)throw Error('AVR signature');await this.erase();for(let i=0;i<b.length;i+=128){let p=new Uint8Array(128).fill(255);p.set(b.slice(i,i+128));if(!p.every(x=>x===255))await this.page(i,p);else if(!eq(p,await this.read(i,128)))throw Error('AVR erase verify');progress(Math.min(1,(i+128)/b.length));}}
+ async erase(){await this.spi([0xac,0x80,0,0]);await wait(this.tiny?40:20);if(!this.tiny)await this.poll();}
+ async page(a,b){const p=this.tiny?.page||128,limit=this.tiny?.limit||32768;if(a%p||b.length!==p||a<0||a+p>limit)throw Error('USBasp page');let r=await this.device.controlTransferOut({requestType:'vendor',recipient:'device',request:6,value:a,index:p|(3<<8)},b);if(r.status!=='ok'||r.bytesWritten!==p)throw Error('USBasp write');if(this.tiny)await wait(15);else await this.poll();if(!eq(b,await this.read(a,p)))throw Error('USBasp readback');}
+ async program(b,progress=()=>{}){if(this.tiny)return this.programTiny(b,progress);if(!b.length||b.length>32768)throw Error('AVR Flash size');let sig=await this.signature();if(!['1e950f','1e9514'].includes(sig)||sig!==this.expectedSignature)throw Error('AVR signature');await this.erase();for(let i=0;i<b.length;i+=128){let p=new Uint8Array(128).fill(255);p.set(b.slice(i,i+128));if(!p.every(x=>x===255))await this.page(i,p);else if(!eq(p,await this.read(i,128)))throw Error('AVR erase verify');progress(Math.min(1,(i+128)/b.length));}}
+ async programTiny(b,progress=()=>{}){const p=this.tiny;if(!(b instanceof Uint8Array)||!b.length||b.length>p.limit||b.length<2||b[0]===255&&b[1]===255)throw Error('ATtiny image bounds / empty reset vector');const sig=await this.signature();if(sig!==p.signature||sig!==this.expectedSignature)throw Error('ATtiny signature');const low=await this.spi([0x50,0,0,0]),high=await this.spi([0x58,8,0,0]),ext=await this.spi([0x50,8,0,0]),lock=await this.spi([0x58,0,0,0]);if((lock&3)!==3)throw Error('ATtiny locked; automatic unlock refused');await this.erase();if(await this.signature()!==sig)throw Error('ATtiny signature changed');for(let i=0;i<p.limit;i+=p.page){if((await this.read(i,p.page)).some(v=>v!==255))throw Error('ATtiny erase verification');}const full=new Uint8Array(p.limit).fill(255);full.set(b);for(let i=0;i<p.limit;i+=p.page){const page=full.slice(i,i+p.page);if(!page.every(v=>v===255))await this.page(i,page);progress(.75*(i+p.page)/p.limit);}for(let i=0;i<p.limit;i+=p.page){if(!eq(full.slice(i,i+p.page),await this.read(i,p.page)))throw Error('ATtiny final readback');progress(.75+.25*(i+p.page)/p.limit);}if(await this.signature()!==sig||await this.spi([0x50,0,0,0])!==low||await this.spi([0x58,8,0,0])!==high||await this.spi([0x50,8,0,0])!==ext)throw Error('ATtiny identity/fuse changed');}
  async fuses(){return {low_fuses:await this.spi([0x50,0,0,0]),high_fuses:await this.spi([0x58,8,0,0]),extended_fuses:await this.spi([0x50,8,0,0]),lock_bits:await this.spi([0x58,0,0,0])};}
- async install(pkg,progress=()=>{}){let {m,image}=pkg;if(await this.signature()!==m.target.signature||this.expectedSignature!==m.target.signature)throw Error('Wrong AVR');let f=m.fuses;if(![0xe2,0xf7,0xff].includes(f.low_fuses)||!(f.high_fuses&0x80)||(f.high_fuses&0x20)||!(f.high_fuses&0x40)||![0x05,0xfd,0xff].includes(f.extended_fuses)||![0xff,0x0f,0x2f,0x3f].includes(f.lock_bits))throw Error('Fuse profile not supported');await this.program(image,progress);for(let [k,c,mask] of [['extended_fuses',0xa4,7],['high_fuses',0xa8,255],['low_fuses',0xa0,255]]){await this.spi([0xac,c,0,f[k]]);await wait(15);await this.poll();if(((await this.fuses())[k]&mask)!==(f[k]&mask))throw Error('Fuse readback '+k);}await this.spi([0xac,0xe0,0,f.lock_bits]);await wait(15);await this.poll();if(((await this.fuses()).lock_bits&0x3f)!==(f.lock_bits&0x3f))throw Error('Lock readback');}
+ async install(pkg,progress=()=>{}){if(this.tiny)throw Error('ATtiny bootloader/fuse installation not supported');let {m,image}=pkg;if(await this.signature()!==m.target.signature||this.expectedSignature!==m.target.signature)throw Error('Wrong AVR');let f=m.fuses;if(![0xe2,0xf7,0xff].includes(f.low_fuses)||!(f.high_fuses&0x80)||(f.high_fuses&0x20)||!(f.high_fuses&0x40)||![0x05,0xfd,0xff].includes(f.extended_fuses)||![0xff,0x0f,0x2f,0x3f].includes(f.lock_bits))throw Error('Fuse profile not supported');await this.program(image,progress);for(let [k,c,mask] of [['extended_fuses',0xa4,7],['high_fuses',0xa8,255],['low_fuses',0xa0,255]]){await this.spi([0xac,c,0,f[k]]);await wait(15);await this.poll();if(((await this.fuses())[k]&mask)!==(f[k]&mask))throw Error('Fuse readback '+k);}await this.spi([0xac,0xe0,0,f.lock_bits]);await wait(15);await this.poll();if(((await this.fuses()).lock_bits&0x3f)!==(f.lock_bits&0x3f))throw Error('Lock readback');}
  async close(){try{await this.request(2)}finally{await this.device.close();}}
 }
 export async function openUsbAsp(signature){if(!navigator.usb)throw Error('WebUSB недоступен');let d=await navigator.usb.requestDevice({filters:[{vendorId:0x16c0,productId:0x05dc}]});let a=new UsbAsp(d);try{await d.open();if(!d.configuration)await d.selectConfiguration(1);a.expectedSignature=signature;if(await a.init()!==signature)throw Error('Неверная сигнатура AVR');return a;}catch(e){await a.close().catch(()=>{});throw e;}}
@@ -109,3 +111,63 @@ export function validateUf2(b,family){const ids={rp2040:0xe48bff56,rp2350:0xe48b
 export async function espBootPackage(bytes,entry){const {m,files}=await verifyBootZip(bytes,entry);const chip=m.target.mcu,cap=m.target.flashBytes;if(m.kind!=='esp-recovery'||!['esp32c3','esp32s3','esp32c6'].includes(chip)||![4194304,8388608,16777216].includes(cap))throw Error('ESP Recovery profile unsupported');const csv=files.get(m.partitionTable.file);if(!csv||csv.length!==m.partitionTable.size||await sha256Hex(csv)!==m.partitionTable.sha256)throw Error('Partition CSV SHA-256');const roles={bootloader:0,'partition-table':0x8000,'ota-data':0xf000,recovery:0x20000}, seen=new Set();let images=[];for(let f of m.files){if(!Object.hasOwn(roles,f.role)||seen.has(f.role)||f.offset!==roles[f.role]||f.offset+f.size>cap)throw Error('ESP Recovery offsets');seen.add(f.role);let data=files.get(f.file);if(['bootloader','recovery'].includes(f.role)){let expected={esp32c3:5,esp32s3:9,esp32c6:13}[chip];if(data.length<24||data[0]!==0xe9||data[12]+256*data[13]!==expected)throw Error('ESP header chip');}if(f.role==='recovery'&&f.size>0x180000)throw Error('Recovery too large');images.push({address:f.offset,data});}if(seen.size!==4)throw Error('ESP Recovery incomplete');images.sort((a,b)=>a.address-b.address);for(let i=1;i<images.length;i++)if(images[i-1].address+Math.ceil(images[i-1].data.length/4096)*4096>images[i].address)throw Error('ESP overlap');return {m,images};}
 export async function checkEspRecoveryTarget(s,pkg){if(s.chip!==pkg.m.target.mcu||s.flash!==pkg.m.target.flashBytes)throw Error('ESP model / Flash mismatch');if(typeof s.loader.getSecurityInfo!=='function'||s.loader.secureDownloadMode)throw Error('ESP security state unavailable');let sec=await s.loader.getSecurityInfo();if(sec?.flags!==0||sec?.flashCryptCnt!==0||sec?.chipId!==({esp32c3:5,esp32s3:9,esp32c6:13}[s.chip]))throw Error('ESP: не подтверждено отсутствие защиты. Запись запрещена.');if('esp-'+String(await s.loader.chip.readMac(s.loader)).toLowerCase()!==s.id)throw Error('MAC changed');}
 export async function installEspRecovery(s,pkg,vendor,progress=()=>{}){await checkEspRecoveryTarget(s,pkg);if(!s.backupSha256||!/^[a-f0-9]{64}$/.test(s.backupSha256))throw Error('Сначала резервная копия');await s.loader.writeFlash({fileArray:pkg.images,flashMode:'keep',flashFreq:'keep',flashSize:'keep',eraseAll:true,compress:true,calculateMD5Hash:vendor.md5,reportProgress:(idx,done,total)=>progress((idx+done/total)/pkg.images.length)});for(let f of pkg.images){let got=await s.loader.readFlash(f.address,f.data.length);if(!(got instanceof Uint8Array)||!eq(got,f.data))throw Error('ESP Recovery readback mismatch');}progress(1);}
+
+// Target-neutral ST-LINK/V2 and V2-1 memory transport. No STM32 identification
+// or STM32 flash algorithm is invoked for Nordic.
+export async function openStLinkMemory(usb=navigator.usb){
+ if(!usb?.requestDevice)throw Error('ST-LINK WebUSB unavailable');
+ const d=await usb.requestDevice({filters:[0x3748,0x374b,0x3752].map(productId=>({vendorId:0x0483,productId}))});
+ try{
+  if(d.vendorId!==0x0483||![0x3748,0x374b,0x3752].includes(d.productId))throw Error('ST-LINK model unsupported');
+  const a=new StLinkF1(d,{});
+  await d.open();if(!d.configuration)await d.selectConfiguration(1);
+  const i=d.configuration.interfaces.find(i=>i.interfaceNumber===0&&i.alternate.interfaceClass===255&&i.alternate.endpoints.some(e=>e.direction==='in'&&e.type==='bulk'&&e.endpointNumber===1)&&i.alternate.endpoints.some(e=>e.direction==='out'&&e.type==='bulk'&&e.endpointNumber===a.out));
+  if(!i)throw Error('ST-LINK endpoint mismatch');await d.claimInterface(i.interfaceNumber);
+  const v=await a.cmd([0xf1],6);if(v[0]>>>4!==2)throw Error('ST-LINK/V2 required');
+  const mode=await a.cmd([0xf5],2);if(mode[0]===0)throw Error('ST-LINK in DFU');
+  if(mode[0]!==2)await a.ok([0xf2,0x30,0xa3]);
+  return {readWord:async addr=>{if(addr%4)throw Error('ST-LINK word alignment');return a.reg(addr);},writeWord:async(addr,val)=>{
+   if(addr%4||!Number.isInteger(val)||val<0||val>0xffffffff)throw Error('ST-LINK word arguments');
+   await a.cmd([0xf2,8,...le32(addr),4,0],0,u(le32(val)));await a.rwStatus();
+  },close:()=>a.close()};
+ }catch(e){if(d.opened)await d.close().catch(()=>{});throw e;}
+}
+
+export async function openTinyUsbAsp(chip,usb=navigator.usb){
+ const p=TINY_ISP[chip];if(!Object.hasOwn(TINY_ISP,chip)||!usb?.requestDevice)throw Error('ATtiny ISP target/WebUSB unavailable');
+ const d=await usb.requestDevice({filters:[{vendorId:0x16c0,productId:0x05dc}]});
+ if(d.vendorId!==0x16c0||d.productId!==0x05dc)throw Error('USBasp VID/PID');
+ const a=new UsbAsp(d);a.tiny=p;a.expectedSignature=p.signature;
+ try{await d.open();if(!d.configuration)await d.selectConfiguration(1);if(await a.init()!==p.signature)throw Error('ATtiny signature mismatch');return a;}
+ catch(e){if(d.opened)await a.close().catch(()=>{});throw e;}
+}
+
+// Arduino Examples ArduinoISP: STK500v1 at 19200 8N1.
+// Separate from an Arduino's own bootloader: exact sign-on before target access.
+export class TinyArduinoIsp extends UsbAsp {
+ constructor(io,chip){super(null);if(!Object.hasOwn(TINY_ISP,chip))throw Error('ATtiny ISP target unsupported');this.io=io;this.tiny=TINY_ISP[chip];this.expectedSignature=this.tiny.signature;this.active=false;this.failed=false;}
+ async cmd(a,n=0){if(this.failed)throw Error('ArduinoISP session invalid; reconnect');try{await this.io.send([...a,0x20]);const b=await this.io.read(n+2,3000);if(b.length!==n+2||b[0]!==0x14||b.at(-1)!==0x10)throw Error('ArduinoISP response');return b.slice(1,-1);}catch(e){this.failed=true;throw e;}}
+ async enter(){
+  if(this.active)throw Error('ArduinoISP already active');
+  await this.cmd([0x30]);const id=new TextDecoder().decode(await this.cmd([0x31],7));if(id!=='AVR ISP')throw Error('Require ArduinoISP sketch, not Arduino bootloader');
+  const p=this.tiny,params=new Uint8Array(20);params[0]=0x20;params[4]=1;params[5]=1;params[6]=1;params[7]=3;params[8]=255;params[9]=255;
+  const v=new DataView(params.buffer);v.setUint16(12,p.page,false);v.setUint32(16,p.limit,false);
+  await this.cmd([0x42,...params]);this.active=true;await this.cmd([0x50]);
+ }
+ async leave(){if(!this.active)return;this.active=false;if(this.failed){throw Error('ArduinoISP connection lost; release target RESET manually before reconnecting');}await this.cmd([0x51]);}
+ async signature(){if(!this.active)throw Error('ArduinoISP not in programming mode');return hex(await this.cmd([0x75],3));}
+ async init(){try{await this.enter();const sig=await this.signature();if(sig!==this.expectedSignature)throw Error('ATtiny signature mismatch');return sig;}finally{await this.leave();}}
+ async spi(a){if(!this.active||a.length!==4)throw Error('ArduinoISP universal');return (await this.cmd([0x56,...a],1))[0];}
+ async address(a){if(!Number.isInteger(a)||a<0||a%2||a>=this.tiny.limit)throw Error('ArduinoISP address');const w=a/2;await this.cmd([0x55,w&255,w>>8]);}
+ async read(a,n){if(!this.active||!Number.isInteger(n)||n<2||n>256||n%2||a+n>this.tiny.limit)throw Error('ArduinoISP read bounds');await this.address(a);return this.cmd([0x74,n>>8,n&255,0x46],n);}
+ async page(a,b){
+  const p=this.tiny.page;if(!this.active||!Number.isInteger(a)||a<0||a%p||a+p>this.tiny.limit||b.length!==p)throw Error('ArduinoISP page bounds');
+  if(p===16){ // Stock ArduinoISP current_page() does not handle 16-byte pages.
+   for(let i=0;i<p;i+=2){await this.spi([0x40,0,i/2,b[i]]);await this.spi([0x48,0,i/2,b[i+1]]);}
+   const w=a/2;await this.spi([0x4c,w>>8,w&255,0]);
+  }else{await this.address(a);await this.cmd([0x64,p>>8,p&255,0x46,...b]);}
+  await wait(15);if(!eq(b,await this.read(a,p)))throw Error('ArduinoISP page readback');
+ }
+ async program(b,progress=()=>{}){if(!(b instanceof Uint8Array)||b.length<2||b.length>this.tiny.limit||b[0]===255&&b[1]===255)throw Error('ATtiny image bounds / empty reset vector');try{await this.enter();return await this.programTiny(b,progress);}finally{await this.leave();}}
+ async close(){try{await this.leave();}finally{await this.io.close();}}
+}

@@ -94,15 +94,21 @@ export class GithubBuilder {
     }
     return response.json();
   }
-  async check() {
+  async requirePrivate() {
     const repo=await this.api('');
     if(!repo?.full_name || !sameRepo(repo.full_name,this.repo))throw Error('GitHub вернул другой репозиторий');
+    if(repo.private!==true)throw Error('Для личных исходников нужен private Builder (приватный репозиторий). Публичная загрузка запрещена.');
+    return repo;
+  }
+  async check() {
+    const repo=await this.requirePrivate();
     const workflow=await this.api(`/actions/workflows/${WORKFLOW}`);
     if(workflow?.state!=='active')throw Error('Workflow не активен. Проверь вкладку Actions в репозитории.');
     return repo.full_name;
   }
   async uploadSource({file,requestId}) {
     validateId(requestId);
+    await this.requirePrivate();
     const ext = file.name.toLowerCase().endsWith('.zip')?'zip':'ino';
     const bytes=new Uint8Array(await file.arrayBuffer());
     return this.api(`/contents/requests/${requestId}/source.${ext}`,'PUT',{
@@ -142,6 +148,7 @@ export class GithubBuilder {
   }
   async dispatch({requestId,profile,name,version,libraries,file}) {
     validateId(requestId);
+    await this.requirePrivate();
     return this.api(`/actions/workflows/${WORKFLOW}/dispatches`,'POST',{
       ref:'main', inputs:{
         request_id:requestId,
