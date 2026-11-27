@@ -55,7 +55,33 @@ export class StLinkF1 extends Stm32SwdSession{
  async read(a,n){let start=a&~3,len=Math.ceil((a-start+n)/4)*4;if(n<1||len>1024)throw Error('SWD read length');let b=await this.cmd([0xf2,7,...le32(start),len&255,len>>8],len);await this.rwStatus();return b.slice(a-start,a-start+n);}
  async reg(a){return word(await this.read(a,4));}
  async put(a,val){await this.ok([0xf2,0x35,...le32(a),...le32(val)]);}
- async init(){let v=await this.cmd([0xf1],6);if(v[0]>>>4!==2)throw Error('Требуется ST-LINK/V2');let mode=await this.cmd([0xf5],2);if(mode[0]===0)throw Error('ST-LINK в DFU');if(mode[0]!==2)await this.ok([0xf2,0x30,0xa3]);let id=await this.identify();return id;}
+ // ST-LINK/V2 normally starts in DFU. Leave it without a firmware update.
+ // Protocol sequence matches OpenOCD: exit current mode (no IN response), query,
+ // then explicitly enter SWD without target reset. Never send erase/write here.
+ async enterSwd(pause=wait){
+  const v=await this.cmd([0xf1],6);
+  if(v[0]>>>4!==2)throw Error('Требуется ST-LINK/V2');
+  let mode=(await this.cmd([0xf5],2))[0];
+  const exit=mode===0?[0xf3,0x07]:mode===2?[0xf2,0x21]:mode===3?[0xf4,0x01]:null;
+  if(mode!==1&&!exit)throw Error('ST-LINK: неизвестный или неподдерживаемый режим');
+  if(exit){
+   const initial=mode;
+   // Send exactly once; no blind retries after an ambiguous USB transfer.
+   try{
+    await this.cmd(exit,0);
+    for(const delay of [100,200,400,800]){
+     await pause(delay);
+     mode=(await this.cmd([0xf5],2))[0];
+     if(mode===1)break;
+     if(mode!==initial)break;
+    }
+   }catch(e){throw Error('ST-LINK: связь потеряна при смене режима. Нажми подключение ещё раз, не отключая USB.');}
+   if(mode!==1)throw Error('ST-LINK: не удалось выйти из текущего режима');
+  }
+  await this.ok([0xf2,0x30,0xa3]);
+  if((await this.cmd([0xf5],2))[0]!==2)throw Error('ST-LINK: переход в режим SWD не подтверждён');
+ }
+ async init(){await this.enterSwd();return this.identify();}
  async writeHalfword(a,p){await this.cmd([0xf2,0x48,...le32(a),2,0],0,p);await this.rwStatus();}
  async writeFlashWord16(a,p){if(a%16||p.length!==16)throw Error('SWD flash-word alignment');await this.cmd([0xf2,8,...le32(a),16,0],0,p);await this.rwStatus();}
  async writeFlashWord32(a,p){if(a%32||p.length!==32)throw Error('SWD flash-word alignment');await this.cmd([0xf2,8,...le32(a),32,0],0,p);await this.rwStatus();}
@@ -123,9 +149,7 @@ export async function openStLinkMemory(usb=navigator.usb){
   await d.open();if(!d.configuration)await d.selectConfiguration(1);
   const i=d.configuration.interfaces.find(i=>i.interfaceNumber===0&&i.alternate.interfaceClass===255&&i.alternate.endpoints.some(e=>e.direction==='in'&&e.type==='bulk'&&e.endpointNumber===1)&&i.alternate.endpoints.some(e=>e.direction==='out'&&e.type==='bulk'&&e.endpointNumber===a.out));
   if(!i)throw Error('ST-LINK endpoint mismatch');await d.claimInterface(i.interfaceNumber);
-  const v=await a.cmd([0xf1],6);if(v[0]>>>4!==2)throw Error('ST-LINK/V2 required');
-  const mode=await a.cmd([0xf5],2);if(mode[0]===0)throw Error('ST-LINK in DFU');
-  if(mode[0]!==2)await a.ok([0xf2,0x30,0xa3]);
+  await a.enterSwd();
   return {readWord:async addr=>{if(addr%4)throw Error('ST-LINK word alignment');return a.reg(addr);},writeWord:async(addr,val)=>{
    if(addr%4||!Number.isInteger(val)||val<0||val>0xffffffff)throw Error('ST-LINK word arguments');
    await a.cmd([0xf2,8,...le32(addr),4,0],0,u(le32(val)));await a.rwStatus();
