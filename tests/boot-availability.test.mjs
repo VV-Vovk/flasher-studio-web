@@ -44,7 +44,7 @@ test('Boot controls remain visible and toggle disabled state with compatible tar
  const source=html.match(/function syncBootInstall27\([\s\S]*?\n\}/)[0];
  const ids=['opBoot14','bootSetupBuild','bootSetupDevice','deviceBootPanel14','bootAvailability28'];
  const elements=Object.fromEntries(ids.map(id=>[id,{hidden:true,disabled:false,child:{},querySelector(){return this.child;}}]));
- const ctx=vm.createContext({$:id=>elements[id],targetState:'none'});
+ const ctx=vm.createContext({$:id=>elements[id],targetState:'none',fsLocale:{mark:s=>s,setProperty:(e,k,v)=>{e[k]=v;},setText:(e,v)=>{e.textContent=v;}}});
  const sync=vm.runInContext(source+'\nsyncBootInstall27;',ctx);
  for(const plan of [null,{kind:'esp'},null]){
   ctx.targetState=plan?'manual':'none';sync(plan);

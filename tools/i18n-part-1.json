@@ -1,0 +1,802 @@
+{
+  "Нет совместимых записей для этой платы. Выбери другой источник.": {
+    "en": "No compatible entries for this board. Select another source.",
+    "de": "Keine kompatiblen Einträge für diese Platine. Wähle eine andere Quelle."
+  },
+  "Подключить для установки загрузчика": {
+    "en": "Connect to install bootloader",
+    "de": "Zur Bootloader-Installation verbinden"
+  },
+  "загрузчика": {
+    "en": "bootloader",
+    "de": "Bootloader"
+  },
+  "Служебная OTA-прошивка": {
+    "en": "OTA service firmware",
+    "de": "OTA-Service-Firmware"
+  },
+  "Не выбран": {
+    "en": "Not selected",
+    "de": "Nicht ausgewählt"
+  },
+  "Установка завершена": {
+    "en": "Installation completed",
+    "de": "Installation abgeschlossen"
+  },
+  "Устройства": {
+    "en": "Devices",
+    "de": "Geräte"
+  },
+  "Мои устройства · последняя известная информация": {
+    "en": "My devices · last known information",
+    "de": "Meine Geräte · letzte bekannte Informationen"
+  },
+  "Последнее подключение": {
+    "en": "Last connection",
+    "de": "Letzte Verbindung"
+  },
+  "По названию": {
+    "en": "By name",
+    "de": "Nach Name"
+  },
+  "Загрузчик:": {
+    "en": "Bootloader:",
+    "de": "Bootloader:"
+  },
+  "не определён": {
+    "en": "not detected",
+    "de": "nicht erkannt"
+  },
+  "не обнаружен": {
+    "en": "not found",
+    "de": "nicht gefunden"
+  },
+  "Нет совместимых загрузчиков": {
+    "en": "No compatible bootloaders",
+    "de": "Keine kompatiblen Bootloader"
+  },
+  "Нет сохранённых загрузчиков или совпадений": {
+    "en": "No saved bootloaders or matches",
+    "de": "Keine gespeicherten Bootloader oder Treffer"
+  },
+  "Последняя: v": {
+    "en": "Latest: v",
+    "de": "Neueste: v"
+  },
+  "UART-профиль": {
+    "en": "UART profile",
+    "de": "UART-Profil"
+  },
+  "Выбрана эта версия": {
+    "en": "This version is selected",
+    "de": "Diese Version ist ausgewählt"
+  },
+  "Удалить только эту версию загрузчика? История устройств сохранится.": {
+    "en": "Delete only this bootloader version? Device history will be retained.",
+    "de": "Nur diese Bootloader-Version löschen? Der Geräteverlauf bleibt erhalten."
+  },
+  "Загрузчик и версия": {
+    "en": "Bootloader and version",
+    "de": "Bootloader und Version"
+  },
+  "Выбрать загрузчик и версию": {
+    "en": "Select bootloader and version",
+    "de": "Bootloader und Version auswählen"
+  },
+  "Название или версия": {
+    "en": "Name or version",
+    "de": "Name oder Version"
+  },
+  "Выбрать загрузчик": {
+    "en": "Select bootloader",
+    "de": "Bootloader auswählen"
+  },
+  "(подключено)": {
+    "en": "(connected)",
+    "de": "(verbunden)"
+  },
+  "Имя или модель платы": {
+    "en": "Board name or model",
+    "de": "Platinenname oder Modell"
+  },
+  "Выбрать модель вручную": {
+    "en": "Select model manually",
+    "de": "Modell manuell auswählen"
+  },
+  "· Подключено": {
+    "en": "· Connected",
+    "de": "· Verbunden"
+  },
+  "Подключённое устройство": {
+    "en": "Connected device",
+    "de": "Verbundenes Gerät"
+  },
+  "Нет устройств": {
+    "en": "No devices",
+    "de": "Keine Geräte"
+  },
+  "Подключи устройство для чтения": {
+    "en": "Connect a device to read information",
+    "de": "Verbinde ein Gerät zum Auslesen"
+  },
+  "последние данные:": {
+    "en": "last known data:",
+    "de": "letzte bekannte Daten:"
+  },
+  "память защищена": {
+    "en": "memory protected",
+    "de": "Speicher geschützt"
+  },
+  "память пуста": {
+    "en": "memory empty",
+    "de": "Speicher leer"
+  },
+  "прошивка не определена": {
+    "en": "firmware not detected",
+    "de": "Firmware nicht erkannt"
+  },
+  "Выбери проект и версию": {
+    "en": "Select a project and version",
+    "de": "Wähle ein Projekt und eine Version"
+  },
+  "Только описание · нет файла прошивки": {
+    "en": "Description only · firmware file missing",
+    "de": "Nur Beschreibung · Firmware-Datei fehlt"
+  },
+  "Целевая плата ещё не выбрана": {
+    "en": "Target board not selected yet",
+    "de": "Zielplatine noch nicht ausgewählt"
+  },
+  "Другое семейство микроконтроллеров": {
+    "en": "Different microcontroller family",
+    "de": "Andere Mikrocontroller-Familie"
+  },
+  "Другой микроконтроллер / серия:": {
+    "en": "Different microcontroller / series:",
+    "de": "Anderer Mikrocontroller / andere Serie:"
+  },
+  "Совпадает профиль платы · проверить образ перед записью": {
+    "en": "Board profile matches · verify image before programming",
+    "de": "Platinenprofil stimmt überein · Abbild vor der Programmierung prüfen"
+  },
+  "Тот же чип / серия, другая плата · проверь память и настройки": {
+    "en": "Same chip / series, different board · verify memory and settings",
+    "de": "Gleicher Chip / gleiche Serie, andere Platine · Speicher und Einstellungen prüfen"
+  },
+  "Совместимость не подтверждена · проверь целевую плату": {
+    "en": "Compatibility unconfirmed · verify target board",
+    "de": "Kompatibilität nicht bestätigt · Zielplatine prüfen"
+  },
+  "Выбрать проект и версию": {
+    "en": "Select project and version",
+    "de": "Projekt und Version auswählen"
+  },
+  "Проект, версия, плата…": {
+    "en": "Project, version, board…",
+    "de": "Projekt, Version, Platine…"
+  },
+  "Выбрать прошивку": {
+    "en": "Select firmware",
+    "de": "Firmware auswählen"
+  },
+  "Все": {
+    "en": "All",
+    "de": "Alle"
+  },
+  "Для этой платы": {
+    "en": "For this board",
+    "de": "Für diese Platine"
+  },
+  "Версий:": {
+    "en": "Versions:",
+    "de": "Versionen:"
+  },
+  "Нет прошивок для этой платы. Можно открыть «Все».": {
+    "en": "No firmware for this board. You can open “All”.",
+    "de": "Keine Firmware für diese Platine. Du kannst „Alle“ öffnen."
+  },
+  "Нет совпадений": {
+    "en": "No matches",
+    "de": "Keine Treffer"
+  },
+  "Прошивка": {
+    "en": "Firmware",
+    "de": "Firmware"
+  },
+  "Все проекты": {
+    "en": "All projects",
+    "de": "Alle Projekte"
+  },
+  "· выбранная плата": {
+    "en": "· selected board",
+    "de": "· ausgewählte Platine"
+  },
+  "Выбрать": {
+    "en": "Select",
+    "de": "Auswählen"
+  },
+  "Интерфейс": {
+    "en": "Interface",
+    "de": "Schnittstelle"
+  },
+  "Выбрать параметр": {
+    "en": "Select parameter",
+    "de": "Parameter auswählen"
+  },
+  "Нет вариантов": {
+    "en": "No options",
+    "de": "Keine Optionen"
+  },
+  "Поиск по имени или ID": {
+    "en": "Search by name or ID",
+    "de": "Nach Name oder ID suchen"
+  },
+  "Какую плату подключаем?": {
+    "en": "Which board are we connecting?",
+    "de": "Welche Platine wird verbunden?"
+  },
+  "Подключение ещё недоступно.": {
+    "en": "Connection not available yet.",
+    "de": "Verbindung noch nicht verfügbar."
+  },
+  "Сохранённые устройства": {
+    "en": "Saved devices",
+    "de": "Gespeicherte Geräte"
+  },
+  "+ Подключить новую плату": {
+    "en": "+ Connect new board",
+    "de": "+ Neue Platine verbinden"
+  },
+  "Нужен установленный UART-загрузчик. Подключение через USB-UART адаптер.": {
+    "en": "An installed UART bootloader is required. Connect using a USB-UART adapter.",
+    "de": "Ein installierter UART-Bootloader ist erforderlich. Verbindung über einen USB-UART-Adapter."
+  },
+  "8 МГц · внутренний RC": {
+    "en": "8 MHz · internal RC",
+    "de": "8 MHz · interner RC-Oszillator"
+  },
+  "8 МГц · внешний кварц": {
+    "en": "8 MHz · external crystal",
+    "de": "8 MHz · externer Quarz"
+  },
+  "16 МГц · внешний кварц": {
+    "en": "16 MHz · external crystal",
+    "de": "16 MHz · externer Quarz"
+  },
+  "Стандартный UART-загрузчик": {
+    "en": "Standard UART bootloader",
+    "de": "Standard-UART-Bootloader"
+  },
+  "Optiboot · подобрать под тактирование": {
+    "en": "Optiboot · match clock configuration",
+    "de": "Optiboot · passend zur Taktkonfiguration"
+  },
+  "Первичная запись через ISP. После установки — USB-UART.": {
+    "en": "Initial programming via ISP. After installation, use USB-UART.",
+    "de": "Erstprogrammierung über ISP. Nach der Installation USB-UART verwenden."
+  },
+  "· настройка Fuse Bits и проверка сигнатуры.": {
+    "en": "· configure fuse bits and verify signature.",
+    "de": "· Fuse-Bits konfigurieren und Signatur prüfen."
+  },
+  "UART-загрузчик установлен.": {
+    "en": "UART bootloader installed.",
+    "de": "UART-Bootloader installiert."
+  },
+  "Для USB-UART необходим установленный UART-загрузчик. Первичная установка — через ISP.": {
+    "en": "USB-UART requires an installed UART bootloader. Initial installation is via ISP.",
+    "de": "USB-UART erfordert einen installierten UART-Bootloader. Erstinstallation über ISP."
+  },
+  "Тактирование:": {
+    "en": "Clock:",
+    "de": "Takt:"
+  },
+  ". Меняется выбором профиля платы. Для UART требуется совместимый загрузчик.": {
+    "en": ". Changed by selecting the board profile. UART requires a compatible bootloader.",
+    "de": ". Wird durch die Auswahl des Platinenprofils geändert. UART erfordert einen kompatiblen Bootloader."
+  },
+  "Не удалось открыть хранилище / загрузить компилятор.": {
+    "en": "Could not open storage / load compiler.",
+    "de": "Speicher konnte nicht geöffnet / Compiler nicht geladen werden."
+  },
+  "Выбери исходный проект.": {
+    "en": "Select the source project.",
+    "de": "Wähle das Quellprojekt aus."
+  },
+  "Выбери целевую плату.": {
+    "en": "Select the target board.",
+    "de": "Wähle die Zielplatine aus."
+  },
+  "Облачная сборка для этой модели пока не подключена.": {
+    "en": "Cloud builds for this model are not available yet.",
+    "de": "Cloud-Builds für dieses Modell sind noch nicht verfügbar."
+  },
+  "Текущий компилятор принимает INO и ZIP Arduino.": {
+    "en": "The current compiler accepts Arduino INO and ZIP files.",
+    "de": "Der aktuelle Compiler akzeptiert Arduino-INO- und ZIP-Dateien."
+  },
+  "Текущий компилятор поддерживает Arduino / Arduino CLI.": {
+    "en": "The current compiler supports Arduino / Arduino CLI.",
+    "de": "Der aktuelle Compiler unterstützt Arduino / Arduino CLI."
+  },
+  "Проверить последнюю сборку": {
+    "en": "Check latest build",
+    "de": "Letzten Build prüfen"
+  },
+  "Журнал GitHub Actions ↗": {
+    "en": "GitHub Actions log ↗",
+    "de": "GitHub-Actions-Protokoll ↗"
+  },
+  "Очистить токен и сбросить проверку доступа": {
+    "en": "Clear token and reset access check",
+    "de": "Token löschen und Zugriffsprüfung zurücksetzen"
+  },
+  "Доступ ещё не проверен.": {
+    "en": "Access not checked yet.",
+    "de": "Zugriff noch nicht geprüft."
+  },
+  "Помощь с токеном": {
+    "en": "Token help",
+    "de": "Hilfe zum Token"
+  },
+  "Fine-grained PAT: Actions и Contents — Read and write, Metadata — Read.": {
+    "en": "Fine-grained PAT: Actions and Contents — Read and write, Metadata — Read.",
+    "de": "Fine-grained PAT: Actions und Contents — Read and write, Metadata — Read."
+  },
+  "Токен остаётся в текущей вкладке. После проверки браузер может предложить сохранить его. Сброс очищает поле токена, не меняя репозиторий. Сохранённый пароль в менеджере браузера не удаляется. Права записи проверяются при сборке.": {
+    "en": "The token stays in the current tab. After verification, the browser may offer to save it. Reset clears the token field without changing the repository. Saved browser passwords are not deleted. Write permissions are checked during the build.",
+    "de": "Das Token bleibt im aktuellen Tab. Nach der Prüfung kann der Browser anbieten, es zu speichern. Zurücksetzen leert das Token-Feld, ohne das Repository zu ändern. Gespeicherte Browser-Passwörter werden nicht gelöscht. Schreibrechte werden beim Build geprüft."
+  },
+  "Исходники отправляются в выбранный репозиторий. В публичном репозитории они доступны другим.": {
+    "en": "Source files are sent to the selected repository. In a public repository they are accessible to others.",
+    "de": "Quelldateien werden an das ausgewählte Repository gesendet. In einem öffentlichen Repository sind sie für andere zugänglich."
+  },
+  "Токен введён, доступ ещё не проверен.": {
+    "en": "Token entered, access not yet checked.",
+    "de": "Token eingegeben, Zugriff noch nicht geprüft."
+  },
+  "Репозиторий изменён. Проверь доступ.": {
+    "en": "Repository changed. Check access.",
+    "de": "Repository geändert. Prüfe den Zugriff."
+  },
+  "Модуль компилятора не загружен": {
+    "en": "Compiler module not loaded",
+    "de": "Compiler-Modul nicht geladen"
+  },
+  "Проверяю GitHub…": {
+    "en": "Checking GitHub…",
+    "de": "GitHub wird geprüft…"
+  },
+  "Данные изменились. Проверь доступ снова.": {
+    "en": "Data changed. Check access again.",
+    "de": "Daten geändert. Prüfe den Zugriff erneut."
+  },
+  "Доступ подтверждён.": {
+    "en": "Access confirmed.",
+    "de": "Zugriff bestätigt."
+  },
+  "Ошибка:": {
+    "en": "Error:",
+    "de": "Fehler:"
+  },
+  "Текущий workflow всегда выполняет автоподбор библиотек": {
+    "en": "The current workflow always selects libraries automatically",
+    "de": "Der aktuelle Workflow wählt Bibliotheken immer automatisch aus"
+  },
+  "Размер Flash и разметка памяти задаются стандартным профилем GitHub-компилятора. Изменение этих параметров пока недоступно.": {
+    "en": "Flash size and memory layout are set by the standard GitHub compiler profile. Changing these settings is not available yet.",
+    "de": "Flash-Größe und Speicheraufteilung werden durch das Standardprofil des GitHub-Compilers festgelegt. Diese Einstellungen können noch nicht geändert werden."
+  },
+  "GitHub Actions · стандартный профиль · merged BIN": {
+    "en": "GitHub Actions · standard profile · merged BIN",
+    "de": "GitHub Actions · Standardprofil · zusammengeführte BIN-Datei"
+  },
+  "Функция пока не реализована. Запись не выполнялась.": {
+    "en": "Feature not implemented yet. No programming was performed.",
+    "de": "Funktion noch nicht implementiert. Es wurde nichts programmiert."
+  },
+  "Подключение пока недоступно": {
+    "en": "Connection not available yet",
+    "de": "Verbindung noch nicht verfügbar"
+  },
+  "Драйвер для физического подключения ещё не реализован.": {
+    "en": "Physical connection driver not implemented yet.",
+    "de": "Treiber für die physische Verbindung noch nicht implementiert."
+  },
+  "Подключи устройство для записи.": {
+    "en": "Connect a device to program it.",
+    "de": "Verbinde ein Gerät zum Programmieren."
+  },
+  "Информация появится после считывания реальной платы.": {
+    "en": "Information appears after reading a physical board.",
+    "de": "Informationen erscheinen nach dem Auslesen einer realen Platine."
+  },
+  "Пакет Optiboot и настройки Fuse Bits ещё не подключены.": {
+    "en": "Optiboot package and fuse-bit settings not integrated yet.",
+    "de": "Optiboot-Paket und Fuse-Bit-Einstellungen noch nicht integriert."
+  },
+  "Установка пока недоступна": {
+    "en": "Installation not available yet",
+    "de": "Installation noch nicht verfügbar"
+  },
+  "Проводная установка загрузчика ещё не реализована.": {
+    "en": "Wired bootloader installation not implemented yet.",
+    "de": "Kabelgebundene Bootloader-Installation noch nicht implementiert."
+  },
+  "Новая сборка": {
+    "en": "New build",
+    "de": "Neuer Build"
+  },
+  "Новый проект": {
+    "en": "New project",
+    "de": "Neues Projekt"
+  },
+  "Остановить ожидание": {
+    "en": "Stop waiting",
+    "de": "Warten beenden"
+  },
+  "Ожидание остановлено. GitHub продолжает сборку; можно проверить её позже.": {
+    "en": "Waiting stopped. GitHub continues building; you can check later.",
+    "de": "Warten beendet. GitHub setzt den Build fort; du kannst ihn später prüfen."
+  },
+  "Ожидание остановлено.": {
+    "en": "Waiting stopped.",
+    "de": "Warten beendet."
+  },
+  ". Проверь журнал.": {
+    "en": ". Check the log.",
+    "de": ". Prüfe das Protokoll."
+  },
+  "Компиляция успешна. Проверяю полученный BIN и SHA-256.": {
+    "en": "Compilation successful. Verifying received BIN and SHA-256.",
+    "de": "Kompilierung erfolgreich. Empfangene BIN-Datei und SHA-256 werden geprüft."
+  },
+  "Скачать проверенный BIN": {
+    "en": "Download verified BIN",
+    "de": "Verifizierte BIN-Datei herunterladen"
+  },
+  "BIN проверен и сохранён:": {
+    "en": "BIN verified and saved:",
+    "de": "BIN-Datei verifiziert und gespeichert:"
+  },
+  "байт. SHA-256 OK.": {
+    "en": "bytes. SHA-256 OK.",
+    "de": "Bytes. SHA-256 OK."
+  },
+  "В очереди GitHub": {
+    "en": "Queued on GitHub",
+    "de": "In GitHub-Warteschlange"
+  },
+  "GitHub выполняет сборку": {
+    "en": "GitHub is building",
+    "de": "GitHub führt den Build aus"
+  },
+  "Ожидаю появления запуска в GitHub Actions.": {
+    "en": "Waiting for the run to appear in GitHub Actions.",
+    "de": "Warte auf den Lauf in GitHub Actions."
+  },
+  "Период проверки завершён. Нажми «Проверить последнюю сборку».": {
+    "en": "Check period ended. Press “Check latest build”.",
+    "de": "Prüfzeitraum beendet. Drücke „Letzten Build prüfen“."
+  },
+  "Такая версия для этой платы уже существует": {
+    "en": "This version already exists for this board",
+    "de": "Diese Version existiert bereits für diese Platine"
+  },
+  "Отправить исходники «": {
+    "en": "Send source files “",
+    "de": "Quelldateien „"
+  },
+  "» в": {
+    "en": "” to",
+    "de": "“ senden an"
+  },
+  "? В публичном репозитории они будут доступны всем.": {
+    "en": "? In a public repository they will be accessible to everyone.",
+    "de": "? In einem öffentlichen Repository sind sie für alle zugänglich."
+  },
+  "Предыдущий запрос ещё сохранён; новый заменит ссылку для восстановления.": {
+    "en": "Previous request is still saved; a new request replaces the recovery link.",
+    "de": "Die vorherige Anfrage ist noch gespeichert; eine neue ersetzt den Wiederherstellungslink."
+  },
+  "Загружаю исходники в GitHub…": {
+    "en": "Uploading source files to GitHub…",
+    "de": "Quelldateien werden zu GitHub hochgeladen…"
+  },
+  "Исходники приняты. Запускаю workflow…": {
+    "en": "Source files accepted. Starting workflow…",
+    "de": "Quelldateien angenommen. Workflow wird gestartet…"
+  },
+  "ID запроса:": {
+    "en": "Request ID:",
+    "de": "Anfrage-ID:"
+  },
+  "Выбери репозиторий последней сборки.": {
+    "en": "Select the repository of the last build.",
+    "de": "Wähle das Repository des letzten Builds aus."
+  },
+  "Скачать ZIP": {
+    "en": "Download ZIP",
+    "de": "ZIP herunterladen"
+  },
+  "Удалить эту версию и её BIN?": {
+    "en": "Delete this version and its BIN?",
+    "de": "Diese Version und ihre BIN-Datei löschen?"
+  },
+  "Ошибка открытия компилятора:": {
+    "en": "Error opening compiler:",
+    "de": "Fehler beim Öffnen des Compilers:"
+  },
+  "USB-модуль ещё загружается": {
+    "en": "USB module is still loading",
+    "de": "USB-Modul wird noch geladen"
+  },
+  "Универсальный API не загружен": {
+    "en": "Universal API not loaded",
+    "de": "Universelle API nicht geladen"
+  },
+  "Автоматически": {
+    "en": "Automatic",
+    "de": "Automatisch"
+  },
+  "Из проекта": {
+    "en": "From project",
+    "de": "Aus dem Projekt"
+  },
+  "Параметры облачной сборки": {
+    "en": "Cloud build settings",
+    "de": "Cloud-Build-Einstellungen"
+  },
+  "Arduino FQBN (если нужен другой)": {
+    "en": "Arduino FQBN (if different)",
+    "de": "Arduino-FQBN (falls abweichend)"
+  },
+  "Native target / board (при необходимости)": {
+    "en": "Native target / board (if required)",
+    "de": "Native target / board (bei Bedarf)"
+  },
+  "PlatformIO environment (необязательно)": {
+    "en": "PlatformIO environment (optional)",
+    "de": "PlatformIO-Environment (optional)"
+  },
+  "Arduino Nano (старый загрузчик)": {
+    "en": "Arduino Nano (old bootloader)",
+    "de": "Arduino Nano (alter Bootloader)"
+  },
+  "Загрузка API…": {
+    "en": "Loading API…",
+    "de": "API wird geladen…"
+  },
+  "Размер исходников не должен превышать 15 МиБ.": {
+    "en": "Source size must not exceed 15 MiB.",
+    "de": "Quelldateien dürfen 15 MiB nicht überschreiten."
+  },
+  "Нужен проект INO, ZIP, C, CPP или IOC.": {
+    "en": "An INO, ZIP, C, CPP or IOC project is required.",
+    "de": "Ein INO-, ZIP-, C-, CPP- oder IOC-Projekt ist erforderlich."
+  },
+  "Для одного IOC нужен STM32CubeMX; пока загрузи готовый проект.": {
+    "en": "An IOC alone requires STM32CubeMX; for now, upload a prepared project.",
+    "de": "Eine einzelne IOC-Datei erfordert STM32CubeMX; lade vorerst ein vorbereitetes Projekt hoch."
+  },
+  "Укажи точный Arduino FQBN в расширенных настройках.": {
+    "en": "Specify the exact Arduino FQBN in advanced settings.",
+    "de": "Gib den genauen Arduino-FQBN in den erweiterten Einstellungen an."
+  },
+  "Укажи точную модель STM32.": {
+    "en": "Specify the exact STM32 model.",
+    "de": "Gib das genaue STM32-Modell an."
+  },
+  "Укажи ESP target.": {
+    "en": "Specify the ESP target.",
+    "de": "Gib das ESP-Ziel an."
+  },
+  "Уточни систему сборки в расширенных настройках.": {
+    "en": "Specify the build system in advanced settings.",
+    "de": "Gib das Build-System in den erweiterten Einstellungen an."
+  },
+  "· проверяемый ZIP": {
+    "en": "· verifiable ZIP",
+    "de": "· prüfbare ZIP-Datei"
+  },
+  "Сначала отключи программатор": {
+    "en": "Disconnect the programmer first",
+    "de": "Trenne zuerst das Programmiergerät"
+  },
+  "Если браузер блокирует прямую загрузку приватного артефакта, скачай firmware-&lt;ID&gt; через журнал GitHub Actions и выбери ZIP здесь.": {
+    "en": "If the browser blocks direct download of a private artifact, download firmware-&lt;ID&gt; from the GitHub Actions log and select the ZIP here.",
+    "de": "Wenn der Browser den direkten Download eines privaten Artefakts blockiert, lade firmware-&lt;ID&gt; aus dem GitHub-Actions-Protokoll herunter und wähle die ZIP-Datei hier aus."
+  },
+  "Проверить и сохранить ZIP": {
+    "en": "Verify and save ZIP",
+    "de": "ZIP prüfen und speichern"
+  },
+  "Каталог Recovery недоступен": {
+    "en": "Recovery catalog unavailable",
+    "de": "Recovery-Katalog nicht verfügbar"
+  },
+  "Разметка ESP недоступна": {
+    "en": "ESP memory layout unavailable",
+    "de": "ESP-Speicheraufteilung nicht verfügbar"
+  },
+  "FS10 обнаружен в исходниках: выбери Recovery в настройках сборки": {
+    "en": "FS10 detected in source: select Recovery in build settings",
+    "de": "FS10 in den Quelldateien erkannt: Wähle Recovery in den Build-Einstellungen"
+  },
+  "STM32 target не совпадает": {
+    "en": "STM32 target mismatch",
+    "de": "STM32-Ziel stimmt nicht überein"
+  },
+  "Скачать проверенный ZIP": {
+    "en": "Download verified ZIP",
+    "de": "Verifizierte ZIP-Datei herunterladen"
+  },
+  "Проверены все": {
+    "en": "All",
+    "de": "Alle"
+  },
+  "файлов. ZIP сохранён.": {
+    "en": "files verified. ZIP saved.",
+    "de": "Dateien verifiziert. ZIP-Datei gespeichert."
+  },
+  "STM32WB OTA: отдельный образ приложения 0x08007000, прямую запись отключили. Экспортируй через панель OTA.": {
+    "en": "STM32WB OTA: separate application image at 0x08007000; direct programming is disabled. Export using the OTA panel.",
+    "de": "STM32WB OTA: separates Anwendungsabbild bei 0x08007000; direkte Programmierung deaktiviert. Exportiere über den OTA-Bereich."
+  },
+  "STM32WB: ELF проверен; экспериментальная запись CPU1 через SWD с проверкой памяти на устройстве. Совместимость радиостека не проверена.": {
+    "en": "STM32WB: ELF verified; experimental CPU1 programming via SWD with on-device memory checks. Radio stack compatibility unverified.",
+    "de": "STM32WB: ELF verifiziert; experimentelle CPU1-Programmierung über SWD mit Speicherprüfung am Gerät. Funkstack-Kompatibilität nicht geprüft."
+  },
+  "STM32WB: только компиляция, геометрия shared RAM не проверена.": {
+    "en": "STM32WB: compilation only; shared RAM geometry unverified.",
+    "de": "STM32WB: nur Kompilierung; Geometrie des gemeinsamen RAM nicht verifiziert."
+  },
+  "Ожидание остановлено; сборка GitHub продолжается.": {
+    "en": "Waiting stopped; GitHub build continues.",
+    "de": "Warten beendet; GitHub-Build läuft weiter."
+  },
+  "— открой журнал.": {
+    "en": "— open the log.",
+    "de": "— öffne das Protokoll."
+  },
+  "Сборка успешна. Получение артефакта…": {
+    "en": "Build successful. Retrieving artifact…",
+    "de": "Build erfolgreich. Artefakt wird abgerufen…"
+  },
+  "Автополучение:": {
+    "en": "Automatic retrieval:",
+    "de": "Automatischer Abruf:"
+  },
+  "; выбери ZIP из Artifacts.": {
+    "en": "; select ZIP from Artifacts.",
+    "de": "; wähle die ZIP-Datei unter Artifacts."
+  },
+  "Проверь позже через «Проверить последнюю сборку».": {
+    "en": "Check later using “Check latest build”.",
+    "de": "Prüfe später über „Letzten Build prüfen“."
+  },
+  "Укажи имя и версию": {
+    "en": "Enter name and version",
+    "de": "Name und Version eingeben"
+  },
+  "Такая версия уже есть": {
+    "en": "This version already exists",
+    "de": "Diese Version existiert bereits"
+  },
+  "Отправить исходники в": {
+    "en": "Send source files to",
+    "de": "Quelldateien senden an"
+  },
+  "? Они останутся в истории Git.": {
+    "en": "? They will remain in Git history.",
+    "de": "? Sie bleiben im Git-Verlauf erhalten."
+  },
+  "STM32WB: полный проект с лицензированными библиотеками пользователя и flasher-native.json (wbAppFlashKiB из SFSA). Для проверенной геометрии WB55 доступна экспериментальная запись CPU1 после ELF-аудита и проверки живых границ. Совместимость радиостека не проверена.": {
+    "en": "STM32WB: complete project with the user's licensed libraries and flasher-native.json (wbAppFlashKiB from SFSA). For reviewed WB55 geometry, experimental CPU1 programming is available after ELF audit and live boundary checks. Radio stack compatibility unverified.",
+    "de": "STM32WB: vollständiges Projekt mit lizenzierten Benutzerbibliotheken und flasher-native.json (wbAppFlashKiB aus SFSA). Für geprüfte WB55-Geometrie ist experimentelle CPU1-Programmierung nach ELF-Prüfung und Kontrolle der tatsächlichen Grenzen verfügbar. Funkstack-Kompatibilität nicht geprüft."
+  },
+  "STM32WB: CPU1, без автоматической загрузки Bluetooth Middleware.": {
+    "en": "STM32WB: CPU1, no automatic download of Bluetooth middleware.",
+    "de": "STM32WB: CPU1, kein automatischer Download der Bluetooth-Middleware."
+  },
+  "Предыдущий запрос сохранён; новый заменит ссылку.": {
+    "en": "Previous request saved; new request replaces the link.",
+    "de": "Vorherige Anfrage gespeichert; neue Anfrage ersetzt den Link."
+  },
+  "Recovery: каталог недоступен": {
+    "en": "Recovery: catalog unavailable",
+    "de": "Recovery: Katalog nicht verfügbar"
+  },
+  "Recovery: выбери совместимый ESP-профиль": {
+    "en": "Recovery: select a compatible ESP profile",
+    "de": "Recovery: kompatibles ESP-Profil auswählen"
+  },
+  "Добавлена проверенная разметка": {
+    "en": "Verified memory layout added",
+    "de": "Verifizierte Speicheraufteilung hinzugefügt"
+  },
+  "; оригинал не изменён.": {
+    "en": "; original unchanged.",
+    "de": "; Original unverändert."
+  },
+  "Для пользовательских исходников требуется приватный репозиторий.": {
+    "en": "A private repository is required for user source files.",
+    "de": "Für Benutzer-Quelldateien ist ein privates Repository erforderlich."
+  },
+  "Загрузка исходников…": {
+    "en": "Uploading source files…",
+    "de": "Quelldateien werden hochgeladen…"
+  },
+  "Запуск": {
+    "en": "Starting",
+    "de": "Starte"
+  },
+  "Выбери репозиторий запроса": {
+    "en": "Select request repository",
+    "de": "Repository der Anfrage auswählen"
+  },
+  "Нет завершённого запроса или ZIP": {
+    "en": "No completed request or ZIP",
+    "de": "Keine abgeschlossene Anfrage oder ZIP-Datei"
+  },
+  "Ошибка ZIP:": {
+    "en": "ZIP error:",
+    "de": "ZIP-Fehler:"
+  },
+  "32 hex символа": {
+    "en": "32 hex characters",
+    "de": "32 Hex-Zeichen"
+  },
+  "Токен уже установленного Recovery v0.2.0 / v0.2.1": {
+    "en": "Token of the already installed Recovery v0.2.0 / v0.2.1",
+    "de": "Token des bereits installierten Recovery v0.2.0 / v0.2.1"
+  },
+  "PIN сопряжения может запросить Android. Для обновления нужен app-only BIN, собранный с совместимой разметкой памяти.": {
+    "en": "Android may request a pairing PIN. An app-only BIN built with a compatible memory layout is required for the update.",
+    "de": "Android kann eine Pairing-PIN anfordern. Für das Update ist eine reine Anwendungs-BIN mit kompatibler Speicheraufteilung erforderlich."
+  },
+  "Реальная запись. Требуется подтверждение перед изменением Flash.": {
+    "en": "Actual programming. Confirmation is required before modifying Flash.",
+    "de": "Reale Programmierung. Vor einer Änderung des Flash-Speichers ist eine Bestätigung erforderlich."
+  },
+  "Интерфейс пока недоступен": {
+    "en": "Interface not available yet",
+    "de": "Schnittstelle noch nicht verfügbar"
+  },
+  "Связь подтверждена реальным ответом микроконтроллера.": {
+    "en": "Connection confirmed by an actual response from the microcontroller.",
+    "de": "Verbindung durch eine tatsächliche Antwort des Mikrocontrollers bestätigt."
+  },
+  "BLE: включи Recovery, укажи его токен и выбери устройство.": {
+    "en": "BLE: start Recovery, enter its token and select the device.",
+    "de": "BLE: Starte Recovery, gib dessen Token ein und wähle das Gerät."
+  },
+  "Android: WebUSB только для совместимых CDC-ACM устройств. CH340/CP210x могут не поддерживаться.": {
+    "en": "Android: WebUSB only for compatible CDC-ACM devices. CH340/CP210x may not be supported.",
+    "de": "Android: WebUSB nur für kompatible CDC-ACM-Geräte. CH340/CP210x werden möglicherweise nicht unterstützt."
+  },
+  "STM32: войди в системный Boot mode; AVR: нужен установленный STK500v1.": {
+    "en": "STM32: enter system boot mode; AVR: an installed STK500v1 is required.",
+    "de": "STM32: System-Bootmodus aktivieren; AVR: installiertes STK500v1 erforderlich."
+  },
+  "Записать и проверить": {
+    "en": "Program and verify",
+    "de": "Programmieren und verifizieren"
+  },
+  "Полный merged BIN": {
+    "en": "Full merged BIN",
+    "de": "Vollständige zusammengeführte BIN-Datei"
+  },
+  "CPU1 · только страницы приложения": {
+    "en": "CPU1 · application pages only",
+    "de": "CPU1 · nur Anwendungsseiten"
+  },
+  "Полная запись Flash (со стиранием)": {
+    "en": "Full Flash programming (with erase)",
+    "de": "Vollständige Flash-Programmierung (mit Löschen)"
+  },
+  "Версия ранее записанной программы не считывается автоматически.": {
+    "en": "The version of previously programmed firmware is not read automatically.",
+    "de": "Die Version der zuvor programmierten Firmware wird nicht automatisch ausgelesen."
+  }
+}

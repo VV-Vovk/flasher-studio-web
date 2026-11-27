@@ -1,0 +1,3 @@
+# Localization candidate v0.2.63
+
+Russian (default), English and German are selectable in Settings. Main interface, dynamic dialogs, device controls and serial-monitor chrome use the bundled translation catalog; known diagnostic messages are localized when presented. Raw tool/serial/compiler output and unknown driver messages remain verbatim. Existing data, IDs, enum values and protocols are unchanged. The source inventory records dynamic translation coverage. Release requires successful CI and explicit production deployment confirmation. Physical programming was not tested as part of this presentation-only change.

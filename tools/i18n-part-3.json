@@ -1,0 +1,802 @@
+{
+  "Из каталога (выбранная выше версия)": {
+    "en": "From catalog (version selected above)",
+    "de": "Aus Katalog (oben ausgewählte Version)"
+  },
+  "Подключить, записать и проверить CRC": {
+    "en": "Connect, program and verify CRC",
+    "de": "Verbinden, programmieren und CRC prüfen"
+  },
+  "Recovery FS10 подтвердил разметку.": {
+    "en": "Recovery FS10 confirmed the memory layout.",
+    "de": "Recovery FS10 hat die Speicheraufteilung bestätigt."
+  },
+  "Выбери версию STM32 FS10 в каталоге": {
+    "en": "Select the STM32 FS10 version in the catalog",
+    "de": "Wähle die STM32-FS10-Version im Katalog"
+  },
+  "Точно STM32F103C8T6 с установленным FS10? Приложение будет стёрто. Продолжить?": {
+    "en": "Are you sure this is an STM32F103C8T6 with FS10 installed? The application will be erased. Continue?",
+    "de": "Ist es sicher ein STM32F103C8T6 mit installiertem FS10? Die Anwendung wird gelöscht. Fortfahren?"
+  },
+  "Загрузчик подтвердил CRC32 и векторы. Отпусти PB12 и перезапусти. Запуск приложения не проверен.": {
+    "en": "Bootloader confirmed CRC32 and vectors. Release PB12 and restart. Application execution has not been verified.",
+    "de": "Bootloader hat CRC32 und Vektoren bestätigt. PB12 freigeben und neu starten. Ausführung der Anwendung wurde nicht geprüft."
+  },
+  "· после начала записи состояние приложения неизвестно.": {
+    "en": "· application state unknown after programming began.",
+    "de": "· Zustand der Anwendung nach Beginn der Programmierung unbekannt."
+  },
+  "USB-интерфейс телефона / ПК": {
+    "en": "Phone / PC USB interface",
+    "de": "USB-Schnittstelle von Telefon / PC"
+  },
+  "Авто · проводной USB": {
+    "en": "Auto · wired USB",
+    "de": "Auto · kabelgebundenes USB"
+  },
+  "На Android Авто показывает совместимые USB-устройства CH340 / CP210x / CDC, а не Bluetooth. Ручной выбор остаётся доступен. Старые CH340 без 8E1 не поддерживают STM32 ROM UART.": {
+    "en": "On Android, Auto lists compatible CH340 / CP210x / CDC USB devices, not Bluetooth. Manual selection remains available. Older CH340 without 8E1 do not support STM32 ROM UART.",
+    "de": "Unter Android zeigt Auto kompatible CH340- / CP210x- / CDC-USB-Geräte an, nicht Bluetooth. Manuelle Auswahl bleibt verfügbar. Ältere CH340 ohne 8E1 unterstützen STM32 ROM UART nicht."
+  },
+  "USB-интерфейс": {
+    "en": "USB interface",
+    "de": "USB-Schnittstelle"
+  },
+  "Использовать при подключении и установке загрузчика": {
+    "en": "Use for connection and bootloader installation",
+    "de": "Für Verbindung und Bootloader-Installation verwenden"
+  },
+  "На Android необходим USB OTG и разрешение Chrome. Драйверы ещё требуют испытаний на реальном оборудовании.": {
+    "en": "Android requires USB OTG and Chrome permission. Drivers still need testing on real hardware.",
+    "de": "Android erfordert USB OTG und Chrome-Berechtigung. Treiber müssen noch auf realer Hardware getestet werden."
+  },
+  "Требуется Recovery v0.2.1 с CORS. Подключись к индивидуальной Wi-Fi сети платы FS-… (без интернета). Разреши Chrome доступ к локальной сети. Выбери версию прошивки, собранную с разметкой Recovery v0.2.1, в каталоге выше.": {
+    "en": "Recovery v0.2.1 with CORS is required. Connect to the board's individual FS-… Wi-Fi network (without internet). Allow Chrome access to the local network. Select a firmware version built with the Recovery v0.2.1 layout from the catalog above.",
+    "de": "Recovery v0.2.1 mit CORS erforderlich. Verbinde dich mit dem individuellen FS-…-WLAN der Platine (ohne Internet). Erlaube Chrome den Zugriff auf das lokale Netzwerk. Wähle im obigen Katalog eine Firmware-Version mit Recovery-v0.2.1-Speicheraufteilung."
+  },
+  "Токен платы": {
+    "en": "Board token",
+    "de": "Platinen-Token"
+  },
+  "Проверить устройство и обновить": {
+    "en": "Verify device and update",
+    "de": "Gerät prüfen und aktualisieren"
+  },
+  "USB-модуль загружается…": {
+    "en": "USB module loading…",
+    "de": "USB-Modul wird geladen…"
+  },
+  "Используй Wi-Fi Recovery ниже": {
+    "en": "Use Wi-Fi Recovery below",
+    "de": "Verwende unten WLAN-Recovery"
+  },
+  "Wi-Fi OTA: соединение по локальной сети, не USB.": {
+    "en": "Wi-Fi OTA: local network connection, not USB.",
+    "de": "WLAN-OTA: Verbindung über lokales Netzwerk, nicht USB."
+  },
+  "Выбери собранную для этой платы версию с разметкой Recovery": {
+    "en": "Select a version built for this board using Recovery layout",
+    "de": "Wähle eine für diese Platine mit Recovery-Aufteilung erstellte Version"
+  },
+  "Несовместимый каталог Recovery": {
+    "en": "Incompatible Recovery catalog",
+    "de": "Inkompatibler Recovery-Katalog"
+  },
+  "Подключена не выбранная плата": {
+    "en": "Connected board is not the selected board",
+    "de": "Verbundene Platine stimmt nicht mit Auswahl überein"
+  },
+  "Устройство:": {
+    "en": "Device:",
+    "de": "Gerät:"
+  },
+  "· разметка подтверждена.": {
+    "en": "· memory layout confirmed.",
+    "de": "· Speicheraufteilung bestätigt."
+  },
+  "Обновить": {
+    "en": "Update",
+    "de": "Aktualisiere"
+  },
+  "до": {
+    "en": "to",
+    "de": "auf"
+  },
+  "? Только для тестовой платы.": {
+    "en": "? For a test board only.",
+    "de": "? Nur für eine Testplatine."
+  },
+  "Recovery подтвердил SHA-256": {
+    "en": "Recovery confirmed SHA-256",
+    "de": "Recovery hat SHA-256 bestätigt"
+  },
+  "и принял образ. Запуск приложения не проверен.": {
+    "en": "and accepted the image. Application execution has not been verified.",
+    "de": "und das Abbild angenommen. Ausführung der Anwendung wurde nicht geprüft."
+  },
+  "· результат записи неизвестен.": {
+    "en": "· programming result unknown.",
+    "de": "· Programmierergebnis unbekannt."
+  },
+  "· запись не начата.": {
+    "en": "· programming not started.",
+    "de": "· Programmierung nicht gestartet."
+  },
+  "Если браузер блокирует доступ, проверь локальную сеть и версию Recovery.": {
+    "en": "If the browser blocks access, check the local network and Recovery version.",
+    "de": "Wenn der Browser den Zugriff blockiert, prüfe das lokale Netzwerk und die Recovery-Version."
+  },
+  "Установка STM32 UART Recovery": {
+    "en": "STM32 UART Recovery installation",
+    "de": "STM32-UART-Recovery-Installation"
+  },
+  "Кандидат, аппаратных испытаний нет. Вся Flash будет стёрта, Option Bytes не изменяются. После установки приложение должно быть скомпоновано для 0x08004000, не для обычной Flash.": {
+    "en": "Candidate, no hardware tests. All Flash will be erased; option bytes are not changed. After installation, the application must be linked to 0x08004000, not the normal Flash base.",
+    "de": "Kandidat, keine Hardwaretests. Gesamter Flash wird gelöscht; Option Bytes bleiben unverändert. Nach der Installation muss die Anwendung auf 0x08004000 gelinkt werden, nicht auf den normalen Flash-Beginn."
+  },
+  "Подключить SWD и проверить UID": {
+    "en": "Connect SWD and verify UID",
+    "de": "SWD verbinden und UID prüfen"
+  },
+  "Скачать полную копию Flash": {
+    "en": "Download full Flash backup",
+    "de": "Vollständige Flash-Sicherung herunterladen"
+  },
+  "Копия сохранена. Это тестовая плата. Разрешаю полное стирание.": {
+    "en": "Backup saved. This is a test board. I authorize full erase.",
+    "de": "Sicherung gespeichert. Dies ist eine Testplatine. Ich erlaube vollständiges Löschen."
+  },
+  "Пакет и linker script проверены.": {
+    "en": "Package and linker script verified.",
+    "de": "Paket und Linker-Skript verifiziert."
+  },
+  "Подключена другая сохранённая плата": {
+    "en": "A different saved board is connected",
+    "de": "Eine andere gespeicherte Platine ist verbunden"
+  },
+  "· 64 КиБ Flash.": {
+    "en": "· 64 KiB Flash.",
+    "de": "· 64 KiB Flash."
+  },
+  "Резервная копия подготовлена: SHA-256": {
+    "en": "Backup prepared: SHA-256",
+    "de": "Sicherung vorbereitet: SHA-256"
+  },
+  ". Проверь, что файл сохранён.": {
+    "en": ". Verify that the file is saved.",
+    "de": ". Prüfe, ob die Datei gespeichert wurde."
+  },
+  "Стереть все 64 КиБ Flash": {
+    "en": "Erase all 64 KiB of Flash on",
+    "de": "Gesamte 64 KiB Flash löschen auf"
+  },
+  "и записать экспериментальный Recovery?": {
+    "en": "and program the experimental Recovery?",
+    "de": "und experimentelles Recovery programmieren?"
+  },
+  "Readback загрузчика совпал. Сбрось плату; запуск Recovery ещё не проверен.": {
+    "en": "Bootloader readback matches. Reset the board; Recovery execution has not yet been verified.",
+    "de": "Bootloader-Rücklesedaten stimmen überein. Setze die Platine zurück; Ausführung von Recovery wurde noch nicht geprüft."
+  },
+  "ST-LINK/V2, V2-1 или CMSIS-DAP v2; публичный кандидат, без аппаратных испытаний.": {
+    "en": "ST-LINK/V2, V2-1 or CMSIS-DAP v2; public candidate, no hardware tests.",
+    "de": "ST-LINK/V2, V2-1 oder CMSIS-DAP v2; öffentlicher Kandidat, keine Hardwaretests."
+  },
+  "ST-LINK/V2 или V2-1": {
+    "en": "ST-LINK/V2 or V2-1",
+    "de": "ST-LINK/V2 oder V2-1"
+  },
+  "Тип CMSIS-DAP": {
+    "en": "CMSIS-DAP type",
+    "de": "CMSIS-DAP-Typ"
+  },
+  "WebHID обычно доступен на ПК, не на Android.": {
+    "en": "WebHID is usually available on PCs, not Android.",
+    "de": "WebHID ist normalerweise auf PCs verfügbar, nicht unter Android."
+  },
+  "ST-LINK · SWDIO, SWCLK, GND. Питание платы включено. BOOT0 переключать не нужно.": {
+    "en": "ST-LINK · SWDIO, SWCLK, GND. Board powered on. No need to change BOOT0.",
+    "de": "ST-LINK · SWDIO, SWCLK, GND. Platine mit Strom versorgt. BOOT0 muss nicht umgeschaltet werden."
+  },
+  "· SWDIO, SWCLK, GND. После записи ручной RESET. Аппаратные испытания ещё не проводились.": {
+    "en": "· SWDIO, SWCLK, GND. Manual RESET after programming. Hardware tests have not yet been performed.",
+    "de": "· SWDIO, SWCLK, GND. Manueller RESET nach Programmierung. Hardwaretests wurden noch nicht durchgeführt."
+  },
+  "Выбери проект и версию FS10 в блоке записи прошивки выше.": {
+    "en": "Select the FS10 project and version in the firmware programming section above.",
+    "de": "Wähle FS10-Projekt und Version im obigen Abschnitt zur Firmware-Programmierung."
+  },
+  "Только UART Recovery FS10": {
+    "en": "UART Recovery FS10 only",
+    "de": "Nur UART Recovery FS10"
+  },
+  "Нет совместимого пакета или установщика.": {
+    "en": "No compatible package or installer.",
+    "de": "Kein kompatibles Paket oder Installationsprogramm."
+  },
+  "Отдельная операция · не требуется для обычной записи приложения.": {
+    "en": "Separate operation · not required for normal application programming.",
+    "de": "Separater Vorgang · für normale Anwendungsprogrammierung nicht erforderlich."
+  },
+  "Настройки ESP Recovery": {
+    "en": "ESP Recovery settings",
+    "de": "ESP-Recovery-Einstellungen"
+  },
+  "Объём Flash": {
+    "en": "Flash size",
+    "de": "Flash-Größe"
+  },
+  "4 МиБ": {
+    "en": "4 MiB",
+    "de": "4 MiB"
+  },
+  "8 МиБ": {
+    "en": "8 MiB",
+    "de": "8 MiB"
+  },
+  "16 МиБ": {
+    "en": "16 MiB",
+    "de": "16 MiB"
+  },
+  "Беспроводные интерфейсы": {
+    "en": "Wireless interfaces",
+    "de": "Funkschnittstellen"
+  },
+  "GPIO активации (LOW)": {
+    "en": "Activation GPIO (LOW)",
+    "de": "Aktivierungs-GPIO (LOW)"
+  },
+  "Удержание после сброса": {
+    "en": "Hold after reset",
+    "de": "Halten nach Reset"
+  },
+  "0 с · проверка GPIO без задержки": {
+    "en": "0 s · check GPIO without delay",
+    "de": "0 s · GPIO ohne Verzögerung prüfen"
+  },
+  "1 с": {
+    "en": "1 s",
+    "de": "1 s"
+  },
+  "2 с": {
+    "en": "2 s",
+    "de": "2 s"
+  },
+  "3 с · по умолчанию": {
+    "en": "3 s · default",
+    "de": "3 s · Standard"
+  },
+  "4 с": {
+    "en": "4 s",
+    "de": "4 s"
+  },
+  "5 с": {
+    "en": "5 s",
+    "de": "5 s"
+  },
+  "Сбросить настройки по умолчанию": {
+    "en": "Restore defaults",
+    "de": "Standardeinstellungen wiederherstellen"
+  },
+  "GPIO должен быть свободным на конкретной плате. Параметры записываются при сборке загрузчика. Если точного пакета нет, установка недоступна.": {
+    "en": "GPIO must be free on the specific board. Settings are written during bootloader build. If no exact package exists, installation is unavailable.",
+    "de": "GPIO muss auf der konkreten Platine frei sein. Einstellungen werden beim Build des Bootloaders festgelegt. Ohne genau passendes Paket ist die Installation nicht verfügbar."
+  },
+  "· по умолчанию": {
+    "en": "· default",
+    "de": "· Standard"
+  },
+  "Найден точный профиль:": {
+    "en": "Exact profile found:",
+    "de": "Genaues Profil gefunden:"
+  },
+  "верс. · выбери версию ниже.": {
+    "en": "versions · select a version below.",
+    "de": "Versionen · wähle unten eine Version."
+  },
+  "Нет готового пакета для этих настроек. Сборка из приложения пока недоступна.": {
+    "en": "No prepared package for these settings. Building from the app is not yet available.",
+    "de": "Kein fertiges Paket für diese Einstellungen. Build aus der App noch nicht verfügbar."
+  },
+  "Пакеты ESP пока приватные; для испытаний требуется проверенный ZIP.": {
+    "en": "ESP packages are still private; a verified ZIP is required for testing.",
+    "de": "ESP-Pakete sind noch privat; zum Testen ist eine verifizierte ZIP-Datei erforderlich."
+  },
+  "Выбери другие параметры или сбрось настройки.": {
+    "en": "Choose different parameters or reset settings.",
+    "de": "Wähle andere Parameter oder setze Einstellungen zurück."
+  },
+  "Облачная сборка ESP Recovery": {
+    "en": "ESP Recovery cloud build",
+    "de": "ESP-Recovery-Cloud-Build"
+  },
+  "Подготовить загрузчик": {
+    "en": "Prepare bootloader",
+    "de": "Bootloader vorbereiten"
+  },
+  "Проверить предыдущую сборку": {
+    "en": "Check previous build",
+    "de": "Vorherigen Build prüfen"
+  },
+  "Сбросить ожидание сборки": {
+    "en": "Reset build waiting state",
+    "de": "Build-Wartestatus zurücksetzen"
+  },
+  "Открыть журнал GitHub": {
+    "en": "Open GitHub log",
+    "de": "GitHub-Protokoll öffnen"
+  },
+  "Сборка в твоём приватном GitHub Builder. Используется обычный токен компилятора. Установка на тестовой плате.": {
+    "en": "Build in your private GitHub Builder. The regular compiler token is used. Installation on a test board.",
+    "de": "Build in deinem privaten GitHub Builder. Das normale Compiler-Token wird verwendet. Installation auf einer Testplatine."
+  },
+  "Импорт собственного ZIP (дополнительно)": {
+    "en": "Import custom ZIP (optional)",
+    "de": "Eigene ZIP-Datei importieren (optional)"
+  },
+  "Проверить и добавить свой пакет": {
+    "en": "Verify and add custom package",
+    "de": "Eigenes Paket prüfen und hinzufügen"
+  },
+  "Только собственная проверочная сборка.": {
+    "en": "Your own test build only.",
+    "de": "Nur eigener Test-Build."
+  },
+  "Собственный пакет доступен. Публичная раздача ESP не включена.": {
+    "en": "Custom package available. Public ESP distribution is not enabled.",
+    "de": "Eigenes Paket verfügbar. Öffentliche ESP-Verteilung ist nicht aktiviert."
+  },
+  "Выбери оба файла из одной собственной сборки.": {
+    "en": "Select both files from the same custom build.",
+    "de": "Wähle beide Dateien aus demselben eigenen Build."
+  },
+  "Подтверждаешь, что это твоя локальная сборка из исходников Flasher Studio? Контрольные суммы проверяют целостность, а не авторство. Только тестовая плата.": {
+    "en": "Confirm that this is your own local build from Flasher Studio sources? Checksums verify integrity, not authorship. Test board only.",
+    "de": "Bestätigst du, dass dies dein eigener lokaler Build aus Flasher-Studio-Quellen ist? Prüfsummen verifizieren Integrität, nicht Urheberschaft. Nur Testplatine."
+  },
+  "Лимит локальных записей": {
+    "en": "Local entry limit",
+    "de": "Limit lokaler Einträge"
+  },
+  "Метаданные сохранены только на текущий сеанс": {
+    "en": "Metadata saved for current session only",
+    "de": "Metadaten nur für aktuelle Sitzung gespeichert"
+  },
+  "Проверен локальный ZIP. Выбрана точная конфигурация. После перезагрузки приложения при установке потребуется выбрать ZIP заново.": {
+    "en": "Local ZIP verified. Exact configuration selected. After reloading the app, select the ZIP again when installing.",
+    "de": "Lokale ZIP-Datei verifiziert. Genaue Konfiguration ausgewählt. Nach dem Neuladen der App muss die ZIP-Datei bei der Installation erneut ausgewählt werden."
+  },
+  "Собственный локальный пакет проверен. Не является публичным релизом.": {
+    "en": "Custom local package verified. Not a public release.",
+    "de": "Eigenes lokales Paket verifiziert. Kein öffentliches Release."
+  },
+  "Локальный ZIP и разметка проверены.": {
+    "en": "Local ZIP and memory layout verified.",
+    "de": "Lokale ZIP-Datei und Speicheraufteilung verifiziert."
+  },
+  "Подготовить или выбрать сохранённый загрузчик": {
+    "en": "Prepare or select saved bootloader",
+    "de": "Bootloader vorbereiten oder gespeicherten auswählen"
+  },
+  "Собрать загрузчик в GitHub": {
+    "en": "Build bootloader on GitHub",
+    "de": "Bootloader auf GitHub erstellen"
+  },
+  "Нет своего пакета для этих настроек. Собери его в GitHub.": {
+    "en": "No custom package for these settings. Build it on GitHub.",
+    "de": "Kein eigenes Paket für diese Einstellungen. Erstelle es auf GitHub."
+  },
+  "Выбор готового пакета станет доступен после сборки.": {
+    "en": "Prepared package selection will be available after the build.",
+    "de": "Auswahl des fertigen Pakets ist nach dem Build verfügbar."
+  },
+  "Достигнут лимит сохранённых загрузчиков": {
+    "en": "Saved bootloader limit reached",
+    "de": "Limit gespeicherter Bootloader erreicht"
+  },
+  "Сборка GitHub:": {
+    "en": "GitHub build:",
+    "de": "GitHub-Build:"
+  },
+  ". Открой журнал.": {
+    "en": ". Open the log.",
+    "de": ". Öffne das Protokoll."
+  },
+  "Сборка завершена. Проверяем и сохраняем загрузчик…": {
+    "en": "Build completed. Verifying and saving bootloader…",
+    "de": "Build abgeschlossen. Bootloader wird geprüft und gespeichert…"
+  },
+  "Получение проверенных частей:": {
+    "en": "Retrieving verified parts:",
+    "de": "Verifizierte Teile werden abgerufen:"
+  },
+  "Загрузчик готов и сохранён. Теперь можно установить его по USB.": {
+    "en": "Bootloader ready and saved. You can now install it via USB.",
+    "de": "Bootloader fertig und gespeichert. Du kannst ihn jetzt über USB installieren."
+  },
+  "ожидает запуска": {
+    "en": "waiting to start",
+    "de": "wartet auf Start"
+  },
+  "идёт сборка и проверка": {
+    "en": "building and verifying",
+    "de": "Build und Prüfung laufen"
+  },
+  "Ищем запущенную сборку в GitHub…": {
+    "en": "Looking for the running build on GitHub…",
+    "de": "Laufender Build auf GitHub wird gesucht…"
+  },
+  "Ожидание остановлено. Нажми «Проверить предыдущую сборку», не запускай её повторно.": {
+    "en": "Waiting stopped. Press “Check previous build”; do not start it again.",
+    "de": "Warten beendet. Drücke „Vorherigen Build prüfen“; starte ihn nicht erneut."
+  },
+  "Готовый загрузчик найден. Компиляция не нужна.": {
+    "en": "Prepared bootloader found. Compilation not required.",
+    "de": "Fertiger Bootloader gefunden. Keine Kompilierung erforderlich."
+  },
+  "Собрать ESP Recovery в твоём приватном Builder": {
+    "en": "Build ESP Recovery in your private Builder",
+    "de": "ESP Recovery in deinem privaten Builder erstellen"
+  },
+  "? Используются минуты GitHub Actions твоего аккаунта. Публичного релиза не будет.": {
+    "en": "? Uses GitHub Actions minutes from your account. There will be no public release.",
+    "de": "? Verwendet GitHub-Actions-Minuten deines Kontos. Es erfolgt kein öffentliches Release."
+  },
+  "Запускаем сборку…": {
+    "en": "Starting build…",
+    "de": "Build wird gestartet…"
+  },
+  "GitHub не подтвердил запуск:": {
+    "en": "GitHub did not confirm the launch:",
+    "de": "GitHub hat den Start nicht bestätigt:"
+  },
+  ". Проверяем, не была ли сборка уже принята.": {
+    "en": ". Checking whether the build was already accepted.",
+    "de": ". Es wird geprüft, ob der Build bereits angenommen wurde."
+  },
+  "· проверь предыдущую сборку.": {
+    "en": "· check previous build.",
+    "de": "· vorherigen Build prüfen."
+  },
+  "Сбросить ожидание? Уже запущенная задача GitHub не отменяется. Проверь журнал перед повторной сборкой.": {
+    "en": "Reset waiting? A running GitHub job will not be cancelled. Check the log before rebuilding.",
+    "de": "Warten zurücksetzen? Ein bereits laufender GitHub-Job wird nicht abgebrochen. Prüfe das Protokoll vor einem erneuten Build."
+  },
+  "Ожидание сброшено.": {
+    "en": "Waiting reset.",
+    "de": "Warten zurückgesetzt."
+  },
+  "Загрузчик восстановлен из хранилища и проверен.": {
+    "en": "Bootloader restored from storage and verified.",
+    "de": "Bootloader aus Speicher wiederhergestellt und verifiziert."
+  },
+  "Не удалось получить сохранённый ZIP:": {
+    "en": "Could not retrieve saved ZIP:",
+    "de": "Gespeicherte ZIP-Datei konnte nicht abgerufen werden:"
+  },
+  "Облачная сборка недоступна:": {
+    "en": "Cloud build unavailable:",
+    "de": "Cloud-Build nicht verfügbar:"
+  },
+  "Монитор недоступен:": {
+    "en": "Monitor unavailable:",
+    "de": "Monitor nicht verfügbar:"
+  },
+  "Zephyr 4.1.0 · точная цель платы, не подтверждение физического SoC": {
+    "en": "Zephyr 4.1.0 · exact board target, not confirmation of physical SoC",
+    "de": "Zephyr 4.1.0 · genaues Platinenziel, keine Bestätigung des physischen SoC"
+  },
+  "Указать полный код ·": {
+    "en": "Specify full part number ·",
+    "de": "Vollständige Bauteilbezeichnung angeben ·"
+  },
+  "Нет доступного профиля": {
+    "en": "No available profile",
+    "de": "Kein verfügbares Profil"
+  },
+  "· USBasp / ArduinoISP · без смены fuse": {
+    "en": "· USBasp / ArduinoISP · no fuse changes",
+    "de": "· USBasp / ArduinoISP · keine Fuse-Änderungen"
+  },
+  "· эксперимент SWD во вкладке Устройство": {
+    "en": "· experimental SWD in Device tab",
+    "de": "· experimentelles SWD im Geräte-Tab"
+  },
+  "Для этой модели нет доступной сборки или записи": {
+    "en": "No build or programming available for this model",
+    "de": "Kein Build und keine Programmierung für dieses Modell verfügbar"
+  },
+  "Введи полный код вместо x": {
+    "en": "Enter full part number instead of x",
+    "de": "Gib die vollständige Bauteilbezeichnung statt x ein"
+  },
+  "Устройство пока не поддерживается": {
+    "en": "Device not supported yet",
+    "de": "Gerät noch nicht unterstützt"
+  },
+  "Для этой платы пока нет доступной сборки или записи": {
+    "en": "No build or programming available for this board yet",
+    "de": "Für diese Platine sind Build und Programmierung noch nicht verfügbar"
+  },
+  "Только компиляция · запись пока недоступна": {
+    "en": "Compilation only · programming not available yet",
+    "de": "Nur Kompilierung · Programmierung noch nicht verfügbar"
+  },
+  "Модель не поддерживается": {
+    "en": "Model not supported",
+    "de": "Modell nicht unterstützt"
+  },
+  "Этот интерфейс пока недоступен для выбранной модели": {
+    "en": "This interface is not yet available for the selected model",
+    "de": "Diese Schnittstelle ist für das ausgewählte Modell noch nicht verfügbar"
+  },
+  "Компиляция доступна. Для записи используй внешний программатор.": {
+    "en": "Compilation available. Use an external programmer for programming.",
+    "de": "Kompilierung verfügbar. Verwende zur Programmierung ein externes Programmiergerät."
+  },
+  "Эта модель пока не поддерживается.": {
+    "en": "This model is not supported yet.",
+    "de": "Dieses Modell wird noch nicht unterstützt."
+  },
+  "ATtiny: выбери Arduino и точный FQBN выбранной модели/тактирования:": {
+    "en": "ATtiny: select Arduino and exact FQBN for the selected model/clock configuration:",
+    "de": "ATtiny: Wähle Arduino und den genauen FQBN für Modell/Taktkonfiguration:"
+  },
+  "STM32WB: выбери CPU1 (STM32 bare) или CubeIDE GNU и точную модель без переопределения.": {
+    "en": "STM32WB: select CPU1 (STM32 bare) or CubeIDE GNU and the exact model without overriding it.",
+    "de": "STM32WB: Wähle CPU1 (STM32 bare) oder CubeIDE GNU und das genaue Modell ohne Überschreibung."
+  },
+  "STM32WB: сначала выбери соответствующую целевую модель.": {
+    "en": "STM32WB: select the corresponding target model first.",
+    "de": "STM32WB: Wähle zuerst das passende Zielmodell."
+  },
+  "Компиляция выбранной модели пока не поддерживается.": {
+    "en": "Compilation for selected model is not yet supported.",
+    "de": "Kompilierung für das ausgewählte Modell wird noch nicht unterstützt."
+  },
+  "Проверяем каталог возможностей…": {
+    "en": "Checking capability catalog…",
+    "de": "Funktionskatalog wird geprüft…"
+  },
+  "Нет подтверждённого профиля сборки STM32.": {
+    "en": "No confirmed STM32 build profile.",
+    "de": "Kein bestätigtes STM32-Build-Profil."
+  },
+  "STM32WB · память проекта": {
+    "en": "STM32WB · project memory",
+    "de": "STM32WB · Projektspeicher"
+  },
+  "Скачать flasher-native.json": {
+    "en": "Download flasher-native.json",
+    "de": "flasher-native.json herunterladen"
+  },
+  "Помести JSON в корень исходного CubeIDE ZIP. Если файл уже есть, перенеси только wbAppFlashKiB, не удаляй другие настройки. Совместимость радиостека проверяется отдельно.": {
+    "en": "Place the JSON in the root of the source CubeIDE ZIP. If the file already exists, transfer only wbAppFlashKiB; do not remove other settings. Radio stack compatibility is checked separately.",
+    "de": "Lege die JSON-Datei im Stammverzeichnis der CubeIDE-Quell-ZIP ab. Falls die Datei bereits existiert, übernimm nur wbAppFlashKiB; entferne keine anderen Einstellungen. Funkstack-Kompatibilität wird separat geprüft."
+  },
+  "Flash CPU1 по SFSA:": {
+    "en": "CPU1 Flash according to SFSA:",
+    "de": "CPU1-Flash gemäß SFSA:"
+  },
+  "КиБ. Конфигурация будет считана повторно перед скачиванием.": {
+    "en": "KiB. Configuration will be read again before download.",
+    "de": "KiB. Konfiguration wird vor dem Download erneut ausgelesen."
+  },
+  "Устройство изменилось": {
+    "en": "Device changed",
+    "de": "Gerät geändert"
+  },
+  "КиБ; IPCCDBA": {
+    "en": "KiB; IPCCDBA",
+    "de": "KiB; IPCCDBA"
+  },
+  "нестандартный": {
+    "en": "nonstandard",
+    "de": "nicht standardmäßig"
+  },
+  "WB: конфигурация CPU1": {
+    "en": "WB: CPU1 configuration",
+    "de": "WB: CPU1-Konfiguration"
+  },
+  "КиБ сохранена; запись не выполнялась.": {
+    "en": "KiB saved; no programming performed.",
+    "de": "KiB gespeichert; keine Programmierung durchgeführt."
+  },
+  "Диагностика заводского USB DFU в Boot mode. Если ROM не позволяет прочитать границы памяти, запись не разрешается.": {
+    "en": "Factory USB DFU diagnostics in boot mode. If ROM does not allow memory boundaries to be read, programming is not permitted.",
+    "de": "Werks-USB-DFU-Diagnose im Bootmodus. Wenn ROM das Auslesen der Speichergrenzen nicht zulässt, ist Programmierung nicht erlaubt."
+  },
+  "Проверить USB DFU (только чтение)": {
+    "en": "Check USB DFU (read only)",
+    "de": "USB DFU prüfen (nur lesen)"
+  },
+  "CPU1 HEX для экспериментальной записи DFU": {
+    "en": "CPU1 HEX for experimental DFU programming",
+    "de": "CPU1-HEX für experimentelle DFU-Programmierung"
+  },
+  "Записать CPU1 через DFU (эксперимент)": {
+    "en": "Program CPU1 via DFU (experimental)",
+    "de": "CPU1 über DFU programmieren (experimentell)"
+  },
+  "Для штатного BLE OTA WB55: проверка сервиса без записи и подготовка локального HEX приложения, скомпонованного на 0x08007000.": {
+    "en": "For standard WB55 BLE OTA: verify service without programming and prepare local application HEX linked to 0x08007000.",
+    "de": "Für standardmäßiges WB55-BLE-OTA: Dienst ohne Programmierung prüfen und lokale Anwendungs-HEX mit Linker-Adresse 0x08007000 vorbereiten."
+  },
+  "Проверить BLE OTA сервис": {
+    "en": "Check BLE OTA service",
+    "de": "BLE-OTA-Dienst prüfen"
+  },
+  "Граница CPU1 Flash, КиБ (из SFSA)": {
+    "en": "CPU1 Flash boundary, KiB (from SFSA)",
+    "de": "CPU1-Flash-Grenze, KiB (aus SFSA)"
+  },
+  "Адресный HEX приложения OTA": {
+    "en": "Addressed OTA application HEX",
+    "de": "Adressierte OTA-Anwendungs-HEX"
+  },
+  "Проверить HEX и скачать OTA BIN": {
+    "en": "Verify HEX and download OTA BIN",
+    "de": "HEX prüfen und OTA-BIN herunterladen"
+  },
+  "Скачать OTA BIN из выбранной версии каталога": {
+    "en": "Download OTA BIN from selected catalog version",
+    "de": "OTA-BIN aus ausgewählter Katalogversion herunterladen"
+  },
+  "Передать выбранный HEX через BLE (эксперимент)": {
+    "en": "Transfer selected HEX via BLE (experimental)",
+    "de": "Ausgewählte HEX über BLE übertragen (experimentell)"
+  },
+  "BIN для установленного совместимого BLE_Ota. Размер и совместимость радиостека на устройстве не подтверждаются. Передача доступна только для вручную подготовленного совместимого BLE_Ota с уже стёртыми страницами; подтверждение перезагрузки не равно readback.": {
+    "en": "BIN for an installed compatible BLE_Ota. Size and radio stack compatibility are not confirmed on device. Transfer is only available for manually prepared compatible BLE_Ota with already erased pages; reboot confirmation is not readback.",
+    "de": "BIN für ein installiertes kompatibles BLE_Ota. Größe und Funkstack-Kompatibilität werden am Gerät nicht bestätigt. Übertragung nur für manuell vorbereitetes kompatibles BLE_Ota mit bereits gelöschten Seiten; Neustartbestätigung ist kein Rücklesen."
+  },
+  "Радиостек и FUS": {
+    "en": "Radio stack and FUS",
+    "de": "Funkstack und FUS"
+  },
+  "Локальная сверка файла с официальной версией STM32CubeWB v1.24.0. Файл не загружается на сервер. Установка только после проверки совместимости и инструкций ST.": {
+    "en": "Local comparison of file with official STM32CubeWB v1.24.0. File is not uploaded to a server. Installation only after verifying compatibility and ST instructions.",
+    "de": "Lokaler Abgleich der Datei mit offiziellem STM32CubeWB v1.24.0. Datei wird nicht auf einen Server hochgeladen. Installation nur nach Prüfung der Kompatibilität und ST-Anleitungen."
+  },
+  "Проверить оригинальность файла ST": {
+    "en": "Verify original ST file",
+    "de": "Original-ST-Datei prüfen"
+  },
+  "План установки через STM32CubeProgrammer (без прямой записи из браузера).": {
+    "en": "Installation plan using STM32CubeProgrammer (no direct programming from browser).",
+    "de": "Installationsplan mit STM32CubeProgrammer (keine direkte Programmierung aus dem Browser)."
+  },
+  "Текущая версия FUS (из CubeProgrammer)": {
+    "en": "Current FUS version (from CubeProgrammer)",
+    "de": "Aktuelle FUS-Version (aus CubeProgrammer)"
+  },
+  "Сохраняемая область CPU1, КиБ от начала Flash": {
+    "en": "CPU1 area to preserve, KiB from Flash start",
+    "de": "Zu erhaltender CPU1-Bereich, KiB ab Flash-Beginn"
+  },
+  "Проверить совместимость и подготовить план": {
+    "en": "Check compatibility and prepare plan",
+    "de": "Kompatibilität prüfen und Plan vorbereiten"
+  },
+  "Эксперимент для STM32WB35/WB55 с USB ROM DFU. Перед заменой старого стека проверь резервную копию CPU1 и наличие оригинального BIN нового стека. Подготовка записывает BIN только в пустые страницы и проверяет чтением; установка разрешена только при пустой области вне проверенной резервной копии CPU1 и области BIN. Прямое обновление требует FUS 2.2.0 и нового формата стека; сохранение pairing зависит от совместимости старого и нового стека. Сохрани данные, проверь Release Notes, обеспечь стабильное питание. Не отключай питание и не повторяй команду при USB-сбросе.": {
+    "en": "Experimental for STM32WB35/WB55 with USB ROM DFU. Before replacing the old stack, verify the CPU1 backup and original BIN of the new stack. Preparation writes BIN only to empty pages and verifies by readback; installation is allowed only if the area outside the verified CPU1 backup and BIN area is empty. Direct update requires FUS 2.2.0 and the new stack format; preserving pairing depends on compatibility of old and new stack. Save data, check Release Notes and ensure stable power. Do not disconnect power or repeat the command on USB reset.",
+    "de": "Experimentell für STM32WB35/WB55 mit USB ROM DFU. Prüfe vor dem Austausch des alten Stacks die CPU1-Sicherung und die originale BIN-Datei des neuen Stacks. Die Vorbereitung schreibt BIN nur in leere Seiten und verifiziert durch Rücklesen; Installation ist nur bei leerem Bereich außerhalb der verifizierten CPU1-Sicherung und des BIN-Bereichs erlaubt. Direktes Update erfordert FUS 2.2.0 und das neue Stack-Format; Erhalt von Pairing hängt von der Kompatibilität des alten und neuen Stacks ab. Sichere Daten, prüfe Release Notes und stelle stabile Stromversorgung sicher. Bei USB-Reset Stromversorgung nicht trennen und Befehl nicht wiederholen."
+  },
+  "Записать BIN в пустую область (без запуска FUS)": {
+    "en": "Program BIN into empty area (without starting FUS)",
+    "de": "BIN in leeren Bereich programmieren (ohne FUS-Start)"
+  },
+  "Перейти из радиостека в FUS (эксперимент)": {
+    "en": "Switch from radio stack to FUS (experimental)",
+    "de": "Vom Funkstack zu FUS wechseln (experimentell)"
+  },
+  "Сохранить резервную копию указанной области CPU1": {
+    "en": "Save backup of specified CPU1 area",
+    "de": "Sicherung des angegebenen CPU1-Bereichs speichern"
+  },
+  "Резервная копия CPU1 (BIN, от начала Flash; обязательна при сохранении ненулевой области)": {
+    "en": "CPU1 backup (BIN from Flash start; required when preserving a nonzero area)",
+    "de": "CPU1-Sicherung (BIN ab Flash-Beginn; erforderlich bei Erhalt eines Bereichs größer null)"
+  },
+  "Установить через FUS с проверкой CPU1 (эксперимент)": {
+    "en": "Install via FUS with CPU1 verification (experimental)",
+    "de": "Über FUS mit CPU1-Prüfung installieren (experimentell)"
+  },
+  "Обновить установленный стек напрямую (FUS 2.2, новый формат)": {
+    "en": "Update installed stack directly (FUS 2.2, new format)",
+    "de": "Installierten Stack direkt aktualisieren (FUS 2.2, neues Format)"
+  },
+  "Удалить установленный радиостек перед заменой (эксперимент)": {
+    "en": "Delete installed radio stack before replacement (experimental)",
+    "de": "Installierten Funkstack vor Austausch löschen (experimentell)"
+  },
+  "После переподключения: проверить версию": {
+    "en": "After reconnecting: check version",
+    "de": "Nach erneutem Verbinden: Version prüfen"
+  },
+  "Снять блокировку после проверки в CubeProgrammer": {
+    "en": "Unlock after checking in CubeProgrammer",
+    "de": "Sperre nach Prüfung in CubeProgrammer aufheben"
+  },
+  "Запустить установленный радиостек через USB DFU (эксперимент)": {
+    "en": "Start installed radio stack via USB DFU (experimental)",
+    "de": "Installierten Funkstack über USB DFU starten (experimentell)"
+  },
+  "Локальное сохранение состояния FUS недоступно": {
+    "en": "Local FUS state storage unavailable",
+    "de": "Lokales Speichern des FUS-Zustands nicht verfügbar"
+  },
+  "После переподключения: проверить запуск стека": {
+    "en": "After reconnecting: verify stack startup",
+    "de": "Nach erneutem Verbinden: Stack-Start prüfen"
+  },
+  "После переподключения: проверить удаление и состояние FUS": {
+    "en": "After reconnecting: verify deletion and FUS state",
+    "de": "Nach erneutem Verbinden: Löschung und FUS-Zustand prüfen"
+  },
+  "После переподключения: проверить вход в FUS": {
+    "en": "After reconnecting: verify FUS entry",
+    "de": "Nach erneutem Verbinden: Wechsel zu FUS prüfen"
+  },
+  "После переподключения: проверить версию и CPU1": {
+    "en": "After reconnecting: verify version and CPU1",
+    "de": "Nach erneutem Verbinden: Version und CPU1 prüfen"
+  },
+  "Версия установлена, стек остановлен. Запусти его отдельной кнопкой на том же устройстве.": {
+    "en": "Version installed, stack stopped. Start it using the separate button on the same device.",
+    "de": "Version installiert, Stack gestoppt. Starte ihn über die separate Schaltfläche auf demselben Gerät."
+  },
+  "Ожидается проверка": {
+    "en": "Waiting for verification of",
+    "de": "Warte auf Prüfung von"
+  },
+  "удаления ·": {
+    "en": "deletion ·",
+    "de": "Löschung ·"
+  },
+  "установки ·": {
+    "en": "installation ·",
+    "de": "Installation ·"
+  },
+  ". Не повторяй команду и не отключай питание до проверки.": {
+    "en": ". Do not repeat the command or disconnect power before verification.",
+    "de": ". Befehl vor der Prüfung nicht wiederholen und Stromversorgung nicht trennen."
+  },
+  "Локальное сохранение состояния недоступно: активация FUS заблокирована.": {
+    "en": "Local storage unavailable: FUS activation blocked.",
+    "de": "Lokales Speichern nicht verfügbar: FUS-Aktivierung gesperrt."
+  },
+  "Следующий файл FUS:": {
+    "en": "Next FUS file:",
+    "de": "Nächste FUS-Datei:"
+  },
+  ". После установки заново проверь устройство.": {
+    "en": ". After installation, check the device again.",
+    "de": ". Prüfe das Gerät nach Installation erneut."
+  },
+  "FUS соответствует версии каталога ST.": {
+    "en": "FUS matches the ST catalog version.",
+    "de": "FUS entspricht der ST-Katalogversion."
+  },
+  "КиБ · SFSA": {
+    "en": "KiB · SFSA",
+    "de": "KiB · SFSA"
+  },
+  "КиБ · только чтение; запись не выполнялась.": {
+    "en": "KiB · read only; no programming performed.",
+    "de": "KiB · nur lesen; keine Programmierung durchgeführt."
+  },
+  "· состояние": {
+    "en": "· state",
+    "de": "· Zustand"
+  },
+  "· стек": {
+    "en": "· stack",
+    "de": "· Stack"
+  },
+  "нет/не определён": {
+    "en": "none / not detected",
+    "de": "keiner / nicht erkannt"
+  }
+}

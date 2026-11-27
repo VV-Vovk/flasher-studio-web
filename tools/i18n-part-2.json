@@ -1,0 +1,802 @@
+{
+  "Уникальный аппаратный ID недоступен; имя не сохраняется.": {
+    "en": "Unique hardware ID unavailable; name will not be saved.",
+    "de": "Eindeutige Hardware-ID nicht verfügbar; Name wird nicht gespeichert."
+  },
+  "Подключи устройство.": {
+    "en": "Connect a device.",
+    "de": "Verbinde ein Gerät."
+  },
+  "Имя": {
+    "en": "Name",
+    "de": "Name"
+  },
+  "Аппаратный ID": {
+    "en": "Hardware ID",
+    "de": "Hardware-ID"
+  },
+  "Последняя запись Flasher Studio": {
+    "en": "Last programming by Flasher Studio",
+    "de": "Letzte Programmierung durch Flasher Studio"
+  },
+  "Нет сведений": {
+    "en": "No information",
+    "de": "Keine Informationen"
+  },
+  "Последняя запись из локальной истории; текущее содержимое отдельно не идентифицировано.": {
+    "en": "Last programming from local history; current contents have not been independently identified.",
+    "de": "Letzte Programmierung aus lokalem Verlauf; aktueller Inhalt wurde nicht unabhängig identifiziert."
+  },
+  "Переименовать": {
+    "en": "Rename",
+    "de": "Umbenennen"
+  },
+  "Flash CPU1 (при подключении)": {
+    "en": "CPU1 Flash (at connection)",
+    "de": "CPU1-Flash (bei Verbindung)"
+  },
+  "КиБ из": {
+    "en": "KiB of",
+    "de": "KiB von"
+  },
+  "КиБ": {
+    "en": "KiB",
+    "de": "KiB"
+  },
+  "SFSA · граница": {
+    "en": "SFSA · boundary",
+    "de": "SFSA · Grenze"
+  },
+  "Радиостек и FUS не обновляются. Перед записью граница считывается повторно.": {
+    "en": "Radio stack and FUS are not updated. The boundary is read again before programming.",
+    "de": "Funkstack und FUS werden nicht aktualisiert. Die Grenze wird vor der Programmierung erneut ausgelesen."
+  },
+  "К подключению устройства": {
+    "en": "Go to device connection",
+    "de": "Zur Geräteverbindung"
+  },
+  "STM32WB: пользовательская Flash CPU1": {
+    "en": "STM32WB: user CPU1 Flash",
+    "de": "STM32WB: CPU1-Benutzer-Flash"
+  },
+  "КиБ · SFSA 0x": {
+    "en": "KiB · SFSA 0x",
+    "de": "KiB · SFSA 0x"
+  },
+  "1.x (сигнатура неизвестна)": {
+    "en": "1.x (signature unknown)",
+    "de": "1.x (Signatur unbekannt)"
+  },
+  "байт": {
+    "en": "bytes",
+    "de": "Bytes"
+  },
+  "Micronucleus: запись приложения без чтения Flash. Загрузчик сохраняется по протоколу. Не отключай питание до окончания.": {
+    "en": "Micronucleus: application programming without Flash readback. The protocol preserves the bootloader. Do not disconnect power until completion.",
+    "de": "Micronucleus: Anwendungsprogrammierung ohne Flash-Auslesen. Der Bootloader bleibt gemäß Protokoll erhalten. Bis zum Abschluss die Stromversorgung nicht trennen."
+  },
+  "ArduinoISP: стандартный скетч ArduinoISP, D10 → RESET; отключи автосброс программатора, согласуй напряжения. Стирается Flash, EEPROM может быть стёрта; fuse не меняются.": {
+    "en": "ArduinoISP: standard ArduinoISP sketch, D10 → RESET; disable programmer auto-reset and match voltage levels. Flash is erased, EEPROM may be erased; fuses are not changed.",
+    "de": "ArduinoISP: Standard-Sketch ArduinoISP, D10 → RESET; automatischen Reset des Programmiergeräts deaktivieren und Spannungspegel abstimmen. Flash wird gelöscht, EEPROM kann gelöscht werden; Fuses bleiben unverändert."
+  },
+  "ATtiny: ISP chip erase удалит старую прошивку и загрузчик; EEPROM может быть стёрта. Fuse Bits не меняются; проверь соответствие тактирования выбранному профилю.": {
+    "en": "ATtiny: ISP chip erase removes existing firmware and bootloader; EEPROM may be erased. Fuse bits are not changed; verify that clocking matches the selected profile.",
+    "de": "ATtiny: ISP-Chip-Erase löscht vorhandene Firmware und Bootloader; EEPROM kann gelöscht werden. Fuse-Bits bleiben unverändert; prüfe, ob die Taktkonfiguration zum gewählten Profil passt."
+  },
+  "ESP driver не загружен": {
+    "en": "ESP driver not loaded",
+    "de": "ESP-Treiber nicht geladen"
+  },
+  "Подключён другой ESP:": {
+    "en": "Different ESP connected:",
+    "de": "Anderer ESP verbunden:"
+  },
+  "Другой STM32 PID 0x": {
+    "en": "Different STM32 PID 0x",
+    "de": "Andere STM32-PID 0x"
+  },
+  "Объём Flash отличается от выбранной модели": {
+    "en": "Flash size differs from selected model",
+    "de": "Flash-Größe weicht vom gewählten Modell ab"
+  },
+  "UID не прочитан": {
+    "en": "UID not read",
+    "de": "UID nicht ausgelesen"
+  },
+  "Другая сигнатура AVR:": {
+    "en": "Different AVR signature:",
+    "de": "Andere AVR-Signatur:"
+  },
+  "· сигнатура": {
+    "en": "· signature",
+    "de": "· Signatur"
+  },
+  "Цель изменена": {
+    "en": "Target changed",
+    "de": "Ziel geändert"
+  },
+  "Подключён другой физический экземпляр. Выбери его модель вручную.": {
+    "en": "A different physical device is connected. Select its model manually.",
+    "de": "Ein anderes physisches Gerät ist verbunden. Wähle dessen Modell manuell aus."
+  },
+  "Связь установлена:": {
+    "en": "Connection established:",
+    "de": "Verbindung hergestellt:"
+  },
+  "UID изменился": {
+    "en": "UID changed",
+    "de": "UID geändert"
+  },
+  "MAC изменился": {
+    "en": "MAC changed",
+    "de": "MAC geändert"
+  },
+  "Другой Recovery": {
+    "en": "Different Recovery",
+    "de": "Anderes Recovery"
+  },
+  "Сигнатура изменилась": {
+    "en": "Signature changed",
+    "de": "Signatur geändert"
+  },
+  "Аппаратный ответ подтверждён.": {
+    "en": "Hardware response confirmed.",
+    "de": "Hardware-Antwort bestätigt."
+  },
+  "Выбери версию": {
+    "en": "Select a version",
+    "de": "Wähle eine Version aus"
+  },
+  "Профиль прошивки не совпадает с выбранной платой": {
+    "en": "Firmware profile does not match selected board",
+    "de": "Firmware-Profil stimmt nicht mit gewählter Platine überein"
+  },
+  "SHA-256 не совпадает": {
+    "en": "SHA-256 mismatch",
+    "de": "SHA-256 stimmt nicht überein"
+  },
+  "Выбери файл": {
+    "en": "Select a file",
+    "de": "Wähle eine Datei aus"
+  },
+  "Файл слишком большой": {
+    "en": "File too large",
+    "de": "Datei zu groß"
+  },
+  "ZIP сначала нужно импортировать как проверенный результат облачной сборки": {
+    "en": "ZIP must first be imported as a verified cloud build result",
+    "de": "ZIP muss zuerst als verifiziertes Cloud-Build-Ergebnis importiert werden"
+  },
+  "ATtiny: FQBN сборки не соответствует выбранной модели и частоте": {
+    "en": "ATtiny: build FQBN does not match selected model and frequency",
+    "de": "ATtiny: Build-FQBN stimmt nicht mit gewähltem Modell und Frequenz überein"
+  },
+  "STM32WB OTA: используй экспорт OTA BIN; обычная запись заблокирована.": {
+    "en": "STM32WB OTA: use OTA BIN export; standard programming is blocked.",
+    "de": "STM32WB OTA: OTA-BIN-Export verwenden; normale Programmierung ist gesperrt."
+  },
+  "STM32WB: полный проект доступен для SWD только после ELF-аудита поддерживаемой модели.": {
+    "en": "STM32WB: complete project is available for SWD only after ELF audit of a supported model.",
+    "de": "STM32WB: vollständiges Projekt ist erst nach ELF-Prüfung eines unterstützten Modells für SWD verfügbar."
+  },
+  "Пакет Recovery нельзя записывать как полный образ: используй соответствующий раздел Recovery.": {
+    "en": "A Recovery package must not be programmed as a full image: use the corresponding Recovery section.",
+    "de": "Ein Recovery-Paket darf nicht als vollständiges Abbild programmiert werden: Verwende den entsprechenden Recovery-Bereich."
+  },
+  "Разметка Recovery не совпадает с устройством": {
+    "en": "Recovery memory layout does not match device",
+    "de": "Recovery-Speicheraufteilung stimmt nicht mit dem Gerät überein"
+  },
+  "Для BLE нужен пакет, собранный с разметкой Recovery": {
+    "en": "BLE requires a package built with the Recovery memory layout",
+    "de": "BLE erfordert ein mit der Recovery-Speicheraufteilung erstelltes Paket"
+  },
+  "ESP8266: поддерживается Arduino Core 3.1.2, один полный BIN. Для другого проекта выбери проверенный локальный Arduino BIN.": {
+    "en": "ESP8266: Arduino Core 3.1.2 with one full BIN is supported. For another project select a verified local Arduino BIN.",
+    "de": "ESP8266: Arduino Core 3.1.2 mit einer vollständigen BIN-Datei wird unterstützt. Wähle für ein anderes Projekt eine verifizierte lokale Arduino-BIN-Datei."
+  },
+  "Нет единственного merged BIN": {
+    "en": "No single merged BIN",
+    "de": "Keine eindeutige zusammengeführte BIN-Datei"
+  },
+  "Нужен однозначный HEX": {
+    "en": "An unambiguous HEX is required",
+    "de": "Eine eindeutige HEX-Datei ist erforderlich"
+  },
+  "Нужен один HEX приложения": {
+    "en": "A single application HEX is required",
+    "de": "Eine einzelne Anwendungs-HEX-Datei ist erforderlich"
+  },
+  "Цель изменилась": {
+    "en": "Target changed",
+    "de": "Ziel geändert"
+  },
+  "Для STM32 требуется адресный Intel HEX, не BIN без адреса": {
+    "en": "STM32 requires addressed Intel HEX, not a BIN without addresses",
+    "de": "STM32 erfordert Intel HEX mit Adressen, keine BIN-Datei ohne Adressen"
+  },
+  "Для AVR нужен Intel HEX приложения": {
+    "en": "AVR requires an application Intel HEX",
+    "de": "AVR erfordert eine Intel-HEX-Datei der Anwendung"
+  },
+  "Для ESP нужен BIN": {
+    "en": "ESP requires a BIN",
+    "de": "ESP erfordert eine BIN-Datei"
+  },
+  "STM32WB: образ превышает доступную Flash CPU1 (": {
+    "en": "STM32WB: image exceeds available CPU1 Flash (",
+    "de": "STM32WB: Abbild überschreitet verfügbaren CPU1-Flash ("
+  },
+  "КиБ)": {
+    "en": "KiB)",
+    "de": "KiB)"
+  },
+  "WB: ELF и HEX совпадают; Flash": {
+    "en": "WB: ELF and HEX match; Flash",
+    "de": "WB: ELF und HEX stimmen überein; Flash"
+  },
+  "КиБ; SRAM2a": {
+    "en": "KiB; SRAM2a",
+    "de": "KiB; SRAM2a"
+  },
+  "КиБ, SRAM2b": {
+    "en": "KiB, SRAM2b",
+    "de": "KiB, SRAM2b"
+  },
+  "КиБ.": {
+    "en": "KiB.",
+    "de": "KiB."
+  },
+  "Экспериментальная запись CPU1. Подтверди совместимость установленного радиостека с проектом и наличие резервной копии. Версия радиостека и запуск BLE не проверены. FUS и CPU2 не обновляются.": {
+    "en": "Experimental CPU1 programming. Confirm compatibility of the installed radio stack with the project and that you have a backup. Radio stack version and BLE operation have not been verified. FUS and CPU2 are not updated.",
+    "de": "Experimentelle CPU1-Programmierung. Bestätige die Kompatibilität des installierten Funkstacks mit dem Projekt sowie das Vorhandensein einer Sicherung. Funkstack-Version und BLE-Funktion wurden nicht geprüft. FUS und CPU2 werden nicht aktualisiert."
+  },
+  "Записать": {
+    "en": "Program",
+    "de": "Programmiere"
+  },
+  "в": {
+    "en": "to",
+    "de": "in"
+  },
+  "STM32WB: перед записью выполняется reset-and-halt. Стираются только страницы нового приложения CPU1 (включая данные в этих страницах). Радиостек CPU2/FUS и остальные страницы не затрагиваются.": {
+    "en": "STM32WB: reset-and-halt is performed before programming. Only pages of the new CPU1 application are erased, including data in those pages. CPU2 radio stack/FUS and other pages are unaffected.",
+    "de": "STM32WB: Vor der Programmierung wird Reset-and-Halt ausgeführt. Nur Seiten der neuen CPU1-Anwendung werden gelöscht, einschließlich der darin enthaltenen Daten. CPU2-Funkstack/FUS und andere Seiten bleiben unverändert."
+  },
+  "Вся пользовательская Flash будет стёрта.": {
+    "en": "All user Flash will be erased.",
+    "de": "Der gesamte Benutzer-Flash wird gelöscht."
+  },
+  "Полный образ может заменить загрузчик, разделы и настройки.": {
+    "en": "The full image may replace the bootloader, partitions and settings.",
+    "de": "Das vollständige Abbild kann Bootloader, Partitionen und Einstellungen ersetzen."
+  },
+  "Подтверди: BIN собран с совместимой разметкой Recovery, не merged.": {
+    "en": "Confirm: the BIN was built with a compatible Recovery layout and is not merged.",
+    "de": "Bestätige: Die BIN-Datei wurde mit kompatibler Recovery-Speicheraufteilung erstellt und ist kein zusammengeführtes Abbild."
+  },
+  "Trinket/Gemma: старое приложение будет стёрто, а окончательная запись первой страницы не проверяется.": {
+    "en": "Trinket/Gemma: the previous application will be erased, and final programming of the first page is not verified.",
+    "de": "Trinket/Gemma: Die bisherige Anwendung wird gelöscht; die abschließende Programmierung der ersten Seite wird nicht verifiziert."
+  },
+  "Micronucleus 1.x не сообщает сигнатуру. Подтверди, что это именно ATtiny85 Digispark 6012 байт.": {
+    "en": "Micronucleus 1.x does not report a signature. Confirm that this is an ATtiny85 Digispark with 6012 bytes.",
+    "de": "Micronucleus 1.x meldet keine Signatur. Bestätige, dass es sich um einen ATtiny85 Digispark mit 6012 Bytes handelt."
+  },
+  "Micronucleus сотрёт старое приложение, но не загрузчик; чтение Flash невозможно.": {
+    "en": "Micronucleus will erase the previous application but not the bootloader; Flash readback is not possible.",
+    "de": "Micronucleus löscht die bisherige Anwendung, aber nicht den Bootloader; Flash-Auslesen ist nicht möglich."
+  },
+  "ISP сотрёт всю Flash, включая загрузчик; EEPROM также может быть стёрта, Fuse Bits не меняются.": {
+    "en": "ISP erases all Flash, including the bootloader; EEPROM may also be erased. Fuse bits are not changed.",
+    "de": "ISP löscht den gesamten Flash einschließlich Bootloader; EEPROM kann ebenfalls gelöscht werden. Fuse-Bits bleiben unverändert."
+  },
+  "Заменяется приложение.": {
+    "en": "The application will be replaced.",
+    "de": "Die Anwendung wird ersetzt."
+  },
+  "Продолжить только при уверенности в совместимости.": {
+    "en": "Continue only if you are certain of compatibility.",
+    "de": "Fahre nur fort, wenn du dir der Kompatibilität sicher bist."
+  },
+  "Запись завершилась, но readback в драйвере недоступен; результат не подтверждён": {
+    "en": "Programming completed, but driver readback is unavailable; the result is unconfirmed",
+    "de": "Programmierung abgeschlossen, aber Rücklesen ist im Treiber nicht verfügbar; Ergebnis nicht bestätigt"
+  },
+  "Readback ESP не совпадает": {
+    "en": "ESP readback mismatch",
+    "de": "ESP-Rücklesedaten stimmen nicht überein"
+  },
+  "USB-передача завершена. Flash readback недоступен; запуск не проверен. Отключи и подключи плату заново.": {
+    "en": "USB transfer complete. Flash readback unavailable; execution unverified. Disconnect and reconnect the board.",
+    "de": "USB-Übertragung abgeschlossen. Flash-Rücklesen nicht verfügbar; Ausführung nicht geprüft. Trenne und verbinde die Platine erneut."
+  },
+  "Загрузчик принял данные и подтвердил чтение; запись первой страницы при выходе и запуск не проверены.": {
+    "en": "Bootloader accepted the data and confirmed readback; programming of the first page on exit and execution remain unverified.",
+    "de": "Bootloader hat die Daten angenommen und das Rücklesen bestätigt; Programmierung der ersten Seite beim Beenden und Ausführung sind nicht verifiziert."
+  },
+  "Передача завершена · без readback": {
+    "en": "Transfer complete · no readback",
+    "de": "Übertragung abgeschlossen · ohne Rücklesen"
+  },
+  "Flash проверена по SHA-256. Закрываю USB — пока не нажимай RESET.": {
+    "en": "Flash verified by SHA-256. Closing USB — do not press RESET yet.",
+    "de": "Flash per SHA-256 verifiziert. USB wird geschlossen — RESET noch nicht drücken."
+  },
+  "USB закрыт. Отсоедини кабель от телефона, затем перезапусти плату.": {
+    "en": "USB closed. Disconnect the cable from the phone, then restart the board.",
+    "de": "USB geschlossen. Trenne das Kabel vom Telefon und starte dann die Platine neu."
+  },
+  "Запись проверена · USB закрыт": {
+    "en": "Programming verified · USB closed",
+    "de": "Programmierung verifiziert · USB geschlossen"
+  },
+  "Запись проверена · USB не закрыт": {
+    "en": "Programming verified · USB not closed",
+    "de": "Programmierung verifiziert · USB nicht geschlossen"
+  },
+  "Recovery подтвердил образ и SHA-256; запуск приложения не проверен.": {
+    "en": "Recovery confirmed the image and SHA-256; application execution has not been verified.",
+    "de": "Recovery hat Abbild und SHA-256 bestätigt; Ausführung der Anwendung wurde nicht geprüft."
+  },
+  "Запись и проверка всей Flash завершены. Отключи программатор и выключи/включи питание платы (BOOT0=0).": {
+    "en": "Full Flash programming and verification completed. Disconnect the programmer and power-cycle the board (BOOT0=0).",
+    "de": "Vollständige Flash-Programmierung und Verifizierung abgeschlossen. Trenne das Programmiergerät und schalte die Platine aus und wieder ein (BOOT0=0)."
+  },
+  "Запись и проверка Flash завершены. Перезапусти плату в обычном режиме.": {
+    "en": "Flash programming and verification completed. Restart the board in normal mode.",
+    "de": "Flash-Programmierung und Verifizierung abgeschlossen. Starte die Platine im Normalmodus neu."
+  },
+  "Образ принят Recovery": {
+    "en": "Image accepted by Recovery",
+    "de": "Abbild von Recovery angenommen"
+  },
+  "Запись проверена": {
+    "en": "Programming verified",
+    "de": "Programmierung verifiziert"
+  },
+  "· Flash проверена; запуск не проверен": {
+    "en": "· Flash verified; execution unverified",
+    "de": "· Flash verifiziert; Ausführung nicht geprüft"
+  },
+  "· состояние Flash неизвестно": {
+    "en": "· Flash state unknown",
+    "de": "· Flash-Zustand unbekannt"
+  },
+  "· запись не начата": {
+    "en": "· programming not started",
+    "de": "· Programmierung nicht gestartet"
+  },
+  "Недопустимый размер чтения": {
+    "en": "Invalid read size",
+    "de": "Ungültige Lesegröße"
+  },
+  "Неполный readback": {
+    "en": "Incomplete readback",
+    "de": "Unvollständige Rücklesedaten"
+  },
+  "STM32WB: чтение за границей пользовательской Flash запрещено": {
+    "en": "STM32WB: reading beyond user Flash boundary is prohibited",
+    "de": "STM32WB: Lesen außerhalb des Benutzer-Flash-Bereichs ist nicht zulässig"
+  },
+  "Чтение:": {
+    "en": "Reading:",
+    "de": "Lese:"
+  },
+  "Полный readback для этого интерфейса недоступен": {
+    "en": "Full readback unavailable for this interface",
+    "de": "Vollständiges Rücklesen für diese Schnittstelle nicht verfügbar"
+  },
+  "✓ Содержимое записанной области совпадает с последней записью": {
+    "en": "✓ Programmed area matches the last programming operation",
+    "de": "✓ Programmierter Bereich stimmt mit letzter Programmierung überein"
+  },
+  "Считать Flash": {
+    "en": "Read Flash",
+    "de": "Flash auslesen:"
+  },
+  "и сохранить локальный BIN? Файл может содержать настройки и секреты устройства.": {
+    "en": "and save a local BIN? The file may contain device settings and secrets.",
+    "de": "und eine lokale BIN-Datei speichern? Die Datei kann Geräteeinstellungen und Geheimnisse enthalten."
+  },
+  "Резервная копия:": {
+    "en": "Backup:",
+    "de": "Sicherung:"
+  },
+  "байт; SHA-256": {
+    "en": "bytes; SHA-256",
+    "de": "Bytes; SHA-256"
+  },
+  "Нет сохранённого хеша последней записи": {
+    "en": "No saved hash of the last programming operation",
+    "de": "Kein gespeicherter Hash der letzten Programmierung"
+  },
+  "Содержимое изменилось после последней записи": {
+    "en": "Contents changed since last programming",
+    "de": "Inhalt seit letzter Programmierung geändert"
+  },
+  "Текущее содержимое подтверждено SHA-256.": {
+    "en": "Current contents confirmed by SHA-256.",
+    "de": "Aktueller Inhalt per SHA-256 bestätigt."
+  },
+  "Сначала отключи устройство": {
+    "en": "Disconnect the device first",
+    "de": "Trenne zuerst das Gerät"
+  },
+  "CI-пакет · аппаратные испытания не проведены · только ручная установка для поддерживаемых профилей": {
+    "en": "CI package · hardware tests not performed · manual installation only for supported profiles",
+    "de": "CI-Paket · keine Hardwaretests · nur manuelle Installation für unterstützte Profile"
+  },
+  "Открыть репозиторий пакетов ↗": {
+    "en": "Open package repository ↗",
+    "de": "Paket-Repository öffnen ↗"
+  },
+  "USB-модуль не собран. Выполни npm run vendor перед деплоем.": {
+    "en": "USB module not built. Run npm run vendor before deployment.",
+    "de": "USB-Modul nicht erstellt. Führe vor dem Deployment npm run vendor aus."
+  },
+  "ESP USB отключён.": {
+    "en": "ESP USB disconnected.",
+    "de": "ESP-USB getrennt."
+  },
+  "USB отключён.": {
+    "en": "USB disconnected.",
+    "de": "USB getrennt."
+  },
+  "ST-LINK/V2: SWDIO, SWCLK, GND и питание цели. Только STM32F103C8/CB; после записи нужен ручной RESET.": {
+    "en": "ST-LINK/V2: SWDIO, SWCLK, GND and target power. Only STM32F103C8/CB; manual RESET required after programming.",
+    "de": "ST-LINK/V2: SWDIO, SWCLK, GND und Zielversorgung. Nur STM32F103C8/CB; manueller RESET nach Programmierung erforderlich."
+  },
+  "Войди в заводской USB DFU. Если ROM не даёт прочитать PID/UID, запись запрещена.": {
+    "en": "Enter factory USB DFU. If ROM does not allow PID/UID to be read, programming is prohibited.",
+    "de": "Werks-USB-DFU aktivieren. Wenn ROM das Auslesen von PID/UID nicht zulässt, ist Programmierung gesperrt."
+  },
+  "USBasp (16c0:05dc), низкая скорость SCK. Полная запись стирает UART-загрузчик; Fuse Bits не меняются.": {
+    "en": "USBasp (16c0:05dc), low SCK speed. Full programming erases UART bootloader; fuse bits are not changed.",
+    "de": "USBasp (16c0:05dc), niedrige SCK-Geschwindigkeit. Vollständige Programmierung löscht UART-Bootloader; Fuse-Bits bleiben unverändert."
+  },
+  "Экспериментально: оригинальный Trinket/Gemma USB 1.05. Нажми RESET на плате и сразу выбери загрузчик. Не подключай внешний USBtinyISP.": {
+    "en": "Experimental: original Trinket/Gemma USB 1.05. Press RESET on the board and immediately select the bootloader. Do not connect an external USBtinyISP.",
+    "de": "Experimentell: originaler Trinket/Gemma USB 1.05. Drücke RESET auf der Platine und wähle sofort den Bootloader aus. Keinen externen USBtinyISP anschließen."
+  },
+  "Micronucleus: выбери Подключить, вставь плату в USB и быстро выбери загрузчик. 2.x с сигнатурой; 1.x только Digispark 6012 байт, без идентификации чипа. Проверка чтением недоступна.": {
+    "en": "Micronucleus: select Connect, plug the board into USB and quickly select the bootloader. 2.x with signature; 1.x only Digispark 6012 bytes, without chip identification. Readback verification is unavailable.",
+    "de": "Micronucleus: Wähle Verbinden, stecke die Platine an USB und wähle schnell den Bootloader aus. 2.x mit Signatur; 1.x nur Digispark 6012 Bytes, ohne Chip-Identifikation. Verifizierung durch Rücklesen ist nicht verfügbar."
+  },
+  "ArduinoISP: сначала загрузи стандартный скетч в Arduino. D10 → RESET, SPI → MOSI/MISO/SCK, GND. Согласуй питание и уровни; отключи автосброс программатора. 19200 бод.": {
+    "en": "ArduinoISP: first upload the standard sketch to Arduino. D10 → RESET, SPI → MOSI/MISO/SCK, GND. Match power and voltage levels; disable programmer auto-reset. 19200 baud.",
+    "de": "ArduinoISP: Lade zuerst den Standard-Sketch auf Arduino. D10 → RESET, SPI → MOSI/MISO/SCK, GND. Versorgung und Spannungspegel abstimmen; automatischen Reset des Programmiergeräts deaktivieren. 19200 Baud."
+  },
+  "Caterina: нажми RESET и сразу выбери появившийся USB bootloader. Автоматический 1200-baud reset пока не реализован.": {
+    "en": "Caterina: press RESET and immediately select the USB bootloader that appears. Automatic 1200-baud reset is not implemented yet.",
+    "de": "Caterina: Drücke RESET und wähle sofort den erscheinenden USB-Bootloader. Automatischer 1200-Baud-Reset ist noch nicht implementiert."
+  },
+  "Arduino Mega 2560 · USB / UART · штатный STK500v2.": {
+    "en": "Arduino Mega 2560 · USB / UART · standard STK500v2.",
+    "de": "Arduino Mega 2560 · USB / UART · Standard-STK500v2."
+  },
+  "Установка UART-загрузчика": {
+    "en": "UART bootloader installation",
+    "de": "UART-Bootloader-Installation"
+  },
+  "Открыть пакеты GitHub ↗": {
+    "en": "Open GitHub packages ↗",
+    "de": "GitHub-Pakete öffnen ↗"
+  },
+  "ZIP из проверенного каталога CI": {
+    "en": "ZIP from verified CI catalog",
+    "de": "ZIP aus verifiziertem CI-Katalog"
+  },
+  "Тестовая плата. Есть резервная копия. Тактирование и кварц соответствуют профилю. Разрешаю полное стирание Flash, возможное стирание EEPROM и изменение Fuse Bits.": {
+    "en": "Test board. Backup available. Clock and crystal match the profile. I authorize full Flash erase, possible EEPROM erase and modification of fuse bits.",
+    "de": "Testplatine. Sicherung vorhanden. Takt und Quarz entsprechen dem Profil. Ich erlaube vollständiges Löschen des Flash, mögliches Löschen des EEPROM und Änderung der Fuse-Bits."
+  },
+  "Установить через USBasp": {
+    "en": "Install via USBasp",
+    "de": "Über USBasp installieren"
+  },
+  "Размер ZIP не совпадает с каталогом": {
+    "en": "ZIP size does not match catalog",
+    "de": "ZIP-Größe stimmt nicht mit Katalog überein"
+  },
+  "SHA-256 проверен. Пакет": {
+    "en": "SHA-256 verified. Package",
+    "de": "SHA-256 verifiziert. Paket"
+  },
+  "Считаны Fuse Bits:": {
+    "en": "Fuse bits read:",
+    "de": "Fuse-Bits ausgelesen:"
+  },
+  "Сигнатура совпала. Установить": {
+    "en": "Signature matches. Install",
+    "de": "Signatur stimmt überein. Installiere"
+  },
+  "? Текущая программа будет стёрта.": {
+    "en": "? Existing application will be erased.",
+    "de": "? Die vorhandene Anwendung wird gelöscht."
+  },
+  "Flash, Fuse Bits и Lock Bits прочитаны обратно и совпадают. Функционирование UART после RESET ещё не проверено.": {
+    "en": "Flash, fuse bits and lock bits were read back and match. UART operation after RESET has not yet been verified.",
+    "de": "Flash, Fuse-Bits und Lock-Bits wurden zurückgelesen und stimmen überein. UART-Funktion nach RESET wurde noch nicht geprüft."
+  },
+  "Запись и проверка завершены": {
+    "en": "Programming and verification completed",
+    "de": "Programmierung und Verifizierung abgeschlossen"
+  },
+  "· состояние цели неизвестно": {
+    "en": "· target state unknown",
+    "de": "· Zielzustand unbekannt"
+  },
+  "Urboot · подбор под тактирование": {
+    "en": "Urboot · match clock configuration",
+    "de": "Urboot · passend zur Taktkonfiguration"
+  },
+  "· пакет CI, только ручная тестовая установка через USBasp.": {
+    "en": "· CI package, manual test installation via USBasp only.",
+    "de": "· CI-Paket, nur manuelle Testinstallation über USBasp."
+  },
+  "Загрузка каталога…": {
+    "en": "Loading catalog…",
+    "de": "Katalog wird geladen…"
+  },
+  "USBasp · ISP. После установки нужен поддерживаемый UART-клиент Urboot (ещё не подключён).": {
+    "en": "USBasp · ISP. After installation, a supported Urboot UART client is required (not yet integrated).",
+    "de": "USBasp · ISP. Nach der Installation ist ein unterstützter Urboot-UART-Client erforderlich (noch nicht integriert)."
+  },
+  "Проверить пакет и установить": {
+    "en": "Verify package and install",
+    "de": "Paket prüfen und installieren"
+  },
+  "· кандидат: не проверен на физической плате.": {
+    "en": "· candidate: not tested on physical hardware.",
+    "de": "· Kandidat: nicht auf realer Hardware getestet."
+  },
+  "Выбери версию в каталоге выше или отдельный UF2-файл. Проверь и сохрани его. Затем вручную скопируй на диск RPI-RP2 / RP2350, появившийся при BOOTSEL. Физическая запись и readback браузером не подтверждаются.": {
+    "en": "Select a version in the catalog above or a separate UF2 file. Verify and save it. Then manually copy it to the RPI-RP2 / RP2350 drive that appears in BOOTSEL. Physical programming and readback are not confirmed by the browser.",
+    "de": "Wähle eine Version im obigen Katalog oder eine separate UF2-Datei. Prüfe und speichere sie. Kopiere sie dann manuell auf das Laufwerk RPI-RP2 / RP2350, das bei BOOTSEL erscheint. Physische Programmierung und Rücklesen werden vom Browser nicht bestätigt."
+  },
+  "UF2-файл": {
+    "en": "UF2 file",
+    "de": "UF2-Datei"
+  },
+  "Проверить и скачать UF2": {
+    "en": "Verify and download UF2",
+    "de": "UF2 prüfen und herunterladen"
+  },
+  "UF2 до 32 МиБ": {
+    "en": "UF2 up to 32 MiB",
+    "de": "UF2 bis 32 MiB"
+  },
+  "Выбери совместимую сборку из каталога или UF2-файл": {
+    "en": "Select a compatible build from catalog or a UF2 file",
+    "de": "Wähle einen kompatiblen Build aus dem Katalog oder eine UF2-Datei"
+  },
+  "Нужен один UF2 в сборке": {
+    "en": "A single UF2 in the build is required",
+    "de": "Eine einzelne UF2-Datei im Build ist erforderlich"
+  },
+  "UF2 проверен:": {
+    "en": "UF2 verified:",
+    "de": "UF2 verifiziert:"
+  },
+  "блоков. SHA-256": {
+    "en": "blocks. SHA-256",
+    "de": "Blöcke. SHA-256"
+  },
+  "· запись не выполнялась.": {
+    "en": "· no programming performed.",
+    "de": "· keine Programmierung durchgeführt."
+  },
+  "BOOTSEL: сохранение UF2 и ручное копирование на USB-диск.": {
+    "en": "BOOTSEL: save UF2 and manually copy to USB drive.",
+    "de": "BOOTSEL: UF2 speichern und manuell auf USB-Laufwerk kopieren."
+  },
+  "Используй UF2 ниже": {
+    "en": "Use UF2 below",
+    "de": "Verwende unten UF2"
+  },
+  "Выбрать пакет для испытаний": {
+    "en": "Select package for testing",
+    "de": "Paket zum Testen auswählen"
+  },
+  "Установка ESP Recovery": {
+    "en": "ESP Recovery installation",
+    "de": "ESP-Recovery-Installation"
+  },
+  "Скачать ZIP из GitHub Release / Artifacts ↗": {
+    "en": "Download ZIP from GitHub Release / Artifacts ↗",
+    "de": "ZIP aus GitHub Release / Artifacts herunterladen ↗"
+  },
+  "Подключить и проверить чип": {
+    "en": "Connect and verify chip",
+    "de": "Verbinden und Chip prüfen"
+  },
+  "Считать и скачать полную резервную копию": {
+    "en": "Read and download full backup",
+    "de": "Vollständige Sicherung auslesen und herunterladen"
+  },
+  "Резервная копия сохранена. Это тестовая плата, GPIO активации свободен и безопасен. Разрешаю полное стирание Flash.": {
+    "en": "Backup saved. This is a test board; activation GPIO is free and safe. I authorize full Flash erase.",
+    "de": "Sicherung gespeichert. Dies ist eine Testplatine; Aktivierungs-GPIO ist frei und sicher. Ich erlaube vollständiges Löschen des Flash."
+  },
+  "Установить и проверить": {
+    "en": "Install and verify",
+    "de": "Installieren und verifizieren"
+  },
+  "Размер пакета": {
+    "en": "Package size",
+    "de": "Paketgröße"
+  },
+  "Пакет и его файлы проверены по SHA-256.": {
+    "en": "Package and its files verified by SHA-256.",
+    "de": "Paket und enthaltene Dateien per SHA-256 verifiziert."
+  },
+  "Чип и размер Flash совпадают, защита не включена. MAC": {
+    "en": "Chip and Flash size match, protection is disabled. MAC",
+    "de": "Chip und Flash-Größe stimmen überein, Schutz ist deaktiviert. MAC"
+  },
+  "Неполная резервная копия": {
+    "en": "Incomplete backup",
+    "de": "Unvollständige Sicherung"
+  },
+  "Резервная копия подготовлена к скачиванию:": {
+    "en": "Backup prepared for download:",
+    "de": "Sicherung zum Download vorbereitet:"
+  },
+  "байт, SHA-256": {
+    "en": "bytes, SHA-256",
+    "de": "Bytes, SHA-256"
+  },
+  ". Убедись, что файл сохранён.": {
+    "en": ". Make sure the file is saved.",
+    "de": ". Stelle sicher, dass die Datei gespeichert wurde."
+  },
+  "Полностью стереть Flash": {
+    "en": "Completely erase Flash of",
+    "de": "Flash vollständig löschen:"
+  },
+  "и записать": {
+    "en": "and program",
+    "de": "und programmieren:"
+  },
+  "Все файлы прочитаны обратно и совпадают. Закрываю USB; не нажимай RESET.": {
+    "en": "All files read back and match. Closing USB; do not press RESET.",
+    "de": "Alle Dateien zurückgelesen und stimmen überein. USB wird geschlossen; RESET nicht drücken."
+  },
+  "USB закрыт. Отсоедини кабель, затем перезапусти плату. Запуск Recovery, Wi-Fi и BLE ещё не проверены.": {
+    "en": "USB closed. Disconnect the cable, then restart the board. Recovery, Wi-Fi and BLE operation have not yet been verified.",
+    "de": "USB geschlossen. Trenne das Kabel und starte dann die Platine neu. Funktion von Recovery, WLAN und BLE wurde noch nicht geprüft."
+  },
+  "Запись Recovery проверена · USB закрыт": {
+    "en": "Recovery programming verified · USB closed",
+    "de": "Recovery-Programmierung verifiziert · USB geschlossen"
+  },
+  "USB / USB-UART · ручная установка кандидата, полное стирание после резервной копии.": {
+    "en": "USB / USB-UART · manual candidate installation, full erase after backup.",
+    "de": "USB / USB-UART · manuelle Kandidateninstallation, vollständiges Löschen nach Sicherung."
+  },
+  "Выбери пакет с фактическим объёмом Flash. ZIP скачивается из приватного CI/Release вручную.": {
+    "en": "Select a package matching actual Flash size. Download the ZIP manually from private CI/Release.",
+    "de": "Wähle ein Paket passend zur tatsächlichen Flash-Größe. Lade die ZIP-Datei manuell aus privatem CI/Release herunter."
+  },
+  "Выбери готовый пакет из каталога": {
+    "en": "Select a prepared package from catalog",
+    "de": "Wähle ein fertiges Paket aus dem Katalog"
+  },
+  "МиБ · GPIO": {
+    "en": "MiB · GPIO",
+    "de": "MiB · GPIO"
+  },
+  "· LOW · удержание": {
+    "en": "· LOW · hold",
+    "de": "· LOW · halten"
+  },
+  "с после RESET ·": {
+    "en": "s after RESET ·",
+    "de": "s nach RESET ·"
+  },
+  "· аппаратных испытаний нет.": {
+    "en": "· no hardware tests.",
+    "de": "· keine Hardwaretests."
+  },
+  "Обычная прошивка": {
+    "en": "Standard firmware",
+    "de": "Normale Firmware"
+  },
+  "Выбери уже установленный Recovery. Для STM32 FS10: отдельные C/C++ файлы, Builder v0.2.7.": {
+    "en": "Select the already installed Recovery. For STM32 FS10: separate C/C++ files, Builder v0.2.7.",
+    "de": "Wähle das bereits installierte Recovery. Für STM32 FS10: separate C/C++-Dateien, Builder v0.2.7."
+  },
+  "FS10: STM32F103C8T6, отдельные C/C++ исходники.": {
+    "en": "FS10: STM32F103C8T6, separate C/C++ source files.",
+    "de": "FS10: STM32F103C8T6, separate C/C++-Quelldateien."
+  },
+  "Разметка Recovery: Arduino INO/ZIP, ESP-IDF или PlatformIO Arduino ZIP.": {
+    "en": "Recovery layout: Arduino INO/ZIP, ESP-IDF or PlatformIO Arduino ZIP.",
+    "de": "Recovery-Aufteilung: Arduino INO/ZIP, ESP-IDF oder PlatformIO-Arduino-ZIP."
+  },
+  "Получить публичный ZIP (без токена)": {
+    "en": "Get public ZIP (no token)",
+    "de": "Öffentliche ZIP-Datei abrufen (ohne Token)"
+  },
+  "Получить ZIP из GitHub": {
+    "en": "Get ZIP from GitHub",
+    "de": "ZIP von GitHub abrufen"
+  },
+  "Локальный пакет: выбери ZIP со своего ПК, токен не требуется.": {
+    "en": "Local package: select ZIP from your computer; no token required.",
+    "de": "Lokales Paket: ZIP-Datei vom Computer auswählen; kein Token erforderlich."
+  },
+  "ZIP получен и проверен по SHA-256.": {
+    "en": "ZIP received and SHA-256 verified.",
+    "de": "ZIP empfangen und SHA-256 verifiziert."
+  },
+  "Автозагрузка:": {
+    "en": "Automatic download:",
+    "de": "Automatischer Download:"
+  },
+  "· скачай ZIP вручную.": {
+    "en": "· download ZIP manually.",
+    "de": "· ZIP-Datei manuell herunterladen."
+  },
+  "Получить Urboot из MiniCore (без токена)": {
+    "en": "Get Urboot from MiniCore (no token)",
+    "de": "Urboot von MiniCore abrufen (ohne Token)"
+  },
+  "Источник:": {
+    "en": "Source:",
+    "de": "Quelle:"
+  },
+  "Urboot: исходники и лицензия": {
+    "en": "Urboot: source and license",
+    "de": "Urboot: Quellcode und Lizenz"
+  },
+  ". Проверяем точный HEX по SHA-256. ZIP можно выбрать вручную.": {
+    "en": ". Verifying exact HEX by SHA-256. ZIP can be selected manually.",
+    "de": ". Genaue HEX-Datei wird per SHA-256 geprüft. ZIP-Datei kann manuell ausgewählt werden."
+  },
+  "Оригинальный HEX MiniCore получен, SHA-256 совпал. Проверь тактирование и подтверди установку.": {
+    "en": "Original MiniCore HEX received, SHA-256 matches. Verify clocking and confirm installation.",
+    "de": "Originale MiniCore-HEX-Datei empfangen, SHA-256 stimmt überein. Prüfe die Taktkonfiguration und bestätige die Installation."
+  },
+  "Дополнительные интерфейсы · локальные инструменты": {
+    "en": "Additional interfaces · local tools",
+    "de": "Zusätzliche Schnittstellen · lokale Werkzeuge"
+  },
+  "Urboot / UPDI, Wi-Fi Recovery и SWD через ST-LINK/V3, CMSIS-DAP (резервный вариант) или J-Link (STM32F103C8/CB) доступны как отдельные локальные команды, без подключения из браузера. Для AVR нужен AVRDUDE, для SWD — OpenOCD. Для Feather nRF52840 есть отдельная команда nordic (adafruit-nrfutil, USB serial DFU).": {
+    "en": "Urboot / UPDI, Wi-Fi Recovery and SWD via ST-LINK/V3, CMSIS-DAP (fallback) or J-Link (STM32F103C8/CB) are available as separate local commands, without browser connection. AVR requires AVRDUDE; SWD requires OpenOCD. For Feather nRF52840 there is a separate nordic command (adafruit-nrfutil, USB serial DFU).",
+    "de": "Urboot / UPDI, WLAN-Recovery und SWD über ST-LINK/V3, CMSIS-DAP (Ausweichlösung) oder J-Link (STM32F103C8/CB) sind als separate lokale Befehle ohne Browser-Verbindung verfügbar. AVR erfordert AVRDUDE, SWD erfordert OpenOCD. Für Feather nRF52840 gibt es den separaten Befehl nordic (adafruit-nrfutil, USB-Serial-DFU)."
+  },
+  "Скачать локальный инструмент Python": {
+    "en": "Download local Python tool",
+    "de": "Lokales Python-Werkzeug herunterladen"
+  },
+  "Запусти python flasher-native-tools.py --help. Для Wi-Fi подключись к сети Recovery, затем используй команду wifi. Токен вводится локально.": {
+    "en": "Run python flasher-native-tools.py --help. For Wi-Fi, connect to the Recovery network, then use the wifi command. Enter the token locally.",
+    "de": "Führe python flasher-native-tools.py --help aus. Verbinde dich für WLAN mit dem Recovery-Netzwerk und verwende dann den Befehl wifi. Das Token wird lokal eingegeben."
+  },
+  "Скачать app-only BIN выбранной версии": {
+    "en": "Download selected version's app-only BIN",
+    "de": "Reine Anwendungs-BIN der ausgewählten Version herunterladen"
+  },
+  "Выбери в каталоге версию с разметкой Recovery": {
+    "en": "Select a version with Recovery layout in the catalog",
+    "de": "Wähle im Katalog eine Version mit Recovery-Aufteilung"
+  },
+  "App-only BIN проверен и подготовлен к скачиванию. Запись не выполнялась.": {
+    "en": "App-only BIN verified and prepared for download. No programming performed.",
+    "de": "Reine Anwendungs-BIN verifiziert und zum Download vorbereitet. Keine Programmierung durchgeführt."
+  },
+  "Только если уже установлен наш экспериментальный загрузчик FS10 v0.2.0–v0.2.2. PB12 → GND при сбросе. PA9 TX, PA10 RX, 3,3 В, 115200. Загрузчик не сообщает UID. Нужен BIN/HEX с адресом приложения 0x08004000.": {
+    "en": "Only if our experimental FS10 v0.2.0–v0.2.2 bootloader is already installed. PB12 → GND during reset. PA9 TX, PA10 RX, 3.3 V, 115200. Bootloader does not report UID. BIN/HEX with application address 0x08004000 required.",
+    "de": "Nur wenn unser experimenteller Bootloader FS10 v0.2.0–v0.2.2 bereits installiert ist. PB12 → GND beim Reset. PA9 TX, PA10 RX, 3,3 V, 115200. Der Bootloader meldet keine UID. BIN/HEX mit Anwendungsadresse 0x08004000 erforderlich."
+  },
+  "Источник": {
+    "en": "Source",
+    "de": "Quelle"
+  },
+  "Файл BIN / HEX": {
+    "en": "BIN / HEX file",
+    "de": "BIN- / HEX-Datei"
+  }
+}

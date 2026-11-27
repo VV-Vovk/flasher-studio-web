@@ -88,14 +88,16 @@ const $=(root,id)=>root.querySelector('#'+id);
 export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock}){
  const el=id=>$(root,id);let session=null,locked=false,opening=false,closing=false,paused=false,mode='text',dirty=true,frame=0,txt='',t0=performance.now(),stamp=true,atLine=true,txBusy=false;
  const history=new PlotHistory(),hidden=new Set();let bytesRx=0,bytesTx=0,previousStamp='';
- const status=s=>{el('monStatus').textContent=s;};
+ const ui=globalThis.fsLocale, tr=s=>ui?.mark(s)??s, err=s=>ui?.errorMessage(s)??s;
+ const put=(id,v)=>{if(ui)ui.setText(el(id),v);else el(id).textContent=v;};
+ const status=s=>put('monStatus',s);
  function refresh(){
    el('monConnect').disabled=opening||closing||(!locked&&(!available(el('monTransport').value)||!canOpen()));
-   el('monConnect').textContent=opening?'Подключение…':closing?'Закрытие…':locked?'Отключить':'Подключить';
+   put('monConnect',tr(opening?'Подключение…':closing?'Закрытие…':locked?'Отключить':'Подключить'));
    for(const id of ['monTransport','monBaud','monParity','monBits','monStop'])el(id).disabled=locked||opening||closing;
    el('monSend').disabled=!session||opening||closing||txBusy;
    el('monCommand').disabled=!session||opening||closing;
-   el('monPause').textContent=paused?'Продолжить':'Пауза';
+   put('monPause',tr(paused?'Продолжить':'Пауза'));
    el('monDot').classList.toggle('ok',!!session&&!opening&&!closing);
  }
  function append(s){
@@ -118,7 +120,7 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
    ctx.font='11px system-ui';ctx.fillStyle=fg;ctx.strokeStyle=grid;ctx.lineWidth=1;
    const rows=history.rows.slice(-Number(el('monWindow').value)),names=history.names.filter(n=>!hidden.has(n));
    const left=65,right=Math.max(66,w-12),top=16,bottom=Math.max(top+1,h-30);
-   if(!rows.length||!names.length){ctx.textAlign='center';ctx.fillText('Ожидаем числовые данные…',w/2,h/2);return;}
+   if(!rows.length||!names.length){ctx.textAlign='center';ctx.fillText(ui?.translate('Ожидаем числовые данные…',ui.language())??'Ожидаем числовые данные…',w/2,h/2);return;}
    let lo=Infinity,hi=-Infinity;for(const r of rows)for(const n of names){const v=r.values[n];if(v!==undefined){lo=Math.min(lo,v);hi=Math.max(hi,v);}}
    if(!Number.isFinite(lo)||!Number.isFinite(hi))return;
    if(lo===hi){const p=Math.max(Math.abs(lo)*.05,1);lo-=p;hi+=p;}else{const p=(hi-lo)*.08;lo-=p;hi+=p;}
@@ -145,19 +147,19 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
    if(mode==='text'){
      const pre=el('monText'),follow=el('monScroll').checked;pre.textContent=txt;if(follow)pre.scrollTop=pre.scrollHeight;
    }else{const k=history.names.join('|');if(k!==lastNames){lastNames=k;legend();}draw();}
-   el('monStats').textContent='RX '+bytesRx.toLocaleString('ru-RU')+' Б · TX '+bytesTx.toLocaleString('ru-RU')+' Б · '+history.rows.length+' точек';
+   put('monStats','RX '+bytesRx.toLocaleString('ru-RU')+' '+tr('Б')+' · TX '+bytesTx.toLocaleString('ru-RU')+' '+tr('Б')+' · '+history.rows.length+' '+tr('точек'));
  }
  frame=requestAnimationFrame(tick);
  async function disconnect(message='Не подключено'){
    if(closing)return;
    closing=true;refresh();const s=session;session=null;
-   try{await s?.close();status(message);}catch(e){status('Ошибка закрытия: '+e.message);}
+   try{await s?.close();status(err(message));}catch(e){status(tr('Ошибка закрытия: ')+err(e.message));}
    finally{opening=false;closing=false;if(locked){locked=false;onUnlock();}refresh();}
  }
  el('monConnect').onclick=async()=>{
    if(locked){await disconnect();return;}
    if(opening||closing||!canOpen())return;
-   opening=true;locked=true;onLock();refresh();status('Выбери последовательный порт…');
+   opening=true;locked=true;onLock();refresh();status(tr('Выбери последовательный порт…'));
    let current=null;
    try{
      const port=await requestPort(el('monTransport').value);
@@ -166,8 +168,8 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
      session=current;await current.open(port,{baudRate:Number(el('monBaud').value),dataBits:Number(el('monBits').value),stopBits:Number(el('monStop').value),parity:el('monParity').value,flowControl:'none'});
      opening=false;
      if(root.hidden){await disconnect();return;}
-     status('Подключено · '+el('monBaud').value+' бод');refresh();
-   }catch(e){await disconnect(e.name==='NotFoundError'?'Порт не выбран':'Ошибка: '+e.message);}
+     status(tr('Подключено')+' · '+el('monBaud').value+' '+tr('бод'));refresh();
+   }catch(e){await disconnect(e.name==='NotFoundError'?tr('Порт не выбран'):tr('Ошибка: ')+err(e.message));}
  };
  async function send(){
    if(!session||txBusy||opening||closing)return;
@@ -175,7 +177,7 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
    if(!cmd&&ending==='none')return;
    txBusy=true;refresh();
    try{await s.send(cmd,ending);bytesTx+=encodeSend(cmd,ending).length;if(el('monEcho').checked){append('\n→ '+cmd+ENDINGS[ending]);atLine=true;}el('monCommand').value='';dirty=true;}
-   catch(e){status('Ошибка передачи: '+e.message);}
+   catch(e){status(tr('Ошибка передачи: ')+err(e.message));}
    finally{txBusy=false;refresh();}
  }
  el('monSend').onclick=send;el('monCommand').onkeydown=e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();void send();}};
@@ -191,6 +193,7 @@ export function mountMonitor(root,{requestPort,available,canOpen,onLock,onUnlock
  el('monTransport').onchange=refresh;
  // Auto uses the shared wired routing, including Android WebUSB.
  new ResizeObserver(()=>{dirty=true;if(mode==='plot'&&!paused)draw();}).observe(el('monCanvas'));
+ document.addEventListener('fs-language-change',()=>{dirty=true;if(mode==='plot')draw();});
  refresh();
  return {refresh,disconnect,isLocked:()=>locked,isOpening:()=>opening};
 }

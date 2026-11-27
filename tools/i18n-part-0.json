@@ -1,0 +1,802 @@
+{
+  "Разметка памяти": {
+    "en": "Memory layout",
+    "de": "Speicheraufteilung"
+  },
+  "Процессор / загрузчик": {
+    "en": "Processor / bootloader",
+    "de": "Prozessor / Bootloader"
+  },
+  "Способ загрузки": {
+    "en": "Upload method",
+    "de": "Upload-Methode"
+  },
+  "ST-Link (планируется)": {
+    "en": "ST-Link (planned)",
+    "de": "ST-Link (geplant)"
+  },
+  "Выбери INO, ZIP, CPP или H": {
+    "en": "Select INO, ZIP, CPP or H",
+    "de": "INO, ZIP, CPP oder H auswählen"
+  },
+  "КБ": {
+    "en": "KB",
+    "de": "KB"
+  },
+  "Исходник выбран. Готов к анализу.": {
+    "en": "Source selected. Ready for analysis.",
+    "de": "Quelldatei ausgewählt. Bereit zur Analyse."
+  },
+  "Отменено": {
+    "en": "Cancelled",
+    "de": "Abgebrochen"
+  },
+  "Нет сохранённых прошивок. Создай сборку или выбери проект.": {
+    "en": "No saved firmware. Build firmware or select a project.",
+    "de": "Keine gespeicherte Firmware. Erstelle eine Firmware oder wähle ein Projekt."
+  },
+  "К устройству": {
+    "en": "Go to device",
+    "de": "Zum Gerät"
+  },
+  "Удалить": {
+    "en": "Delete",
+    "de": "Löschen"
+  },
+  "Подключено": {
+    "en": "Connected",
+    "de": "Verbunden"
+  },
+  "Отключить": {
+    "en": "Disconnect",
+    "de": "Trennen"
+  },
+  "Автоматический выбор": {
+    "en": "Automatic selection",
+    "de": "Automatische Auswahl"
+  },
+  "Формат корректен. Доступ не проверялся.": {
+    "en": "Format valid. Access has not been checked.",
+    "de": "Format gültig. Zugriff wurde nicht geprüft."
+  },
+  "Используй формат owner/repository": {
+    "en": "Use the owner/repository format",
+    "de": "Verwende das Format owner/repository"
+  },
+  "Custom PCB / другая модель": {
+    "en": "Custom PCB / other model",
+    "de": "Eigene Platine / anderes Modell"
+  },
+  "Не определён": {
+    "en": "Not detected",
+    "de": "Nicht erkannt"
+  },
+  "Не определена": {
+    "en": "Not detected",
+    "de": "Nicht erkannt"
+  },
+  "ZIP не распознан": {
+    "en": "ZIP not recognized",
+    "de": "ZIP nicht erkannt"
+  },
+  "ZIP повреждён": {
+    "en": "ZIP corrupted",
+    "de": "ZIP beschädigt"
+  },
+  "Анализ проекта…": {
+    "en": "Analyzing project…",
+    "de": "Projekt wird analysiert…"
+  },
+  "Распознано:": {
+    "en": "Detected:",
+    "de": "Erkannt:"
+  },
+  "Тип проекта не определён. Открой расширенные настройки.": {
+    "en": "Project type not detected. Open advanced settings.",
+    "de": "Projekttyp nicht erkannt. Öffne die erweiterten Einstellungen."
+  },
+  "Профиль: ESP32-C3 Super Mini.": {
+    "en": "Profile: ESP32-C3 Super Mini.",
+    "de": "Profil: ESP32-C3 Super Mini."
+  },
+  "Найдена маркировка": {
+    "en": "Part number found",
+    "de": "Bauteilbezeichnung gefunden:"
+  },
+  ". Проверь цель.": {
+    "en": ". Verify the target.",
+    "de": ". Prüfe das Ziel."
+  },
+  "Проверь выбранную плату: точная модель не подтверждена.": {
+    "en": "Local analysis completed.",
+    "de": "Lokale Analyse abgeschlossen."
+  },
+  "Локальный анализ завершён.": {
+    "en": "Could not read project:",
+    "de": "Projekt konnte nicht gelesen werden:"
+  },
+  "ISP-программатор": {
+    "en": "ISP programmer",
+    "de": "ISP-Programmiergerät"
+  },
+  "UPDI-программатор": {
+    "en": "UPDI programmer",
+    "de": "UPDI-Programmiergerät"
+  },
+  "Native USB (если доступен)": {
+    "en": "Native USB (if available)",
+    "de": "Natives USB (falls verfügbar)"
+  },
+  "Выбрать микроконтроллер": {
+    "en": "Select microcontroller",
+    "de": "Mikrocontroller auswählen"
+  },
+  "Микроконтроллер": {
+    "en": "Microcontroller",
+    "de": "Mikrocontroller"
+  },
+  "Плата": {
+    "en": "Board",
+    "de": "Platine"
+  },
+  "Компилятор": {
+    "en": "Compiler",
+    "de": "Compiler"
+  },
+  "Формат прошивки": {
+    "en": "Firmware format",
+    "de": "Firmware-Format"
+  },
+  "Параметр выбран или определён": {
+    "en": "Parameter selected or detected",
+    "de": "Parameter ausgewählt oder erkannt"
+  },
+  "Требуется уточнение": {
+    "en": "Clarification needed",
+    "de": "Angabe erforderlich"
+  },
+  "Сначала выбери плату": {
+    "en": "Select a board first",
+    "de": "Wähle zuerst eine Platine aus"
+  },
+  "Не удалось": {
+    "en": "Failed",
+    "de": "Fehlgeschlagen"
+  },
+  "✓ Анализ проекта завершён": {
+    "en": "✓ Project analysis completed",
+    "de": "✓ Projektanalyse abgeschlossen"
+  },
+  "Анализ завершён · проверь найденную модель": {
+    "en": "Analysis completed · verify detected model",
+    "de": "Analyse abgeschlossen · erkannte Bezeichnung prüfen"
+  },
+  "Анализ завершён · уточни целевую плату": {
+    "en": "Analysis completed · specify target board",
+    "de": "Analyse abgeschlossen · Zielplatine angeben"
+  },
+  "Введи точную маркировку MCU": {
+    "en": "Enter exact MCU part number",
+    "de": "Genaue MCU-Bezeichnung eingeben"
+  },
+  "Сначала останови сборку": {
+    "en": "Stop the build first",
+    "de": "Beende zuerst den Build"
+  },
+  "Локально:": {
+    "en": "Locally:",
+    "de": "Lokal:"
+  },
+  "вариантов STM32.": {
+    "en": "STM32 variants.",
+    "de": "STM32-Varianten."
+  },
+  "Наличие в каталоге не означает поддержку сборки или записи.": {
+    "en": "Being listed in the catalog does not imply build or programming support.",
+    "de": "Ein Katalogeintrag bedeutet nicht, dass Kompilierung oder Programmierung unterstützt wird."
+  },
+  "Дополнительные записи импортированы.": {
+    "en": "Additional entries imported.",
+    "de": "Zusätzliche Einträge importiert."
+  },
+  "F0: 111 вариантов из Keil DFP. Другие серии: начальная выборка.": {
+    "en": "F0: 111 variants from Keil DFP. Other series: initial selection.",
+    "de": "F0: 111 Varianten aus Keil DFP. Andere Serien: erste Auswahl."
+  },
+  "Готовые платы": {
+    "en": "Ready-made boards",
+    "de": "Fertige Platinen"
+  },
+  "Поиск по всем STM32, например F030": {
+    "en": "Search all STM32, e.g. F030",
+    "de": "Alle STM32 durchsuchen, z. B. F030"
+  },
+  "Выбери серию": {
+    "en": "Select a series",
+    "de": "Serie auswählen"
+  },
+  "вариантов": {
+    "en": "variants",
+    "de": "Varianten"
+  },
+  "Текущая серия": {
+    "en": "Current series",
+    "de": "Aktuelle Serie"
+  },
+  "Выбрана модель": {
+    "en": "Model selected",
+    "de": "Modell ausgewählt"
+  },
+  "Вариант корпуса / памяти · x — суффикс": {
+    "en": "Package / memory variant · x is a suffix",
+    "de": "Gehäuse- / Speichervariante · x ist ein Suffix"
+  },
+  "В локальной базе нет совпадений.": {
+    "en": "No matches in the local database.",
+    "de": "Keine Treffer in der lokalen Datenbank."
+  },
+  "Выбери серию или введи маркировку.": {
+    "en": "Select a series or enter the part number.",
+    "de": "Wähle eine Serie oder gib die Bauteilbezeichnung ein."
+  },
+  "Ввести точную маркировку вручную": {
+    "en": "Enter exact part number manually",
+    "de": "Genaue Bauteilbezeichnung manuell eingeben"
+  },
+  "В архиве или дереве не найдены XML моделей STM32": {
+    "en": "No STM32 model XML files found in archive or tree",
+    "de": "Keine XML-Dateien für STM32-Modelle im Archiv oder Verzeichnisbaum gefunden"
+  },
+  "Добавлено:": {
+    "en": "Added:",
+    "de": "Hinzugefügt:"
+  },
+  "Сохранено локально.": {
+    "en": "Saved locally.",
+    "de": "Lokal gespeichert."
+  },
+  "Сохранение недоступно в этом браузере.": {
+    "en": "Storage is not available in this browser.",
+    "de": "Speichern ist in diesem Browser nicht verfügbar."
+  },
+  "Импорт не выполнен:": {
+    "en": "Import failed:",
+    "de": "Import fehlgeschlagen:"
+  },
+  "Получение списка моделей из GitHub…": {
+    "en": "Fetching model list from GitHub…",
+    "de": "Modellliste wird von GitHub abgerufen…"
+  },
+  "Папка mcu не найдена": {
+    "en": "mcu folder not found",
+    "de": "Ordner mcu nicht gefunden"
+  },
+  "Список GitHub обрезан — импортируй ZIP": {
+    "en": "GitHub list truncated — import the ZIP",
+    "de": "GitHub-Liste gekürzt — importiere die ZIP-Datei"
+  },
+  "Не удалось загрузить каталог:": {
+    "en": "Could not load catalog:",
+    "de": "Katalog konnte nicht geladen werden:"
+  },
+  ". Можно импортировать официальный ZIP.": {
+    "en": ". You can import the official ZIP.",
+    "de": ". Du kannst die offizielle ZIP-Datei importieren."
+  },
+  "Автонастройки восстановлены. Целевую плату нужно уточнить.": {
+    "en": "Automatic settings restored. Specify the target board.",
+    "de": "Automatische Einstellungen wiederhergestellt. Gib die Zielplatine an."
+  },
+  "Автоматическая конфигурация восстановлена": {
+    "en": "Automatic configuration restored",
+    "de": "Automatische Konfiguration wiederhergestellt"
+  },
+  "Нужна ранее установленная прошивка с совместимым Wi-Fi OTA. Обновляется приложение, не полный образ Flash.": {
+    "en": "Previously installed firmware with compatible Wi-Fi OTA is required. Only the application is updated, not the full Flash image.",
+    "de": "Zuvor installierte Firmware mit kompatiblem WLAN-OTA erforderlich. Nur die Anwendung wird aktualisiert, nicht das vollständige Flash-Abbild."
+  },
+  "Нужен совместимый BLE DFU / MCUboot и подходящий пакет обновления. Наличие Bluetooth само по себе недостаточно.": {
+    "en": "A compatible BLE DFU / MCUboot and update package are required. Bluetooth alone is insufficient.",
+    "de": "Kompatibles BLE DFU / MCUboot und ein passendes Update-Paket erforderlich. Bluetooth allein reicht nicht aus."
+  },
+  "Нужна ранее установленная прошивка или загрузчик с совместимым BLE-сервисом обновления. Поддержка радиомодуля не гарантирует OTA.": {
+    "en": "Previously installed firmware or a bootloader with a compatible BLE update service is required. Radio support does not guarantee OTA.",
+    "de": "Zuvor installierte Firmware oder ein Bootloader mit kompatiblem BLE-Update-Dienst erforderlich. Funkunterstützung garantiert kein OTA."
+  },
+  "Сначала выбери целевую плату": {
+    "en": "Select the target board first",
+    "de": "Wähle zuerst die Zielplatine aus"
+  },
+  "Целевая плата не выбрана": {
+    "en": "No target board selected",
+    "de": "Keine Zielplatine ausgewählt"
+  },
+  "Беспроводной драйвер ещё не реализован.": {
+    "en": "Wireless driver not implemented yet.",
+    "de": "Funktreiber noch nicht implementiert."
+  },
+  "Поиск BLE недоступен": {
+    "en": "BLE discovery unavailable",
+    "de": "BLE-Suche nicht verfügbar"
+  },
+  "Подключение недоступно Wi-Fi": {
+    "en": "Wi-Fi connection unavailable",
+    "de": "WLAN-Verbindung nicht verfügbar"
+  },
+  "OTA · обновление приложения": {
+    "en": "OTA · application update",
+    "de": "OTA · Anwendungsupdate"
+  },
+  "Профиль:": {
+    "en": "Profile:",
+    "de": "Profil:"
+  },
+  "свой загрузчик · OTA не проверено": {
+    "en": "custom bootloader · OTA unverified",
+    "de": "Eigener Bootloader · OTA nicht verifiziert"
+  },
+  ". Реальное устройство не проверено.": {
+    "en": ". Actual hardware has not been verified.",
+    "de": ". Reale Hardware wurde nicht geprüft."
+  },
+  "Установка загрузчика / OTA": {
+    "en": "Bootloader / OTA installation",
+    "de": "Bootloader- / OTA-Installation"
+  },
+  "ESP: штатный загрузчик + совместимая разметка Flash + приложение или отдельная служебная прошивка с OTA. Один bootloader.bin не включает радиообновление.": {
+    "en": "ESP: standard bootloader + compatible Flash layout + application or separate service firmware with OTA. bootloader.bin alone does not provide wireless updates.",
+    "de": "ESP: Standard-Bootloader + kompatible Flash-Aufteilung + Anwendung oder separate Service-Firmware mit OTA. bootloader.bin allein ermöglicht keine Funkupdates."
+  },
+  "Nordic: совместимый загрузчик (например, MCUboot) и BLE DFU/SMP в приложении или служебной прошивке. Формат обновления зависит от реализации.": {
+    "en": "Nordic: compatible bootloader (e.g. MCUboot) and BLE DFU/SMP in the application or service firmware. The update format depends on the implementation.",
+    "de": "Nordic: kompatibler Bootloader (z. B. MCUboot) und BLE DFU/SMP in der Anwendung oder Service-Firmware. Das Update-Format hängt von der Implementierung ab."
+  },
+  "Нужен совместимый загрузчик, разметка памяти и сервис обновления для конкретного MCU. Наличие радиомодуля не гарантирует OTA.": {
+    "en": "A compatible bootloader, memory layout and update service for the exact MCU are required. Radio support does not guarantee OTA.",
+    "de": "Kompatibler Bootloader, Speicheraufteilung und Update-Dienst für den konkreten MCU erforderlich. Funkunterstützung garantiert kein OTA."
+  },
+  "Потребуется отдельный раздел и способ его запуска. Произвольные приложения должны использовать согласованную разметку. Этот вариант пока только проектируется.": {
+    "en": "A separate partition and a way to start it are required. Arbitrary applications must use an agreed layout. This option is still being designed.",
+    "de": "Ein separater Bereich und eine Startmöglichkeit sind erforderlich. Anwendungen müssen die abgestimmte Speicheraufteilung nutzen. Diese Option befindet sich noch in der Planung."
+  },
+  "Сервис OTA должен оставаться в каждой следующей прошивке. Иначе беспроводное обновление перестанет работать.": {
+    "en": "The OTA service must remain in each subsequent firmware. Otherwise wireless updates will stop working.",
+    "de": "Der OTA-Dienst muss in jeder nachfolgenden Firmware enthalten bleiben. Andernfalls funktionieren Funkupdates nicht mehr."
+  },
+  "Подключение:": {
+    "en": "Connection:",
+    "de": "Verbindung:"
+  },
+  "Ничего не найдено": {
+    "en": "Nothing found",
+    "de": "Nichts gefunden"
+  },
+  "Нет сохранённых загрузчиков": {
+    "en": "No saved bootloaders",
+    "de": "Keine gespeicherten Bootloader"
+  },
+  "Измени запрос поиска.": {
+    "en": "Change the search query.",
+    "de": "Ändere den Suchbegriff."
+  },
+  "Пакеты появятся здесь после реальной установки.": {
+    "en": "Packages appear here after actual installation.",
+    "de": "Pakete erscheinen hier nach der tatsächlichen Installation."
+  },
+  "К установке": {
+    "en": "Go to installation",
+    "de": "Zur Installation"
+  },
+  "OTA-пакет": {
+    "en": "OTA package",
+    "de": "OTA-Paket"
+  },
+  "Свой файл": {
+    "en": "Custom file",
+    "de": "Eigene Datei"
+  },
+  "Описание пакета · бинарный файл отсутствует": {
+    "en": "Package description · binary missing",
+    "de": "Paketbeschreibung · Binärdatei fehlt"
+  },
+  "Сохранено только имя файла · потребуется выбрать файл заново": {
+    "en": "Only the filename is saved · select the file again",
+    "de": "Nur Dateiname gespeichert · Datei erneut auswählen"
+  },
+  "Удалить запись загрузчика из каталога?": {
+    "en": "Delete the bootloader entry from the catalog?",
+    "de": "Bootloader-Eintrag aus dem Katalog löschen?"
+  },
+  "Изменение не сохранено между сеансами": {
+    "en": "Change not saved between sessions",
+    "de": "Änderung nicht sitzungsübergreifend gespeichert"
+  },
+  "Нет сохранённых проектов": {
+    "en": "No saved projects",
+    "de": "Keine gespeicherten Projekte"
+  },
+  "Создай сборку и сохрани её в каталог.": {
+    "en": "Build firmware and save it to the catalog.",
+    "de": "Erstelle eine Firmware und speichere sie im Katalog."
+  },
+  "Дождись завершения текущей операции": {
+    "en": "Wait for the current operation to finish",
+    "de": "Warte auf den Abschluss des aktuellen Vorgangs"
+  },
+  "Изменить целевую плату текущего проекта для установки загрузчика?": {
+    "en": "Change the current project's target board to install a bootloader?",
+    "de": "Zielplatine des aktuellen Projekts zur Bootloader-Installation ändern?"
+  },
+  "Выбери исходный файл загрузчика повторно": {
+    "en": "Select the original bootloader file again",
+    "de": "Wähle die ursprüngliche Bootloader-Datei erneut aus"
+  },
+  "История доступна только в этом сеансе": {
+    "en": "History is available only in this session",
+    "de": "Verlauf ist nur in dieser Sitzung verfügbar"
+  },
+  "Аппаратный ID не получен": {
+    "en": "Hardware ID not obtained",
+    "de": "Hardware-ID nicht ermittelt"
+  },
+  "На устройствах:": {
+    "en": "On devices:",
+    "de": "Auf Geräten:"
+  },
+  "· последняя информация": {
+    "en": "· last known information",
+    "de": "· letzte bekannte Informationen"
+  },
+  "Нет записей об установке на конкретную плату.": {
+    "en": "No installation records for an individual board.",
+    "de": "Keine Installationsdaten für eine konkrete Platine."
+  },
+  "Открыть": {
+    "en": "Open",
+    "de": "Öffnen"
+  },
+  "Нет даты чтения": {
+    "en": "No read date",
+    "de": "Kein Auslesedatum"
+  },
+  "Дождись завершения операции": {
+    "en": "Wait for the operation to finish",
+    "de": "Warte auf den Abschluss des Vorgangs"
+  },
+  "Семейство не определено": {
+    "en": "Family not detected",
+    "de": "Familie nicht erkannt"
+  },
+  "Изменить целевую плату текущего проекта?": {
+    "en": "Change the current project's target board?",
+    "de": "Zielplatine des aktuellen Projekts ändern?"
+  },
+  "Целевая плата:": {
+    "en": "Target board:",
+    "de": "Zielplatine:"
+  },
+  "· только описание": {
+    "en": "· description only",
+    "de": "· nur Beschreibung"
+  },
+  "Удалить запись из каталога? История платы останется.": {
+    "en": "Delete the catalog entry? Board history will be retained.",
+    "de": "Katalogeintrag löschen? Der Platinenverlauf bleibt erhalten."
+  },
+  "Сохрани пакет загрузчика.": {
+    "en": "Save the bootloader package.",
+    "de": "Speichere das Bootloader-Paket."
+  },
+  "Удалить запись? История платы останется.": {
+    "en": "Delete entry? Board history will be retained.",
+    "de": "Eintrag löschen? Der Platinenverlauf bleibt erhalten."
+  },
+  "Нажми «Считать информацию».": {
+    "en": "Press “Read information”.",
+    "de": "Drücke „Informationen auslesen“."
+  },
+  "Сохранённые сведения об устройстве": {
+    "en": "Saved device information",
+    "de": "Gespeicherte Geräteinformationen"
+  },
+  "Установленная прошивка": {
+    "en": "Installed firmware",
+    "de": "Installierte Firmware"
+  },
+  "Загрузчик и OTA": {
+    "en": "Bootloader and OTA",
+    "de": "Bootloader und OTA"
+  },
+  "Имя устройства": {
+    "en": "Device name",
+    "de": "Gerätename"
+  },
+  "Память защищена. Содержимое неизвестно.": {
+    "en": "Memory is protected. Contents unknown.",
+    "de": "Speicher ist geschützt. Inhalt unbekannt."
+  },
+  "Область приложения пуста.": {
+    "en": "Application area is empty.",
+    "de": "Anwendungsbereich ist leer."
+  },
+  "Версия": {
+    "en": "Version",
+    "de": "Version"
+  },
+  "ID сборки": {
+    "en": "Build ID",
+    "de": "Build-ID"
+  },
+  "Дата сборки": {
+    "en": "Build date",
+    "de": "Build-Datum"
+  },
+  "✓ Найдена запись сборки в каталоге": {
+    "en": "✓ Build entry found in catalog",
+    "de": "✓ Build-Eintrag im Katalog gefunden"
+  },
+  "Проект найден, этой версии нет в каталоге": {
+    "en": "Project found, this version is not in the catalog",
+    "de": "Projekt gefunden, diese Version fehlt im Katalog"
+  },
+  "Этой сборки нет в каталоге": {
+    "en": "This build is not in the catalog",
+    "de": "Dieser Build fehlt im Katalog"
+  },
+  "Неизвестная прошивка · метаданных нет.": {
+    "en": "Unknown firmware · no metadata.",
+    "de": "Unbekannte Firmware · keine Metadaten."
+  },
+  "Более новая версия в каталоге": {
+    "en": "Newer version in catalog",
+    "de": "Neuere Version im Katalog"
+  },
+  "Наличие и версия не определены.": {
+    "en": "Presence and version not detected.",
+    "de": "Vorhandensein und Version nicht erkannt."
+  },
+  "Поддержка OTA": {
+    "en": "OTA support",
+    "de": "OTA-Unterstützung"
+  },
+  "Не заявлена": {
+    "en": "Not declared",
+    "de": "Nicht angegeben"
+  },
+  "✓ Есть в каталоге": {
+    "en": "✓ In catalog",
+    "de": "✓ Im Katalog"
+  },
+  "Записи нет в каталоге": {
+    "en": "Entry not in catalog",
+    "de": "Eintrag fehlt im Katalog"
+  },
+  "Служебный загрузчик Flasher Studio не обнаружен. Заводской ROM не проверен.": {
+    "en": "Flasher Studio service bootloader not detected. Factory ROM not checked.",
+    "de": "Flasher-Studio-Service-Bootloader nicht erkannt. Werks-ROM nicht geprüft."
+  },
+  "Открыть в каталоге": {
+    "en": "Open in catalog",
+    "de": "Im Katalog öffnen"
+  },
+  "Выбрать версию": {
+    "en": "Select version",
+    "de": "Version auswählen"
+  },
+  "для записи": {
+    "en": "for programming",
+    "de": "zum Programmieren"
+  },
+  "Сохранить описание считанной прошивки": {
+    "en": "Save description of read firmware",
+    "de": "Beschreibung der ausgelesenen Firmware speichern"
+  },
+  "Неизвестная прошивка ·": {
+    "en": "Unknown firmware ·",
+    "de": "Unbekannte Firmware ·"
+  },
+  "Сохранено описание, не бинарный файл": {
+    "en": "Description saved, not the binary file",
+    "de": "Beschreibung gespeichert, keine Binärdatei"
+  },
+  "Открыть загрузчик в каталоге": {
+    "en": "Open bootloader in catalog",
+    "de": "Bootloader im Katalog öffnen"
+  },
+  "Новый экземпляр": {
+    "en": "New instance",
+    "de": "Neues Exemplar"
+  },
+  "OTA не заявлена": {
+    "en": "OTA not declared",
+    "de": "OTA nicht angegeben"
+  },
+  "Версия неизвестна": {
+    "en": "Version unknown",
+    "de": "Version unbekannt"
+  },
+  "Последняя": {
+    "en": "Latest",
+    "de": "Neueste"
+  },
+  "Дата не указана": {
+    "en": "Date unspecified",
+    "de": "Datum nicht angegeben"
+  },
+  "Удалить версию": {
+    "en": "Delete version",
+    "de": "Version löschen"
+  },
+  "Удалить только эту версию? Остальные версии и история устройств сохранятся.": {
+    "en": "Delete only this version? Other versions and device history will be retained.",
+    "de": "Nur diese Version löschen? Andere Versionen und Geräteverlauf bleiben erhalten."
+  },
+  "· На устройствах:": {
+    "en": "· On devices:",
+    "de": "· Auf Geräten:"
+  },
+  "Последняя:": {
+    "en": "Latest:",
+    "de": "Neueste:"
+  },
+  "Плата не указана": {
+    "en": "Board unspecified",
+    "de": "Platine nicht angegeben"
+  },
+  "версия": {
+    "en": "version",
+    "de": "Version"
+  },
+  "версии": {
+    "en": "versions",
+    "de": "Versionen"
+  },
+  "версий": {
+    "en": "versions",
+    "de": "Versionen"
+  },
+  "неизвестна": {
+    "en": "unknown",
+    "de": "unbekannt"
+  },
+  "Версии проекта · от новых к старым": {
+    "en": "Project versions · newest first",
+    "de": "Projektversionen · neueste zuerst"
+  },
+  "Сохранить сборку": {
+    "en": "Save build",
+    "de": "Build speichern"
+  },
+  "Проект и версия прошивки": {
+    "en": "Project and firmware version",
+    "de": "Projekt und Firmware-Version"
+  },
+  "Название нового проекта": {
+    "en": "New project name",
+    "de": "Name des neuen Projekts"
+  },
+  "Сохранить": {
+    "en": "Save",
+    "de": "Speichern"
+  },
+  "Сборка будет добавлена в этот проект отдельной версией.": {
+    "en": "The build will be added to this project as a separate version.",
+    "de": "Der Build wird diesem Projekt als separate Version hinzugefügt."
+  },
+  "Будет создана отдельная карточка проекта.": {
+    "en": "A separate project card will be created.",
+    "de": "Eine separate Projektkarte wird erstellt."
+  },
+  "Например, RGBWW контроллер": {
+    "en": "For example, RGBWW controller",
+    "de": "Zum Beispiel RGBWW-Controller"
+  },
+  "Название платы": {
+    "en": "Board name",
+    "de": "Platinenname"
+  },
+  "Имя сохраняется локально и привязывается к ID экземпляра, а не к версии прошивки. ID считывается из оборудования.": {
+    "en": "The name is stored locally and associated with the instance ID, not the firmware version. The ID is read from hardware.",
+    "de": "Der Name wird lokal gespeichert und der Exemplar-ID zugeordnet, nicht der Firmware-Version. Die ID wird aus der Hardware ausgelesen."
+  },
+  "Позже": {
+    "en": "Later",
+    "de": "Später"
+  },
+  "Новое устройство": {
+    "en": "New device",
+    "de": "Neues Gerät"
+  },
+  "Переименовать устройство": {
+    "en": "Rename device",
+    "de": "Gerät umbenennen"
+  },
+  "Отмена": {
+    "en": "Cancel",
+    "de": "Abbrechen"
+  },
+  "Укажи имя устройства": {
+    "en": "Enter device name",
+    "de": "Gerätenamen eingeben"
+  },
+  "Имя устройства сохранено": {
+    "en": "Device name saved",
+    "de": "Gerätename gespeichert"
+  },
+  "Подключи плату, чтобы сохранить её имя и историю.": {
+    "en": "Connect a board to save its name and history.",
+    "de": "Verbinde eine Platine, um ihren Namen und Verlauf zu speichern."
+  },
+  "Память защищена": {
+    "en": "Memory protected",
+    "de": "Speicher geschützt"
+  },
+  "Память пуста": {
+    "en": "Memory empty",
+    "de": "Speicher leer"
+  },
+  "Прошивка не определена": {
+    "en": "Firmware not detected",
+    "de": "Firmware nicht erkannt"
+  },
+  "● Подключено": {
+    "en": "● Connected",
+    "de": "● Verbunden"
+  },
+  "Последнее чтение:": {
+    "en": "Last read:",
+    "de": "Zuletzt ausgelesen:"
+  },
+  "Информация ещё не считана": {
+    "en": "Information not yet read",
+    "de": "Informationen noch nicht ausgelesen"
+  },
+  "Показать информацию": {
+    "en": "Show information",
+    "de": "Informationen anzeigen"
+  },
+  "Выбрать устройство": {
+    "en": "Select device",
+    "de": "Gerät auswählen"
+  },
+  "✎ Имя": {
+    "en": "✎ Name",
+    "de": "✎ Name"
+  },
+  "Распознанное устройство · имя не задано": {
+    "en": "Detected device · unnamed",
+    "de": "Erkanntes Gerät · ohne Namen"
+  },
+  "Распознанное устройство": {
+    "en": "Detected device",
+    "de": "Erkanntes Gerät"
+  },
+  "Подключено ·": {
+    "en": "Connected ·",
+    "de": "Verbunden ·"
+  },
+  "Для этой платы пока нет способа первичной записи в прототипе.": {
+    "en": "No initial programming method for this board in the prototype yet.",
+    "de": "Für diese Platine gibt es im Prototyp noch keine Methode zur Erstprogrammierung."
+  },
+  "Только проводное подключение. Wi-Fi и BLE используются после установки.": {
+    "en": "Wired connection only. Wi-Fi and BLE are used after installation.",
+    "de": "Nur kabelgebundene Verbindung. WLAN und BLE werden nach der Installation verwendet."
+  },
+  "Цель:": {
+    "en": "Target:",
+    "de": "Ziel:"
+  },
+  "демо": {
+    "en": "demo",
+    "de": "Demo"
+  },
+  "В каталоге нет установленных пакетов.": {
+    "en": "No installed packages in catalog.",
+    "de": "Keine installierten Pakete im Katalog."
+  },
+  "Не удалось прочитать проект:": {
+    "en": "Could not read project:",
+    "de": "Projekt konnte nicht gelesen werden:"
+  }
+}

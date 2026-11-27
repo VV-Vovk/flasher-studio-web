@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '2aa0742c057f76be851db997191135bdf2afd758' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.62 unified connection selection'))
+       (github.event_name == 'push' && github.event.before == 'c9615ec1211fd8bb67292cd69e8e416b763e4bf5' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.63 RU EN DE localization'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

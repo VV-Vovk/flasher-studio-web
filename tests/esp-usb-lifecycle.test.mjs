@@ -45,7 +45,7 @@ test('persistent journal is bounded and excludes credentials and raw exception t
 });
 test('ESP flash success/reset prompt occurs after close and no false flash failure on timeout',()=>{
  const h=readFileSync(new URL('../public/index.html',import.meta.url),'utf8'),line=h.split("$('flash').onclick=async()=>{if(hwBusy")[1].split('\n')[0];
- assert.match(line,/const closed=await dropHardware\(\);if\(closed\)\{logHW\('USB закрыт/);
+ assert.match(line,/const closed=await dropHardware\(\);if\(closed\)\{logHW\(fsLocale\.mark\('USB закрыт/);
  assert.match(line,/Запись проверена · USB не закрыт/);
  for(const script of h.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi))new Function(script[1]);
 });

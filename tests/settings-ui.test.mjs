@@ -11,6 +11,6 @@ test('GitHub settings use one reset action with no orphan button references',()=
  assert.ok(!handler.includes("safeWrite("));
  assert.ok(!handler.includes("defaultRepo"));
  for(const match of handlers)assert.ok(!match[1].includes("$('repo')"));
- assert.ok(handler.includes("$('liveRepoStatus').textContent='Доступ ещё не проверен.'"));
+ assert.ok(handler.includes("fsLocale.setText($('liveRepoStatus'),fsLocale.mark('Доступ ещё не проверен.'))"));
  assert.ok(html.includes('help.append(notice)'));
 });
