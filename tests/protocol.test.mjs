@@ -63,3 +63,21 @@ test('STK500 bounded reset retries log failed synchronization and never write Fl
  await assert.rejects(avr.reenter('1e950f',async()=>{},()=>{}),/Нет ответа/);
  assert.equal(attempt,3);assert.deepEqual(commands,[0x30,0x30,0x30]);
 });
+
+test('AVR GET_PARAMETER and read-only application readback with address and length checks',async()=>{
+ const commands=[];let address=0;
+ const io={async send(a){commands.push(a[0]);this.reply=[];assert.equal(a.at(-1),0x20);
+  if(a[0]===0x41)this.reply=[a[1]===0x81?8:3];
+  else if(a[0]===0x55)address=(a[1]+256*a[2])*2;
+  else if(a[0]===0x74){const n=256*a[1]+a[2];assert.equal(a[3],0x46);this.reply=Array.from({length:n},(_,i)=>(i+address)&255);}
+  else assert.fail('Unexpected write command');
+ },async read(n){const b=[0x14,...this.reply,0x10];assert.equal(b.length,n);return Uint8Array.from(b);}};
+ const avr=new Stk500(io);
+ assert.equal(await avr.bootVersion(),'8.3');
+ const bytes=await avr.readApplication(130,30720);
+ assert.equal(bytes.length,130);assert.deepEqual([...bytes.slice(-3)],[127,128,129]);
+ assert.deepEqual(commands,[0x41,0x41,0x55,0x74,0x55,0x74]);
+ await assert.rejects(avr.readApplication(30721,30720),/размер/);
+ await assert.rejects(avr.readApplication(0,30720),/размер/);
+ assert.equal(commands.length,6);
+});

@@ -95,7 +95,7 @@ let browser;try{
  // Mock a real STK500 session with expired bootloader; no physical USB involved.
  await page.evaluate(()=>{
   fi=2;chip='ATmega328P';board='Arduino Nano';custom='';targetState='manual';methodSelected='USB-UART';renderFamily();methodSelected='USB-UART';
-  const pr=driver.avrProfile(board);const io={buffer:[],closed:false,error:null,port:{async setSignals(v){window.testAvrSignals.push(v.dataTerminalReady);}},async send(a){this.buffer.push(0x14,...(a[0]===0x75?[0x1e,0x95,0x0f]:[]),0x10);},async read(n){return Uint8Array.from(this.buffer.splice(0,n));},async close(){this.closed=true;}};
+  const pr=driver.avrProfile(board);const io={buffer:[],closed:false,error:null,port:{async setSignals(v){window.testAvrSignals.push(v.dataTerminalReady);}},async send(a){this.buffer.push(0x14,...(a[0]===0x75?[0x1e,0x95,0x0f]:a[0]===0x41?[a[1]===0x81?8:3]:[]),0x10);},async read(n){return Uint8Array.from(this.buffer.splice(0,n));},async close(){this.closed=true;}};
   window.testAvrSignals=[];
   hw={kind:'avr',io,avr:new driver.Stk500(io),pr,desc:'ATmega328P · 1e950f',key:targetKey12(target12())+'|'+methodSelected};
   go('device');renderDevice();
@@ -107,7 +107,34 @@ let browser;try{
  assert.deepEqual(await page.evaluate(()=>window.testAvrSignals),[false,true,false]);
  assert.equal(await page.locator('#infoSummary17').textContent(),'ATmega328P · 1e950f');
  assert.ok(await page.evaluate(()=>!!hw));
+ assert.ok((await page.locator('#deviceDetails12').textContent()).includes('8.3'));
+ assert.ok((await page.locator('#deviceDetails12').textContent()).includes('32 KiB'));
+ // Exercise the real manual-device picker, naming and persistent records.
+ await page.evaluate(()=>chooseManualAvr73(hw));
+ await page.locator('#manualAvrNew73').click();
+ await page.locator('#deviceNameInput13').fill('Nano A');
+ await page.locator('#saveDeviceName13').click();
+ const first=await page.evaluate(()=>({record:hw.recordId,hardware:hw.id,count:devices12.filter(d=>d.manual).length}));
+ assert.ok(first.record.startsWith('manual-avr-'));assert.equal(first.hardware,undefined);assert.equal(first.count,1);
+ await page.evaluate(()=>{delete hw.recordId;active12=linkTarget12='';renderDevice();chooseManualAvr73(hw);});
+ await page.locator('#manualAvrNew73').click();
+ await page.locator('#deviceNameInput13').fill('Nano B');
+ await page.locator('#saveDeviceName13').click();
+ const second=await page.evaluate(()=>hw.recordId);
+ assert.notEqual(first.record,second);
+ await page.evaluate(()=>{delete hw.recordId;active12=linkTarget12='';renderDevice();chooseManualAvr73(hw);});
+ await page.locator('#manualAvrChoices73 button').filter({hasText:'Nano A'}).click();
+ assert.equal(await page.evaluate(()=>hw.recordId),first.record);
+ assert.equal(await page.evaluate(()=>hw.id),undefined);
+ assert.ok((await page.locator('#infoSummary17').textContent()).includes('Nano A'));
+ await page.evaluate(()=>{delete hw.recordId;active12=linkTarget12='';renderDevice();chooseManualAvr73(hw);});
+ await page.locator('#manualAvrSkip73').click();
+ assert.equal(await page.evaluate(()=>hw.recordId),undefined);
  await page.evaluate(()=>{hw=null;renderDevice();});
+ await page.reload();
+ await page.waitForFunction(()=>typeof driver!=='undefined'&&driver!==null);
+ assert.deepEqual(await page.evaluate(()=>devices12.filter(d=>d.manual).map(d=>d.name).sort()),['Nano A','Nano B']);
+ assert.deepEqual(await page.evaluate(()=>devices12.filter(d=>d.manual).map(d=>d.id).sort()),[first.record,second].sort());
  assert.deepEqual(errors,[]);
  console.log('RU/EN/DE browser localization smoke passed');
  const origin='http://127.0.0.1:'+server.address().port;

@@ -84,6 +84,23 @@ export class Stk500{
   throw last||Error('Нет ответа микроконтроллера');
  }
  async address(i){const w=i/2;await this.cmd([0x55,w&255,w>>8]);}
+ // GET_PARAMETER: unsupported bootloaders can return dummy values.
+ async bootVersion(){
+  const major=(await this.cmd([0x41,0x81],1,700))[0];
+  const minor=(await this.cmd([0x41,0x82],1,700))[0];
+  return major>0&&major<100&&minor<100?major+'.'+minor:null;
+ }
+ async readApplication(size,limit,progress=()=>{}){
+  if(!Number.isSafeInteger(size)||!Number.isSafeInteger(limit)||size<1||size>limit||limit>32768)throw Error('Недопустимый размер чтения');
+  const bytes=new Uint8Array(size);
+  for(let i=0;i<size;i+=128){
+   const n=Math.min(128,size-i);
+   await this.address(i);
+   bytes.set(await this.cmd([0x74,n>>8,n&255,0x46],n),i);
+   progress((i+n)/size);
+  }
+  return bytes;
+ }
  async program(image,progress=()=>{}){await this.cmd([0x50]);try{for(let i=0;i<image.length;i+=128){let p=new Uint8Array(128).fill(255);p.set(image.slice(i,i+128));await this.address(i);await this.cmd([0x64,0,128,0x46,...p]);await this.address(i);let got=await this.cmd([0x74,0,128,0x46],128);if(!eq(p,got))throw Error('AVR: проверка Flash не прошла');progress(Math.min(1,(i+128)/image.length));}}finally{await this.cmd([0x51]);}}
 }
 // Deliberately narrow tested-by-protocol allowlist. PID is a family/density identifier, not a unique part number.

@@ -20,8 +20,8 @@ jobs:
     if: >-
       github.ref == 'refs/heads/main' &&
       ((github.event_name == 'workflow_dispatch' && inputs.confirm_live) ||
-       (github.event_name == 'push' && github.event.before == '08da944587dca9dd30430d0d4f28e473269de239' &&
-        github.event.head_commit.message == 'Release Flasher Studio v0.2.72 AVR reset pulse and diagnostics'))
+       (github.event_name == 'push' && github.event.before == 'e15199b565891c5e5b81d7c6d6939bc915a73ef6' &&
+        github.event.head_commit.message == 'Release Flasher Studio v0.2.73 named AVR boards and device information'))
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

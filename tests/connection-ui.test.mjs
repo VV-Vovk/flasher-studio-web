@@ -21,10 +21,21 @@ test('STK500 UART re-entry occurs after confirmation and before write flag, and 
  assert.ok(reset>flash.indexOf("Продолжить только при уверенности в совместимости."));
  assert.ok(reset<flash.indexOf('wrote=true'));
  assert.ok(flash.includes("s.kind==='avr'&&s.avr instanceof driver.Stk500"));
- assert.ok(html.includes("else if(s.kind==='avr'&&s.avr instanceof driver.Stk500){await s.avr.reenter(s.pr.signature,undefined,logHW);}"));
+ assert.ok(html.includes("else if(s.kind==='avr'&&s.avr instanceof driver.Stk500){await s.avr.reenter(s.pr.signature,undefined,logHW);"));
  assert.ok(html.includes("if(hw?.kind==='avr'&&!hw.id)fsLocale.setText($('infoSummary17'),hw.desc)"));
 });
 
 test('STK500 initial connection uses the same reset and diagnostic handshake as re-entry',()=>{
  assert.ok(html.includes("sig=await avr.reenter(pr.signature,undefined,logHW)"));
+});
+
+test('Manual AVR record IDs are separate from physical IDs and never auto-selected by chip signature',()=>{
+ assert.ok(html.includes('&&matchTarget12(d)&&!d.manual'));
+ assert.ok(html.includes("else if(hw.kind==='avr'){active12=read12=linkTarget12='';chooseManualAvr73(hw,target);}"));
+ assert.ok(html.includes('s.recordId=d.id;s.verifiedCurrent=false;'));
+ assert.ok(html.includes("id:'manual-avr-'+"));
+ assert.ok(html.includes('x.id===(s.recordId||s.id)'));
+ assert.ok(html.includes('x.id===(input.session.recordId||input.session.id)'));
+ assert.ok(html.includes("d.manual===true&&targetKey12(d.target)===targetKey12(target)"));
+ assert.ok(html.includes("s.avr.readApplication(size,s.pr.limit)"));
 });

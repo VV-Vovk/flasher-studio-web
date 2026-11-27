@@ -8311,5 +8311,133 @@ const FS_I18N_MESSAGES = {
   "Flasher Studio · v0.2.72. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
     "en": "Flasher Studio · v0.2.72. Universal cloud builds, USB/UART programming (first hardware release).",
     "de": "Flasher Studio · v0.2.72. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Flasher Studio · v0.2.73. Универсальная облачная сборка, USB/UART-программирование (первый аппаратный релиз).": {
+    "en": "Flasher Studio · v0.2.73. Universal cloud builds, USB/UART programming (first hardware release).",
+    "de": "Flasher Studio · v0.2.73. Universelle Cloud-Builds, USB/UART-Programmierung (erste Hardware-Version)."
+  },
+  "Имя сохраняется локально и привязывается к записи устройства, а не к версии прошивки.": {
+    "en": "The name is stored locally and belongs to the device record, not the firmware version.",
+    "de": "Der Name wird lokal gespeichert und gehört zum Geräteeintrag, nicht zur Firmware-Version."
+  },
+  "Локальный ID · экземпляр выбирается вручную: ": {
+    "en": "Local ID · manually selected device: ",
+    "de": "Lokale ID · manuell ausgewähltes Gerät: "
+  },
+  "Уникальный аппаратный ID недоступен; экземпляр выбирается вручную.": {
+    "en": "No unique hardware ID; select the physical device manually.",
+    "de": "Keine eindeutige Hardware-ID; Gerät manuell auswählen."
+  },
+  "Выбери экземпляр платы": {
+    "en": "Select the physical board",
+    "de": "Konkrete Platine auswählen"
+  },
+  "Уникальный аппаратный ID недоступен. Подтверди, какая физическая плата подключена. История зависит от этого выбора.": {
+    "en": "No unique hardware ID. Confirm which physical board is connected. History depends on this selection.",
+    "de": "Keine eindeutige Hardware-ID. Bestätige, welche Platine angeschlossen ist. Der Verlauf hängt von dieser Auswahl ab."
+  },
+  "Без сохранения": {
+    "en": "Continue without saving",
+    "de": "Ohne Speichern fortfahren"
+  },
+  "Новая плата": {
+    "en": "New board",
+    "de": "Neue Platine"
+  },
+  "Считано с устройства": {
+    "en": "Read from device",
+    "de": "Vom Gerät gelesen"
+  },
+  "Сигнатура": {
+    "en": "Signature",
+    "de": "Signatur"
+  },
+  "Протокол": {
+    "en": "Protocol",
+    "de": "Protokoll"
+  },
+  "USB-преобразователь": {
+    "en": "USB bridge",
+    "de": "USB-Wandler"
+  },
+  "Версия загрузчика (ответ STK500)": {
+    "en": "Bootloader version (STK500 response)",
+    "de": "Bootloader-Version (STK500-Antwort)"
+  },
+  "Не определена": {
+    "en": "Not determined",
+    "de": "Nicht ermittelt"
+  },
+  "Справочные данные / профиль": {
+    "en": "Reference data / profile",
+    "de": "Referenzdaten / Profil"
+  },
+  "Область приложения": {
+    "en": "Application region",
+    "de": "Anwendungsbereich"
+  },
+  "Локальная история платы": {
+    "en": "Local board history",
+    "de": "Lokaler Platinenverlauf"
+  },
+  "Локальный ID": {
+    "en": "Local ID",
+    "de": "Lokale ID"
+  },
+  "Экземпляр выбран вручную. История не доказывает текущее содержимое Flash.": {
+    "en": "Device selected manually. History does not prove current Flash contents.",
+    "de": "Gerät manuell ausgewählt. Der Verlauf belegt nicht den aktuellen Flash-Inhalt."
+  },
+  "История записей": {
+    "en": "Programming history",
+    "de": "Programmierverlauf"
+  },
+  "Сохранить имя платы": {
+    "en": "Save board name",
+    "de": "Platinenname speichern"
+  },
+  "Считать область приложения": {
+    "en": "Read application region",
+    "de": "Anwendungsbereich lesen"
+  },
+  "Сравнить с последней записью": {
+    "en": "Compare with last programmed image",
+    "de": "Mit letzter Programmierung vergleichen"
+  },
+  "Экземпляр не выбран": {
+    "en": "No device record selected",
+    "de": "Kein Geräteeintrag ausgewählt"
+  },
+  "Совпадения в каталоге": {
+    "en": "Catalog matches",
+    "de": "Katalogtreffer"
+  },
+  "Проверено образов": {
+    "en": "Images checked",
+    "de": "Geprüfte Images"
+  },
+  "Пропущено образов": {
+    "en": "Images skipped",
+    "de": "Übersprungene Images"
+  },
+  "Совпала записанная область": {
+    "en": "Programmed region matches",
+    "de": "Programmierter Bereich stimmt überein"
+  },
+  "Совпадений среди проверенных образов нет.": {
+    "en": "No matches among checked images.",
+    "de": "Keine Treffer unter den geprüften Images."
+  },
+  "Сравнивается область образа с заполнением последней страницы, а не весь Flash. Совпадение не является уникальным ID платы.": {
+    "en": "The image region including final page padding is compared, not all Flash. A match is not a unique board ID.",
+    "de": "Verglichen wird der Image-Bereich einschließlich der Auffüllung der letzten Seite, nicht der gesamte Flash. Ein Treffer ist keine eindeutige Platinen-ID."
+  },
+  "Найти прошивку в каталоге": {
+    "en": "Find firmware in catalog",
+    "de": "Firmware im Katalog suchen"
+  },
+  "Тактовая частота": {
+    "en": "Clock frequency",
+    "de": "Taktfrequenz"
   }
 };
