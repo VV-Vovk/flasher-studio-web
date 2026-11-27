@@ -31,26 +31,57 @@ export class Stm32Rom{
 }
 export class Stk500{
  constructor(io){this.io=io;}
- async cmd(a,n=0){await this.io.send([...a,0x20]);let b=await this.io.read(n+2,3000);if(b[0]!==0x14||b.at(-1)!==0x10)throw Error('STK500: неверный ответ');return b.slice(1,-1);}
+ async cmd(a,n=0,ms=3000){await this.io.send([...a,0x20]);let b=await this.io.read(n+2,ms);if(b[0]!==0x14||b.at(-1)!==0x10)throw Error('STK500: неверный ответ');return b.slice(1,-1);}
  async init(){await this.cmd([0x30]);return hex(await this.cmd([0x75],3));}
- // Optiboot exits to the sketch while the USB port remains open.
- // Re-enter only before a new operation, never during page programming.
- async reenter(expectedSignature,wait=delay){
-  if(this.io.error)throw this.io.error;
-  if(this.io.closed)throw Error('USB отключён');
-  const port=this.io.port;
+ // Separate USB ownership from each short bootloader session.
+ // Use a complete reset pulse and bounded retries only before any Flash write.
+ async reenter(expectedSignature,wait=delay,trace=()=>{}){
+  const io=this.io,port=io.port;
+  const checkLink=()=>{if(io.error)throw io.error;if(io.closed)throw Error('USB отключён');};
+  checkLink();
   if(typeof port?.setSignals!=='function')throw Error('STK500: DTR/RTS unavailable');
-  this.io.buffer.length=0;
-  await port.setSignals({dataTerminalReady:false,requestToSend:false});
-  await wait(80);
-  await port.setSignals({dataTerminalReady:true,requestToSend:true});
-  await wait(250);
-  if(this.io.error)throw this.io.error;
-  if(this.io.closed)throw Error('USB отключён');
-  this.io.buffer.length=0;
-  const signature=await this.init();
-  if(signature!==expectedSignature)throw Error('Сигнатура изменилась');
-  return signature;
+  const inactive={dataTerminalReady:false,requestToSend:false},active={dataTerminalReady:true,requestToSend:true};
+  const info=port.getInfo?.()||{};
+  if(Number.isInteger(info.usbVendorId)&&Number.isInteger(info.usbProductId))trace('USB VID:PID '+info.usbVendorId.toString(16).padStart(4,'0')+':'+info.usbProductId.toString(16).padStart(4,'0'));
+  let last;
+  for(const [index,settle] of [150,300,450].entries()){
+   checkLink();
+   const prefix='STK500 '+(index+1)+'/3: ';
+   io.buffer.length=0;
+   trace(prefix+'DTR/RTS inactive');
+   await port.setSignals(inactive);
+   await wait(250);
+   trace(prefix+'DTR/RTS active');
+   await port.setSignals(active);
+   await wait(10);
+   await port.setSignals(inactive);
+   trace(prefix+'DTR/RTS inactive; wait '+settle+' ms');
+   await wait(settle);
+   checkLink();
+   io.buffer.length=0;
+   try{
+    trace(prefix+'TX 30 20');
+    await io.send([0x30,0x20]);
+    const sync=await io.read(2,700);
+    trace(prefix+'RX '+hex(sync));
+    if(sync[0]!==0x14||sync[1]!==0x10)throw Error('STK500: неверный ответ');
+    trace(prefix+'TX 75 20');
+    await io.send([0x75,0x20]);
+    const reply=await io.read(5,700);
+    trace(prefix+'RX '+hex(reply));
+    if(reply[0]!==0x14||reply[4]!==0x10)throw Error('STK500: неверный ответ');
+    const signature=hex(reply.slice(1,4));
+    if(signature!==expectedSignature){const e=Error('Сигнатура изменилась');e.signatureMismatch=true;throw e;}
+    return signature;
+   }catch(e){
+    checkLink();
+    if(e.signatureMismatch)throw e;
+    if(io.buffer.length)trace(prefix+'RX partial '+hex(io.buffer.slice(0,32)));
+    trace(prefix+'sync/signature failed');
+    last=e;
+   }
+  }
+  throw last||Error('Нет ответа микроконтроллера');
  }
  async address(i){const w=i/2;await this.cmd([0x55,w&255,w>>8]);}
  async program(image,progress=()=>{}){await this.cmd([0x50]);try{for(let i=0;i<image.length;i+=128){let p=new Uint8Array(128).fill(255);p.set(image.slice(i,i+128));await this.address(i);await this.cmd([0x64,0,128,0x46,...p]);await this.address(i);let got=await this.cmd([0x74,0,128,0x46],128);if(!eq(p,got))throw Error('AVR: проверка Flash не прошла');progress(Math.min(1,(i+128)/image.length));}}finally{await this.cmd([0x51]);}}

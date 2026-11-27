@@ -14,7 +14,7 @@ validateRecoveryApp(b,'esp32c3',1000);assert.throws(()=>validateRecoveryApp(b,'e
 test('STK500 re-enters expired bootloader and discards stale sketch output before each operation',async()=>{
  const signals=[],tx=[],waits=[];let active=false,signature=[0x1e,0x95,0x0f],page=null,io={
   buffer:[0x42,0x43],closed:false,error:null,
-  port:{async setSignals(s){signals.push([s.dataTerminalReady,s.requestToSend]);active=s.dataTerminalReady;}},
+  port:{async setSignals(s){signals.push([s.dataTerminalReady,s.requestToSend]);if(s.dataTerminalReady)active=true;}},
   async send(a){assert.ok(active,'bootloader expired');assert.equal(a.at(-1),0x20);tx.push(a[0]);
    let reply=[];if(a[0]===0x75)reply=signature;
    if(a[0]===0x64)page=a.slice(4,-1);
@@ -23,14 +23,14 @@ test('STK500 re-enters expired bootloader and discards stale sketch output befor
   },
   async read(n){assert.ok(this.buffer.length>=n);return Uint8Array.from(this.buffer.splice(0,n));}
  };
- const avr=new Stk500(io),wait=async ms=>{waits.push(ms);if(ms===250)io.buffer.push(0x99);};
+ const avr=new Stk500(io),wait=async ms=>{waits.push(ms);if(ms===150)io.buffer.push(0x99);};
  assert.equal(await avr.reenter('1e950f',wait),'1e950f');
  active=false;io.buffer.push(0x41);
  assert.equal(await avr.reenter('1e950f',wait),'1e950f');
  await avr.program(Uint8Array.of(1,2,3));
  assert.deepEqual(tx,[0x30,0x75,0x30,0x75,0x50,0x55,0x64,0x55,0x74,0x51]);
- assert.deepEqual(signals,[[false,false],[true,true],[false,false],[true,true]]);
- assert.deepEqual(waits,[80,250,80,250]);
+ assert.deepEqual(signals,[[false,false],[true,true],[false,false],[false,false],[true,true],[false,false]]);
+ assert.deepEqual(waits,[250,10,150,250,10,150]);
  assert.deepEqual(page.slice(0,4),[1,2,3,255]);
 });
 test('STK500 re-entry refuses wrong signature, disconnected port and signal failures before write',async()=>{
@@ -44,4 +44,22 @@ test('STK500 re-entry refuses wrong signature, disconnected port and signal fail
  io.error=null;io.closed=true;await assert.rejects(avr.reenter('1e950f',wait),/USB отключён/);
  io.closed=false;io.port.setSignals=async()=>{throw Error('signal failure');};await assert.rejects(avr.reenter('1e950f',wait),/signal failure/);
  assert.deepEqual(commands,[0x30,0x75]);
+});
+
+test('STK500 bounded reset retries log failed synchronization and never write Flash',async()=>{
+ const signals=[],commands=[],waits=[],trace=[];let attempt=0;
+ const io={buffer:[],closed:false,error:null,port:{getInfo(){return {usbVendorId:0x1a86,usbProductId:0x7523};},async setSignals(s){signals.push(s.dataTerminalReady);if(s.dataTerminalReady)attempt++;}},
+ async send(a){commands.push(a[0]);if(attempt===1)return;this.buffer.push(0x14,...(a[0]===0x75?[0x1e,0x95,0x0f]:[]),0x10);},
+ async read(n,ms){assert.equal(ms,700);if(this.buffer.length<n)throw Error('Нет ответа микроконтроллера');return Uint8Array.from(this.buffer.splice(0,n));}};
+ const avr=new Stk500(io);
+ assert.equal(await avr.reenter('1e950f',async ms=>waits.push(ms),s=>trace.push(s)),'1e950f');
+ assert.deepEqual(commands,[0x30,0x30,0x75]);
+ assert.deepEqual(signals,[false,true,false,false,true,false]);
+ assert.deepEqual(waits,[250,10,150,250,10,300]);
+ assert.ok(trace.includes('USB VID:PID 1a86:7523'));
+ assert.ok(trace.includes('STK500 1/3: sync/signature failed'));
+ assert.ok(trace.includes('STK500 2/3: RX 141e950f10'));
+ commands.length=0;attempt=0;io.send=async a=>commands.push(a[0]);
+ await assert.rejects(avr.reenter('1e950f',async()=>{},()=>{}),/Нет ответа/);
+ assert.equal(attempt,3);assert.deepEqual(commands,[0x30,0x30,0x30]);
 });

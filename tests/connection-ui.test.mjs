@@ -17,10 +17,14 @@ test('Inline application JavaScript parses',()=>{for(const m of html.matchAll(/<
 
 test('STK500 UART re-entry occurs after confirmation and before write flag, and on info read',()=>{
  const flash=html.slice(html.lastIndexOf("$('flash').onclick=async"),html.lastIndexOf('async function readPhysical'));
- const reset=flash.indexOf('await s.avr.reenter(s.pr.signature)');
+ const reset=flash.indexOf('await s.avr.reenter(s.pr.signature,undefined,logHW)');
  assert.ok(reset>flash.indexOf("Продолжить только при уверенности в совместимости."));
  assert.ok(reset<flash.indexOf('wrote=true'));
  assert.ok(flash.includes("s.kind==='avr'&&s.avr instanceof driver.Stk500"));
- assert.ok(html.includes("else if(s.kind==='avr'&&s.avr instanceof driver.Stk500){await s.avr.reenter(s.pr.signature);}"));
+ assert.ok(html.includes("else if(s.kind==='avr'&&s.avr instanceof driver.Stk500){await s.avr.reenter(s.pr.signature,undefined,logHW);}"));
  assert.ok(html.includes("if(hw?.kind==='avr'&&!hw.id)fsLocale.setText($('infoSummary17'),hw.desc)"));
+});
+
+test('STK500 initial connection uses the same reset and diagnostic handshake as re-entry',()=>{
+ assert.ok(html.includes("sig=await avr.reenter(pr.signature,undefined,logHW)"));
 });

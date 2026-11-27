@@ -104,7 +104,7 @@ let browser;try{
  await page.locator('#infoFold17').evaluate(el=>el.open=true);
  await page.locator('#readDevice12').click();
  await page.waitForFunction(()=>!hwBusy);
- assert.deepEqual(await page.evaluate(()=>window.testAvrSignals),[false,true]);
+ assert.deepEqual(await page.evaluate(()=>window.testAvrSignals),[false,true,false]);
  assert.equal(await page.locator('#infoSummary17').textContent(),'ATmega328P · 1e950f');
  assert.ok(await page.evaluate(()=>!!hw));
  await page.evaluate(()=>{hw=null;renderDevice();});
