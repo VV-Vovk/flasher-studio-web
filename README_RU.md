@@ -240,3 +240,8 @@ ST-LINK/V2/V2-1 WebUSB memory transport reused without STM32 target commands. St
 ## v0.2.53 — Nordic nRF52: приложение со смещением
 
 Экспериментальная запись адресного HEX с заданными вручную page-aligned границами приложения из linker script. Требуются существующий MBR/loader с правдоподобными векторами, проверка MBR/UICR bootloader/parameter pointers (0xFF8/FFC и UICR NRFFW[0/1]), точная резервная копия всего диапазона 0..конец образа, включая неизменяемый префикс. Отдельное подтверждение и постраничная запись только в разрешённой области. Сохранение префикса проверяется чтением. Не устанавливает SoftDevice/bootloader, не обновляет bootloader settings/CRC, не гарантирует запуск защищённых приложений или совместимость версии стека. No UICR writes or hardware tests. Nordic nRF5 SDK 17.0.2 Bootloader and S140 MBR docs.
+
+
+## v0.2.54 — ATtiny ISP preview
+
+Nine classic ATtiny (13/25/45/85/24/44/84/2313/4313), 18 clock profiles and Digispark ATtiny85 ISP (no bootloader). MicroCore 2.5.2 / TinyCore 0.8.0 via private Builder branch develop/tiny-isp. USBasp exact signature and geometry, reject locked chips, explicit full chip erase, entire Flash erase and final readback. EEPROM may erase; no fuse/lock writes. Clock profile is compile-only: existing fuse/clock must match. Digispark USB Micronucleus, UPDI, Arduino as ISP and high-voltage rescue not implemented. No physical or SDK smoke tests, no live deployment.
